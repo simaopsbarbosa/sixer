@@ -8,14 +8,11 @@ fiver mas melhor (sixer)
 
 - [ ] mockups of first main pages
 - [x] first draft of database 
-- [ ]
 
 ### semana 8
 
 - [ ] finalize database script and create database
 - [ ] partial implementation of some main pages
-- [ ]
-
 
 ## database
 
