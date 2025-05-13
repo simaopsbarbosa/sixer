@@ -1,7 +1,8 @@
 /* Container for the search results main content */
 .search-results-container {
-  width: 900px;
+  max-width: 1200px;
   margin: 3em auto 0 auto;
+  padding: 0 1em;
   text-align: left;
 }
 
@@ -17,21 +18,18 @@
   flex-wrap: wrap;
   gap: 1em;
   margin: 2em 0;
-  justify-content: flex-start;
 }
 
 /* Individual freelancer card */
 .search-card {
+  flex: 1 1 calc(33.333% - 1em);
+  max-width: calc(33.333% - 1em);
+  box-sizing: border-box;
   border: 1px solid #333;
   padding: 0.4em;
-  text-align: left;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: stretch;
-  flex: 1 1 270px;
-  max-width: calc(33.333% - 1em);
-  box-sizing: border-box;
 }
 
 .search-card img {
@@ -55,7 +53,7 @@
 
 .search-card-title {
   font-weight: bold;
-  font-size: 0.7em;
+  font-size: 0.8em;
 }
 
 .search-card-desc {
@@ -86,12 +84,15 @@
 
 @media (max-width: 900px) {
   .search-card {
+    flex: 1 1 calc(50% - 1em);
     max-width: calc(50% - 1em);
   }
 }
 
+/* Mobile: 1 column */
 @media (max-width: 600px) {
   .search-card {
+    flex: 1 1 100%;
     max-width: 100%;
   }
 }

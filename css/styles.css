@@ -13,6 +13,8 @@ body > header {
   padding: 5px;
   margin: 20px 10px;
   border: 1px solid #333333;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 #logo {
@@ -29,6 +31,9 @@ header a {
   display: flex;
   align-items: center;
   gap: 20px;
+  flex: 1;
+  min-width: 200px;
+  max-width: 500px;
 }
 
 .searchbar > a {
@@ -38,7 +43,7 @@ header a {
 }
 
 .searchbar > input {
-  width: 16em;
+  width: 100%;
   height: 2.5em;
   padding-left: 12px;
   border-radius: 0px;
@@ -127,4 +132,47 @@ main p {
 .main-buttons .simple-button {
   margin: 5px;
   width: 12em;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  body > header {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 10px;
+  }
+
+  .searchbar {
+    order: 3;
+    width: 100%;
+    max-width: none;
+    margin: 10px 0;
+  }
+
+  .account {
+    order: 2;
+    justify-content: center;
+    width: 100%;
+  }
+
+  #logo {
+    order: 1;
+    margin: 0 auto;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .account {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .simple-button {
+    width: 100%;
+    margin: 5px 0;
+  }
+
+  .searchbar > input {
+    font-size: 0.9em;
+  }
 }
