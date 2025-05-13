@@ -42,7 +42,14 @@ header a {
   align-items: center;
 }
 
-.searchbar > input {
+.searchbar form {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+.searchbar form input {
   width: 100%;
   height: 2.5em;
   padding-left: 12px;
@@ -55,13 +62,23 @@ header a {
   font-size: 1em;
 }
 
-.searchbar > input::placeholder {
+.searchbar form input::placeholder {
   padding-left: 7px;
 }
 
-.searchbar > input:focus {
+.searchbar form input:focus {
   outline: none;
   border: 1px solid #aaaaaa;
+}
+
+.searchbar form button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .searchbar .icon {

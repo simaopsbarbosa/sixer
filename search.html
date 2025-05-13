@@ -17,14 +17,17 @@
           <span class="categories-text">categories</span
           ><img class="icon" src="assets/icons/dropdown.svg" alt="" />
         </a>
-        <input
-          type="text"
-          placeholder="what do you need to get done?"
-          value="assembly programmer"
-        />
-        <a href="search.html">
-          <img class="icon" src="assets/icons/search.svg" alt="search" />
-        </a>
+        <form action="search.html" method="get">
+          <input
+            type="text"
+            name="q"
+            placeholder="what do you need to get done?"
+            value="assembly programmer"
+          />
+          <button type="submit">
+            <img class="icon" src="assets/icons/search.svg" alt="search" />
+          </button>
+        </form>
       </div>
       <div class="account">
         <a href="">sign-in</a>
@@ -40,7 +43,7 @@
         </h2>
         <div class="search-cards">
           <div class="search-card">
-            <img src="assets/logo-w.png" alt="mock" />
+            <img src="assets/images/assembly.jpg" alt="assembly programmer" />
             <div class="search-card-content">
               <div class="search-card-text">
                 <span class="search-card-title">Peter Parker</span><br />
@@ -58,7 +61,7 @@
             </div>
           </div>
           <div class="search-card">
-            <img src="assets/logo-w.png" alt="mock" />
+            <img src="assets/images/assembly.jpg" alt="assembly programmer" />
             <div class="search-card-content">
               <div class="search-card-text">
                 <span class="search-card-title">Barry Allen</span><br />
@@ -76,7 +79,7 @@
             </div>
           </div>
           <div class="search-card">
-            <img src="assets/logo-w.png" alt="mock" />
+            <img src="assets/images/assembly.jpg" alt="assembly programmer" />
             <div class="search-card-content">
               <div class="search-card-text">
                 <span class="search-card-title">Peter Griffin</span><br />
@@ -94,7 +97,7 @@
             </div>
           </div>
           <div class="search-card">
-            <img src="assets/logo-w.png" alt="mock" />
+            <img src="assets/images/assembly.jpg" alt="assembly programmer" />
             <div class="search-card-content">
               <div class="search-card-text">
                 <span class="search-card-title">Tony Stark</span><br />
@@ -112,7 +115,7 @@
             </div>
           </div>
           <div class="search-card">
-            <img src="assets/logo-w.png" alt="mock" />
+            <img src="assets/images/assembly.jpg" alt="assembly programmer" />
             <div class="search-card-content">
               <div class="search-card-text">
                 <span class="search-card-title">Bruce Banner</span><br />
@@ -132,5 +135,36 @@
         </div>
       </div>
     </main>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector(".searchbar input");
+        const searchIcon = document.querySelector(
+          '.searchbar a[href="search.html"]'
+        );
+
+        // Function to perform search
+        function performSearch() {
+          const searchTerm = searchInput.value.trim();
+          if (searchTerm) {
+            window.location.href = `search.html?q=${encodeURIComponent(
+              searchTerm
+            )}`;
+          }
+        }
+
+        // Handle Enter key press
+        searchInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            performSearch();
+          }
+        });
+
+        // Handle search icon click
+        searchIcon.addEventListener("click", function (e) {
+          e.preventDefault();
+          performSearch();
+        });
+      });
+    </script>
   </body>
 </html>
