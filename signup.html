@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/auth.css" />
+    <title>sixer - sign up</title>
+  </head>
+
+  <body class="main-background">
+    <header>
+      <a href="index.html">
+        <img src="assets/logo-w.png" id="logo" alt="sixer" />
+      </a>
+      <div class="searchbar">
+        <a href="">
+          <span class="categories-text">categories</span
+          ><img class="icon" src="assets/icons/dropdown.svg" alt="" />
+        </a>
+        <form action="search.html" method="get">
+          <input
+            type="text"
+            name="q"
+            placeholder="what do you need to get done?"
+          />
+          <button type="submit">
+            <img class="icon" src="assets/icons/search.svg" alt="search" />
+          </button>
+        </form>
+      </div>
+      <div class="account">
+        <a href="login.html">sign-up</a>
+        <a href="login.html" class="simple-button">login</a>
+      </div>
+    </header>
+    <main>
+      <div class="auth-container">
+        <div class="auth-box">
+          <h2>Create Account</h2>
+          <form class="auth-form" action="#" method="post">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your full name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Create a password"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="confirm-password">Confirm Password</label>
+              <input
+                type="password"
+                id="confirm-password"
+                name="confirm-password"
+                placeholder="Confirm your password"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="country">Country</label>
+              <select id="country" name="country" required>
+                <option value="" disabled selected>Select your country</option>
+                <option value="en">English</option>
+                <option value="pt">Portuguese</option>
+              </select>
+            </div>
+            <button type="submit" class="auth-button">Sign Up</button>
+          </form>
+          <p class="auth-switch">
+            Already have an account? <a href="login.html">Login</a>
+          </p>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
