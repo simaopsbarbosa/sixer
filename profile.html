@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="stylesheet" href="css/profile.css" />
+    <title>sixer - profile</title>
+  </head>
+
+  <body>
+    <header>
+      <a href="index.html">
+        <img src="assets/logo-w.png" id="logo" alt="sixer" />
+      </a>
+      <div class="searchbar">
+        <a href="">
+          <span class="categories-text">categories</span
+          ><img class="icon" src="assets/icons/dropdown.svg" alt="" />
+        </a>
+        <form action="search.html" method="get">
+          <input
+            type="text"
+            name="q"
+            placeholder="what do you need to get done?"
+          />
+          <button type="submit">
+            <img class="icon" src="assets/icons/search.svg" alt="search" />
+          </button>
+        </form>
+      </div>
+      <div class="account">
+        <a href="profile.html">profile</a>
+        <a href="login.html" class="simple-button">logout</a>
+      </div>
+    </header>
+    <main>
+      <div class="profile-container">
+        <div class="profile-header">
+          <div class="profile-avatar">
+            <img
+              src="assets/images/johndoe.png"
+              alt="John Doe's Profile Picture"
+            />
+          </div>
+          <div class="profile-info">
+            <div class="profile-info-top">
+              <h1>John Doe</h1>
+              <p class="profile-email">john.doe@example.com</p>
+              <p class="profile-join-date">Member since May 2025</p>
+            </div>
+            <div class="profile-stats">
+              <div class="stat">
+                <span class="stat-value">4.8</span>
+                <span class="stat-label">Rating</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value">127</span>
+                <span class="stat-label">Jobs</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-content">
+          <div class="profile-section">
+            <h2>About</h2>
+            <p>
+              Experienced freelancer specializing in web development and
+              programming. Based in Portugal.
+            </p>
+          </div>
+
+          <div class="profile-section">
+            <h2>Skills</h2>
+            <div class="skills-list">
+              <span class="skill-tag">Web Development</span>
+              <span class="skill-tag">JavaScript</span>
+              <span class="skill-tag">Python</span>
+              <span class="skill-tag">UI/UX Design</span>
+              <span class="skill-tag">Database Design</span>
+            </div>
+          </div>
+
+          <div class="profile-section">
+            <h2>Recent Work</h2>
+            <div class="recent-work">
+              <div class="work-item">
+                <div class="work-header">
+                  <div class="work-title-group">
+                    <h3>E-commerce Website Development</h3>
+                    <span class="work-date">Completed in April 2025</span>
+                  </div>
+                  <div class="work-rating">5.0</div>
+                </div>
+                <p class="work-description">
+                  Built a full-stack e-commerce platform with modern UI/UX
+                  design.
+                </p>
+              </div>
+              <div class="work-item">
+                <div class="work-header">
+                  <div class="work-title-group">
+                    <h3>Mobile App Backend</h3>
+                    <span class="work-date">Completed in November 2024</span>
+                  </div>
+                  <div class="work-rating">4.8</div>
+                </div>
+                <p class="work-description">
+                  Developed RESTful API and database architecture for a fitness
+                  tracking app.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
