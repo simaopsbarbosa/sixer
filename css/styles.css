@@ -33,7 +33,7 @@ header a {
   gap: 20px;
   flex: 1;
   min-width: 200px;
-  max-width: 500px;
+  max-width: 550px;
 }
 
 .searchbar > a {
@@ -158,6 +158,10 @@ main p {
   #logo {
     order: 1;
     margin: 0 auto;
+  }
+
+  .categories-text {
+    display: none;
   }
 }
 
