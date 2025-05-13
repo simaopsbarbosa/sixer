@@ -1,0 +1,130 @@
+body {
+  font-family: "Inter", Courier, monospace;
+  font-weight: 100;
+  font-size: 1.3em;
+  background-color: #09090b;
+  color: #ffffff;
+}
+
+body > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  margin: 20px 10px;
+  border: 1px solid #333333;
+}
+
+#logo {
+  width: 100px;
+  padding: 0px 10px;
+}
+
+header a {
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.searchbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.searchbar > a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.searchbar > input {
+  width: 16em;
+  height: 2.5em;
+  padding-left: 12px;
+  border-radius: 0px;
+  background-color: #09090b;
+  border: 1px solid #333333;
+  color: #ffffff;
+  font-family: "Inter", Courier, monospace;
+  font-weight: 100;
+  font-size: 1em;
+}
+
+.searchbar > input::placeholder {
+  padding-left: 7px;
+}
+
+.searchbar > input:focus {
+  outline: none;
+  border: 1px solid #aaaaaa;
+}
+
+.searchbar .icon {
+  filter: brightness(0) invert(1);
+}
+
+.account {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 5px;
+}
+
+.simple-button {
+  height: 2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px 15px;
+  border-radius: 0px;
+  background-color: #09090b;
+  border: 1px solid #333333;
+  color: #ffffff;
+  font-family: "Inter", Courier, monospace;
+  font-weight: 100;
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.simple-button.light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.icon {
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.icon path {
+  fill: #ffffff;
+}
+
+main {
+  text-align: center;
+  margin-top: 10vh;
+}
+
+main h1 {
+  font-size: 2.2em;
+  font-weight: bold;
+  margin: 5px;
+}
+
+main p {
+  margin: 0;
+  font-size: 1.6em;
+}
+
+.main-buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5em;
+}
+
+.main-buttons .simple-button {
+  margin: 5px;
+  width: 12em;
+}
