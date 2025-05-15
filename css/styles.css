@@ -266,46 +266,115 @@ main p {
 /* Responsive styles */
 @media screen and (max-width: 768px) {
   body > header {
-    flex-direction: column;
-    align-items: stretch;
-    padding: 10px;
+    flex-wrap: nowrap;
+    padding: 8px;
+    margin: 10px;
+    gap: 15px;
+  }
+
+  .searchbar {
+    max-width: 450px;
+    min-width: 180px;
+  }
+
+  .searchbar form input {
+    font-size: 0.9em;
+    height: 2.2em;
+  }
+
+  .categories-text {
+    font-size: 0.9em;
+    display: none;
+  }
+
+  .account {
+    font-size: 0.9em;
+  }
+
+  .icon {
+    width: 1.3em;
+    height: 1.3em;
+  }
+
+  main h1 {
+    font-size: 2.5em;
+  }
+
+  main p {
+    font-size: 1.7em;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  body > header {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 8px;
+    gap: 10px;
+  }
+
+  #logo {
+    width: 80px;
+    order: 1;
+  }
+
+  .account {
+    order: 2;
+    font-size: 0.85em;
+    gap: 10px;
   }
 
   .searchbar {
     order: 3;
     width: 100%;
     max-width: none;
-    margin: 10px 0;
-  }
-
-  .account {
-    order: 2;
-    justify-content: center;
-    width: 100%;
-  }
-
-  #logo {
-    order: 1;
-    margin: 0 auto;
+    margin: 5px 0 0 0;
+    gap: 10px;
   }
 
   .categories-text {
     display: none;
   }
-}
 
-@media screen and (max-width: 480px) {
-  .account {
-    flex-wrap: wrap;
-    justify-content: center;
+  .searchbar a {
+    padding-left: 5px;
+  }
+
+  .searchbar form {
+    gap: 10px;
+  }
+
+  .searchbar .icon {
+    margin: 5px;
+  }
+
+  .searchbar form input {
+    height: 2em;
+    font-size: 0.85em;
   }
 
   .simple-button {
-    width: 100%;
-    margin: 5px 0;
+    height: 1.8em;
+    font-size: 0.85em;
+    padding: 0 10px;
   }
 
-  .searchbar > input {
-    font-size: 0.9em;
+  main h1 {
+    font-size: 1.8em;
+  }
+
+  main p {
+    font-size: 1.2em;
+  }
+
+  .main-buttons {
+    margin-top: 3em;
+  }
+
+  .main-buttons .simple-button {
+    width: auto;
+    min-width: 200px;
+    font-size: 1em;
+    height: 2.2em;
   }
 }
