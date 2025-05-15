@@ -112,14 +112,14 @@
 
 .profile-email {
   color: #888888;
-  font-size: 1.1em;
+  font-size: 0.9em;
   margin: 0;
   padding: 0;
 }
 
 .profile-join-date {
   color: #888888;
-  font-size: 1em;
+  font-size: 0.85em;
   margin: 0;
   padding: 0;
 }
@@ -137,13 +137,13 @@
 }
 
 .stat-value {
-  font-size: 2em;
+  font-size: 1.8em;
   font-weight: bold;
 }
 
 .stat-label {
   color: #888888;
-  font-size: 0.9em;
+  font-size: 0.8em;
 }
 
 .profile-content {
@@ -165,7 +165,7 @@
 }
 
 .profile-section h2 {
-  font-size: 1.5em;
+  font-size: 1.3em;
   font-weight: bold;
   margin: 0 0 1em 0;
   text-align: left;
@@ -175,7 +175,7 @@
 .profile-section p {
   line-height: 1.6;
   color: #cccccc;
-  font-size: 1.1em;
+  font-size: 0.95em;
   margin: 0;
   padding: 0;
   text-align: left;
@@ -187,7 +187,7 @@
 }
 
 .profile-section:first-of-type p {
-  font-size: 1.2em;
+  font-size: 1em;
   color: #dddddd;
 }
 
@@ -292,7 +292,7 @@
 }
 
 .work-item h3 {
-  font-size: 1.3em;
+  font-size: 1.1em;
   font-weight: bold;
   margin: 0;
   text-align: left;
@@ -301,13 +301,13 @@
 
 .work-date {
   color: #888888;
-  font-size: 0.9em;
+  font-size: 0.85em;
   font-style: italic;
 }
 
 .work-rating {
   color: #ffd700;
-  font-size: 1em;
+  font-size: 0.9em;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -325,7 +325,7 @@
   margin-bottom: 1.5em;
   line-height: 1.6;
   color: #dddddd;
-  font-size: 1.1em;
+  font-size: 0.95em;
 }
 
 /* Responsive styles */
