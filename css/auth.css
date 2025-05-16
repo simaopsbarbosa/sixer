@@ -1,0 +1,181 @@
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.auth-box {
+  background-color: #09090b;
+  padding: 2rem;
+  border: 1px solid #333333;
+  width: 100%;
+  max-width: 400px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes authGlassEffect {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.auth-box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.01),
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.01),
+    transparent,
+    transparent,
+    rgba(255, 255, 255, 0.01),
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.01),
+    transparent
+  );
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.auth-box:hover::before {
+  opacity: 0.8;
+  animation: authGlassEffect 9s linear infinite;
+}
+
+.auth-box:hover {
+  border-color: #444444;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.02);
+}
+
+/* Ensure auth box content stays above the gradient */
+.auth-box h2,
+.auth-form,
+.auth-switch {
+  position: relative;
+  z-index: 2;
+}
+
+.auth-box h2 {
+  text-align: left;
+  margin-bottom: 2rem;
+  color: #ffffff;
+  font-size: 2.2em;
+  font-weight: bold;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.form-group label {
+  color: #ffffff;
+  font-size: 1em;
+  font-weight: 100;
+}
+
+.form-group input {
+  padding: 0.75rem;
+  border: 1px solid #333333;
+  background-color: #09090b;
+  color: #ffffff;
+  font-family: "Inter", Courier, monospace;
+  font-weight: 100;
+  font-size: 1em;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #aaaaaa;
+}
+
+.form-group select {
+  padding: 0.75rem;
+  border: 1px solid #333333;
+  background-color: #09090b;
+  color: #ffffff;
+  font-family: "Inter", Courier, monospace;
+  font-weight: 100;
+  font-size: 1em;
+  transition: border-color 0.3s ease;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1.5em;
+  padding-right: 2.5em;
+}
+
+.form-group select:focus {
+  outline: none;
+  border-color: #aaaaaa;
+}
+
+.form-group select option {
+  background-color: #09090b;
+  color: #ffffff;
+}
+
+.form-group select option:first-child {
+  color: #666666;
+}
+
+.auth-button {
+  background-color: #ffffff;
+  color: #000000;
+  padding: 0.75rem;
+  border: 1px solid #333333;
+  font-family: "Inter", Courier, monospace;
+  font-weight: 100;
+  font-size: 1em;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  margin-top: 1rem;
+}
+
+.auth-button:hover {
+  border-color: #444444;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
+}
+
+.auth-switch {
+  text-align: left;
+  margin-top: 1.5rem;
+  color: #ffffff;
+  font-size: 1em;
+  font-weight: 100;
+}
+
+.auth-switch a {
+  color: #ffffff;
+  text-decoration: underline;
+  font-weight: 100;
+}
+
+.auth-switch a:hover {
+  text-decoration: none;
+}

@@ -1,0 +1,499 @@
+.profile-container {
+  max-width: 1200px;
+  margin: 3em auto 0 auto;
+  padding: 0 0.5em 5em 0.5em;
+}
+
+.profile-header {
+  display: flex;
+  gap: 2em;
+  margin-bottom: 2em;
+  padding: 1em;
+  border: 1px solid #333333;
+  background: linear-gradient(
+    135deg,
+    #0a0a0a00 0%,
+    #0a0a0a00 40%,
+    #1a1a1a 100%
+  );
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  height: 300px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes headerGlassEffect {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.profile-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.02),
+    transparent,
+    transparent,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.02),
+    transparent
+  );
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.profile-header:hover::before {
+  opacity: 1;
+  animation: headerGlassEffect 8s linear infinite;
+}
+
+.profile-header:hover {
+  border-color: #444444;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+}
+
+.profile-avatar {
+  flex-shrink: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.profile-avatar img {
+  height: 100%;
+  object-fit: cover;
+  border: 1px solid #333333;
+}
+
+.profile-info {
+  flex-grow: 1;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-between;
+  min-height: 200px;
+  position: relative;
+  z-index: 2;
+}
+
+.profile-info-top {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 0.5em;
+}
+
+.profile-info h1 {
+  font-size: 2.5em;
+  font-weight: bold;
+  text-align: left;
+  margin: 0;
+  padding: 0;
+}
+
+.profile-email {
+  color: #888888;
+  font-size: 0.9em;
+  margin: 0;
+  padding: 0;
+}
+
+.profile-join-date {
+  color: #888888;
+  font-size: 0.85em;
+  margin: 0;
+  padding: 0;
+}
+
+.profile-stats {
+  display: flex;
+  gap: 3em;
+  margin-top: auto;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.stat-value {
+  font-size: 1.8em;
+  font-weight: bold;
+}
+
+.stat-label {
+  color: #888888;
+  font-size: 0.8em;
+}
+
+.profile-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.profile-section {
+  padding: 1.5em 1em 1em 1em;
+  border: 1px solid #333333;
+  background-color: #09090b;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-section:hover {
+  border-color: #444444;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
+}
+
+.profile-section h2 {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin: 0 0 1em 0;
+  text-align: left;
+  color: #ffffff;
+}
+
+.profile-section p {
+  line-height: 1.6;
+  color: #cccccc;
+  font-size: 0.95em;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+/* Specific styles for About section */
+.profile-section:first-of-type {
+  background-color: #09090b;
+}
+
+.profile-section:first-of-type p {
+  font-size: 1em;
+  color: #dddddd;
+}
+
+.skills-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1em;
+}
+
+.skill-tag {
+  padding: 0.5em 1em;
+  border: 1px solid #333333;
+  font-size: 0.9em;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+@keyframes skillTagGlassEffect {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skill-tag::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.02),
+    transparent,
+    transparent,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.02),
+    transparent
+  );
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.skill-tag:hover::before {
+  opacity: 1;
+  animation: skillTagGlassEffect 8s linear infinite;
+}
+
+.skill-tag:hover {
+  border-color: #444444;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
+}
+
+/* Ensure skill tag text stays above the gradient */
+.skill-tag {
+  position: relative;
+  z-index: 2;
+}
+
+.recent-work {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+.work-item {
+  padding: 1.5em;
+  border: 1px solid #333333;
+  background: linear-gradient(to bottom right, #0a0a0a, #0f0f0f);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.work-item:hover {
+  border-color: #444444;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+.work-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5em;
+}
+
+.work-title-group {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75em;
+}
+
+.work-item h3 {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin: 0;
+  text-align: left;
+  color: #ffffff;
+}
+
+.work-date {
+  color: #888888;
+  font-size: 0.85em;
+  font-style: italic;
+}
+
+.work-rating {
+  color: #ffd700;
+  font-size: 0.9em;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.work-rating::before {
+  content: "★★★★★";
+  font-size: 0.9em;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+}
+
+.work-description {
+  margin-bottom: 1.5em;
+  line-height: 1.6;
+  color: #dddddd;
+  font-size: 0.95em;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 1024px) {
+  .profile-container {
+    max-width: 95%;
+    margin: 2em auto 0 auto;
+  }
+
+  .profile-header {
+    height: auto;
+    flex-direction: column;
+    gap: 1em;
+    padding: 1.5em;
+  }
+
+  .profile-avatar {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+  }
+
+  .profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .profile-info {
+    align-items: center;
+    text-align: center;
+  }
+
+  .profile-info-top {
+    align-items: center;
+  }
+
+  .profile-stats {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .stat {
+    align-items: center;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .profile-container {
+    margin: 1em auto 0 auto;
+  }
+
+  .profile-header {
+    padding: 1em;
+  }
+
+  .profile-avatar {
+    width: 150px;
+    height: 150px;
+  }
+
+  .profile-info h1 {
+    font-size: 2em;
+  }
+
+  .profile-stats {
+    gap: 2em;
+  }
+
+  .stat-value {
+    font-size: 1.5em;
+  }
+
+  .profile-section {
+    padding: 1em;
+  }
+
+  .profile-section h2 {
+    font-size: 1.3em;
+  }
+
+  .skills-list {
+    justify-content: center;
+  }
+
+  .work-header {
+    flex-direction: column;
+    gap: 0.5em;
+    align-items: flex-start;
+  }
+
+  .work-title-group {
+    flex-direction: column;
+    gap: 0.25em;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .profile-container {
+    padding: 0 0.25em 3em 0.25em;
+  }
+
+  .profile-header {
+    padding: 0.75em;
+  }
+
+  .profile-avatar {
+    width: 120px;
+    height: 120px;
+  }
+
+  .profile-info h1 {
+    font-size: 1.75em;
+  }
+
+  .profile-email,
+  .profile-join-date {
+    font-size: 0.9em;
+  }
+
+  .profile-stats {
+    gap: 1.5em;
+  }
+
+  .stat-value {
+    font-size: 1.3em;
+  }
+
+  .stat-label {
+    font-size: 0.8em;
+  }
+
+  .profile-section {
+    padding: 0.75em;
+  }
+
+  .profile-section h2 {
+    font-size: 1.2em;
+    margin-bottom: 0.75em;
+  }
+
+  .profile-section p {
+    font-size: 1em;
+  }
+
+  .skills-list {
+    gap: 0.5em;
+  }
+
+  .skill-tag {
+    font-size: 0.8em;
+    padding: 0.4em 0.8em;
+  }
+
+  .work-item {
+    padding: 1em;
+  }
+
+  .work-item h3 {
+    font-size: 1.1em;
+  }
+
+  .work-date {
+    font-size: 0.8em;
+  }
+
+  .work-description {
+    font-size: 1em;
+    margin-bottom: 1em;
+  }
+}
