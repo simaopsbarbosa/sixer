@@ -1,0 +1,407 @@
+.payment-container {
+  max-width: 1200px;
+  margin: 3em auto 0 auto;
+  padding: 0 0.5em 5em 0.5em;
+}
+
+.payment-header {
+  margin-bottom: 2em;
+  text-align: left;
+}
+
+.payment-header h1 {
+  font-size: 2em;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+}
+
+.payment-subtitle {
+  color: #888888;
+  font-size: 1em;
+  margin: 0.5em 0 0 0;
+}
+
+.payment-content {
+  display: flex;
+  gap: 2em;
+}
+
+.payment-summary {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.service-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #333333;
+  background: linear-gradient(
+    135deg,
+    #0a0a0a00 0%,
+    #0a0a0a00 40%,
+    #1a1a1a 100%
+  );
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.service-card:hover {
+  border-color: #444444;
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes cardGlassEffect {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.service-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.02),
+    transparent,
+    transparent,
+    rgba(255, 255, 255, 0.02),
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.02),
+    transparent
+  );
+  background-size: 200% 100%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1;
+}
+
+.service-card:hover::before {
+  opacity: 1;
+  animation: cardGlassEffect 8s linear infinite;
+}
+
+.service-card-image {
+  position: relative;
+  z-index: 2;
+  height: 200px;
+}
+
+.service-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-bottom: 1px solid #333333;
+}
+
+.service-card-info {
+  padding: 1.5em;
+  position: relative;
+  z-index: 2;
+}
+
+.service-card-info h2 {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 0 0 1em 0;
+}
+
+.service-card-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.freelancer-info-compact {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.freelancer-avatar-small {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #333333;
+}
+
+.freelancer-name {
+  font-size: 0.9em;
+  color: #cccccc;
+}
+
+.service-card-rating {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.rating-value {
+  color: #ffd700;
+  font-size: 1em;
+  font-weight: 500;
+}
+
+.rating-stars {
+  color: #ffd700;
+  font-size: 0.9em;
+}
+
+.payment-details {
+  border: 1px solid #333333;
+  padding: 1.5em;
+  background-color: #09090b;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.payment-details:hover {
+  border-color: #444444;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
+}
+
+.payment-details h2 {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 0 0 1.5em 0;
+}
+
+.payment-breakdown {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.payment-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid #333333;
+}
+
+.payment-row.total {
+  font-weight: bold;
+  font-size: 1.1em;
+  padding-top: 0.5em;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.payment-item {
+  color: #cccccc;
+}
+
+.payment-value {
+  color: #ffffff;
+}
+
+.payment-form-container {
+  flex: 1;
+  border: 1px solid #333333;
+  padding: 1.5em;
+  background-color: #09090b;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.payment-form-container:hover {
+  border-color: #444444;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
+}
+
+.payment-form-container h2 {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin: 0 0 1.5em 0;
+}
+
+.payment-method-selector {
+  display: flex;
+  margin-bottom: 2em;
+}
+
+.payment-method {
+  width: 100%;
+  padding: 0.8em;
+  text-align: center;
+  border: 1px solid #333333;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.payment-method.active {
+  border-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.payment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5em;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.form-group label {
+  font-size: 0.9em;
+  color: #cccccc;
+}
+
+.form-group input {
+  height: 2.5em;
+  padding: 0 12px;
+  border-radius: 0px;
+  background-color: #09090b;
+  border: 1px solid #333333;
+  color: #ffffff;
+  font-family: "Inter", Courier, monospace;
+  font-weight: 100;
+  font-size: 0.9em;
+}
+
+.form-group input:focus {
+  outline: none;
+  border: 1px solid #aaaaaa;
+}
+
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  margin-top: 1em;
+  padding: 0.5em;
+  border: 1px solid #333333;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-checkbox:hover {
+  border-color: #444444;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
+}
+
+.form-checkbox input[type="checkbox"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #333333;
+  background-color: #09090b;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.form-checkbox input[type="checkbox"]:checked {
+  border-color: #ffffff;
+}
+
+.form-checkbox input[type="checkbox"]:checked:after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ffffff;
+  font-size: 0.9em;
+}
+
+.form-checkbox input[type="checkbox"]:focus {
+  outline: none;
+  border-color: #aaaaaa;
+}
+
+.form-checkbox label {
+  font-size: 0.9em;
+  color: #cccccc;
+  cursor: pointer;
+}
+
+.pay-button {
+  margin-top: 1em;
+  padding: 0.8em;
+  font-size: 1em;
+  border: none;
+  background: #ffffff;
+  color: #000000;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: "Inter", Courier, monospace;
+  font-weight: 500;
+}
+
+.pay-button:hover {
+  background: #f3f3f3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.security-note {
+  margin-top: 1.5em;
+  font-size: 0.8em;
+  color: #888888;
+  text-align: center;
+}
+
+@media screen and (max-width: 768px) {
+  .payment-content {
+    flex-direction: column;
+  }
+
+  .payment-summary {
+    order: 2;
+  }
+
+  .payment-form-container {
+    order: 1;
+  }
+
+  .service-card {
+    flex-direction: row;
+    height: 150px;
+  }
+
+  .service-card-image {
+    width: 250px;
+    height: 100%;
+  }
+
+  .service-card-image img {
+    border-bottom: none;
+    border-right: 1px solid #333333;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .service-card {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .service-card-image {
+    width: 100%;
+    height: 150px;
+  }
+
+  .service-card-image img {
+    border-right: none;
+    border-bottom: 1px solid #333333;
+  }
+}
