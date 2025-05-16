@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="css/styles.css" />
     <title>sixer</title>
   </head>
+
   <body>
     <header>
       <a href="index.html">
@@ -13,12 +14,19 @@
       </a>
       <div class="searchbar">
         <a href="">
-          categories<img class="icon" src="assets/icons/dropdown.svg" alt="" />
+          <span class="categories-text">categories</span
+          ><img class="icon" src="assets/icons/dropdown.svg" alt="" />
         </a>
-        <input type="text" placeholder="what do you need to get done?" />
-        <a href="search.html">
-          <img class="icon" src="assets/icons/search.svg" alt="search" />
-        </a>
+        <form action="search.html" method="get">
+          <input
+            type="text"
+            name="q"
+            placeholder="what do you need to get done?"
+          />
+          <button type="submit">
+            <img class="icon" src="assets/icons/search.svg" alt="search" />
+          </button>
+        </form>
       </div>
       <div class="account">
         <a href="">sign-in</a>

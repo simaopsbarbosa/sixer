@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/search.css" />
     <title>sixer - search results</title>
   </head>
+
   <body>
     <header>
       <a href="index.html">
@@ -14,16 +15,20 @@
       </a>
       <div class="searchbar">
         <a href="">
-          categories<img class="icon" src="assets/icons/dropdown.svg" alt="" />
+          <span class="categories-text">categories</span
+          ><img class="icon" src="assets/icons/dropdown.svg" alt="" />
         </a>
-        <input
-          type="text"
-          placeholder="what do you need to get done?"
-          value="assembly programmer"
-        />
-        <a href="search.html">
-          <img class="icon" src="assets/icons/search.svg" alt="search" />
-        </a>
+        <form action="search.html" method="get">
+          <input
+            type="text"
+            name="q"
+            placeholder="what do you need to get done?"
+            value="assembly programmer"
+          />
+          <button type="submit">
+            <img class="icon" src="assets/icons/search.svg" alt="search" />
+          </button>
+        </form>
       </div>
       <div class="account">
         <a href="">sign-in</a>
@@ -39,13 +44,15 @@
         </h2>
         <div class="search-cards">
           <div class="search-card">
-            <img src="assets/logo-w.png" alt="mock" />
-            <div class="search-card-details">
-              <span class="search-card-title">Peter Parker</span><br />
-              <span class="search-card-desc"
-                >I will be your programmer for c plus plus and assembly
-                language</span
-              ><br />
+            <img src="assets/images/assembly.jpg" alt="assembly programmer" />
+            <div class="search-card-content">
+              <div class="search-card-text">
+                <span class="search-card-title">Peter Parker</span><br />
+                <span class="search-card-desc"
+                  >I will be your programmer for c plus plus and assembly
+                  language</span
+                >
+              </div>
               <div class="search-card-stats">
                 <span class="search-card-price"
                   >from <span class="search-card-price-bold">6$</span></span
@@ -55,13 +62,15 @@
             </div>
           </div>
           <div class="search-card">
-            <img src="assets/logo-w.png" alt="mock" />
-            <div class="search-card-details">
-              <span class="search-card-title">Barry Allen</span><br />
-              <span class="search-card-desc"
-                >I will do masm nasm asm x86 8088 x88 8088 mips and arm for very
-                cheap!!!!</span
-              ><br />
+            <img src="assets/images/assembly.jpg" alt="assembly programmer" />
+            <div class="search-card-content">
+              <div class="search-card-text">
+                <span class="search-card-title">Barry Allen</span><br />
+                <span class="search-card-desc"
+                  >I will do masm nasm asm x86 8088 x88 8088 mips and arm for
+                  very cheap!!!!</span
+                >
+              </div>
               <div class="search-card-stats">
                 <span class="search-card-price"
                   >from <span class="search-card-price-bold">87$</span></span
@@ -71,13 +80,15 @@
             </div>
           </div>
           <div class="search-card">
-            <img src="assets/logo-w.png" alt="mock" />
-            <div class="search-card-details">
-              <span class="search-card-title">Peter Griffin</span><br />
-              <span class="search-card-desc"
-                >I will do cpp c sharp python java and assembly tasks and
-                projects</span
-              ><br />
+            <img src="assets/images/assembly.jpg" alt="assembly programmer" />
+            <div class="search-card-content">
+              <div class="search-card-text">
+                <span class="search-card-title">Peter Griffin</span><br />
+                <span class="search-card-desc"
+                  >I will do cpp c sharp python java and assembly tasks and
+                  projects</span
+                >
+              </div>
               <div class="search-card-stats">
                 <span class="search-card-price"
                   >from <span class="search-card-price-bold">6$</span></span
@@ -87,13 +98,15 @@
             </div>
           </div>
           <div class="search-card">
-            <img src="assets/logo-w.png" alt="mock" />
-            <div class="search-card-details">
-              <span class="search-card-title">Tony Stark</span><br />
-              <span class="search-card-desc"
-                >I will program microcontrollers for you in assembly
-                language</span
-              ><br />
+            <img src="assets/images/assembly.jpg" alt="assembly programmer" />
+            <div class="search-card-content">
+              <div class="search-card-text">
+                <span class="search-card-title">Tony Stark</span><br />
+                <span class="search-card-desc"
+                  >I will program microcontrollers for you in assembly
+                  language</span
+                >
+              </div>
               <div class="search-card-stats">
                 <span class="search-card-price"
                   >from <span class="search-card-price-bold">7$</span></span
@@ -103,13 +116,15 @@
             </div>
           </div>
           <div class="search-card">
-            <img src="assets/logo-w.png" alt="mock" />
-            <div class="search-card-details">
-              <span class="search-card-title">Bruce Banner</span><br />
-              <span class="search-card-desc"
-                >I will unlock the power of assembly for your projects. Trust
-                me, I'm a doctor</span
-              ><br />
+            <img src="assets/images/assembly.jpg" alt="assembly programmer" />
+            <div class="search-card-content">
+              <div class="search-card-text">
+                <span class="search-card-title">Bruce Banner</span><br />
+                <span class="search-card-desc"
+                  >I will unlock the power of assembly for your projects. Trust
+                  me, I'm a doctor</span
+                >
+              </div>
               <div class="search-card-stats">
                 <span class="search-card-price"
                   >from <span class="search-card-price-bold">999$</span></span
@@ -121,5 +136,36 @@
         </div>
       </div>
     </main>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.querySelector(".searchbar input");
+        const searchIcon = document.querySelector(
+          '.searchbar a[href="search.html"]'
+        );
+
+        // Function to perform search
+        function performSearch() {
+          const searchTerm = searchInput.value.trim();
+          if (searchTerm) {
+            window.location.href = `search.html?q=${encodeURIComponent(
+              searchTerm
+            )}`;
+          }
+        }
+
+        // Handle Enter key press
+        searchInput.addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            performSearch();
+          }
+        });
+
+        // Handle search icon click
+        searchIcon.addEventListener("click", function (e) {
+          e.preventDefault();
+          performSearch();
+        });
+      });
+    </script>
   </body>
 </html>
