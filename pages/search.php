@@ -1,40 +1,16 @@
+<?php require_once '../templates/common.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/search.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/search.css" />
     <title>sixer - search results</title>
   </head>
 
   <body>
-    <header>
-      <a href="index.html">
-        <img src="assets/logo-w.png" id="logo" alt="sixer" />
-      </a>
-      <div class="searchbar">
-        <a href="">
-          <span class="categories-text">categories</span
-          ><img class="icon" src="assets/icons/dropdown.svg" alt="" />
-        </a>
-        <form action="search.html" method="get">
-          <input
-            type="text"
-            name="q"
-            placeholder="what do you need to get done?"
-            value="assembly programmer"
-          />
-          <button type="submit">
-            <img class="icon" src="assets/icons/search.svg" alt="search" />
-          </button>
-        </form>
-      </div>
-      <div class="account">
-        <a href="signup.html">sign-up</a>
-        <a href="login.html" class="simple-button">login</a>
-      </div>
-    </header>
+    <?php drawHeader(); ?>
     <main>
       <div class="search-results-container">
         <h2 class="search-results-title">
@@ -43,8 +19,8 @@
           >
         </h2>
         <div class="search-cards">
-          <a href="service.html" class="search-card">
-            <img src="assets/images/assembly.jpg" alt="assembly programmer" />
+          <a href="service.php" class="search-card">
+            <img src="../assets/images/assembly.jpg" alt="assembly programmer" />
             <div class="search-card-content">
               <div class="search-card-text">
                 <span class="search-card-title">Peter Parker</span><br />
@@ -61,8 +37,8 @@
               </div>
             </div>
           </a>
-          <a href="service.html" class="search-card">
-            <img src="assets/images/assembly.jpg" alt="assembly programmer" />
+          <a href="service.php" class="search-card">
+            <img src="../assets/images/assembly.jpg" alt="assembly programmer" />
             <div class="search-card-content">
               <div class="search-card-text">
                 <span class="search-card-title">Barry Allen</span><br />
@@ -79,8 +55,8 @@
               </div>
             </div>
           </a>
-          <a href="service.html" class="search-card">
-            <img src="assets/images/assembly.jpg" alt="assembly programmer" />
+          <a href="service.php" class="search-card">
+            <img src="../assets/images/assembly.jpg" alt="assembly programmer" />
             <div class="search-card-content">
               <div class="search-card-text">
                 <span class="search-card-title">Peter Griffin</span><br />
@@ -97,8 +73,8 @@
               </div>
             </div>
           </a>
-          <a href="service.html" class="search-card">
-            <img src="assets/images/assembly.jpg" alt="assembly programmer" />
+          <a href="service.php" class="search-card">
+            <img src="../assets/images/assembly.jpg" alt="assembly programmer" />
             <div class="search-card-content">
               <div class="search-card-text">
                 <span class="search-card-title">Tony Stark</span><br />
@@ -115,8 +91,8 @@
               </div>
             </div>
           </a>
-          <a href="service.html" class="search-card">
-            <img src="assets/images/assembly.jpg" alt="assembly programmer" />
+          <a href="service.php" class="search-card">
+            <img src="../assets/images/assembly.jpg" alt="assembly programmer" />
             <div class="search-card-content">
               <div class="search-card-text">
                 <span class="search-card-title">Bruce Banner</span><br />
@@ -140,14 +116,14 @@
       document.addEventListener("DOMContentLoaded", function () {
         const searchInput = document.querySelector(".searchbar input");
         const searchIcon = document.querySelector(
-          '.searchbar a[href="search.html"]'
+          '.searchbar a[href="search.php"]'
         );
 
         // Function to perform search
         function performSearch() {
           const searchTerm = searchInput.value.trim();
           if (searchTerm) {
-            window.location.href = `search.html?q=${encodeURIComponent(
+            window.location.href = `search.php?q=${encodeURIComponent(
               searchTerm
             )}`;
           }

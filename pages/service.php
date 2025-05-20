@@ -1,45 +1,22 @@
+<?php require_once '../templates/common.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/service.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/service.css" />
     <title>sixer - service</title>
   </head>
 
   <body>
-    <header>
-      <a href="index.html">
-        <img src="assets/logo-w.png" id="logo" alt="sixer" />
-      </a>
-      <div class="searchbar">
-        <a href="">
-          <span class="categories-text">categories</span
-          ><img class="icon" src="assets/icons/dropdown.svg" alt="" />
-        </a>
-        <form action="search.html" method="get">
-          <input
-            type="text"
-            name="q"
-            placeholder="what do you need to get done?"
-          />
-          <button type="submit">
-            <img class="icon" src="assets/icons/search.svg" alt="search" />
-          </button>
-        </form>
-      </div>
-      <div class="account">
-        <a href="profile.html">profile</a>
-        <a href="login.html" class="simple-button">logout</a>
-      </div>
-    </header>
+    <?php drawHeader(); ?>
     <main>
       <div class="service-container">
         <div class="service-header">
           <div class="service-image">
             <img
-              src="assets/images/e-commerce.jpg"
+              src="../assets/images/e-commerce.jpg"
               alt="E-commerce Website Service"
             />
           </div>
@@ -59,9 +36,9 @@
             </div>
             <div class="service-actions">
               <button class="contact-button">Contact Freelancer</button>
-              <a href="payment.html"
-                ><button class="hire-button">Hire Now</button></a
-              >
+              <a href="payment.php">
+                <button class="hire-button">Hire Now</button>
+              </a>
             </div>
           </div>
         </div>
@@ -102,7 +79,7 @@
                 <div class="review-header">
                   <div class="reviewer-info">
                     <img
-                      src="assets/images/johndoe.png"
+                      src="../assets/images/johndoe.png"
                       alt="Sarah Johnson"
                       class="reviewer-avatar"
                     />
@@ -124,7 +101,7 @@
                 <div class="review-header">
                   <div class="reviewer-info">
                     <img
-                      src="assets/images/johndoe.png"
+                      src="../assets/images/johndoe.png"
                       alt="Michael Chen"
                       class="reviewer-avatar"
                     />
@@ -146,7 +123,7 @@
                 <div class="review-header">
                   <div class="reviewer-info">
                     <img
-                      src="assets/images/johndoe.png"
+                      src="../assets/images/johndoe.png"
                       alt="Emma Rodriguez"
                       class="reviewer-avatar"
                     />
@@ -166,12 +143,12 @@
             </div>
           </div>
 
-          <a href="profile.html" class="service-section">
+          <a href="profile.php" class="service-section">
             <h2>About The Freelancer</h2>
             <div class="freelancer-info">
               <div class="freelancer-header">
                 <img
-                  src="assets/images/johndoe.png"
+                  src="../assets/images/johndoe.png"
                   alt="John Doe"
                   class="freelancer-avatar"
                 />

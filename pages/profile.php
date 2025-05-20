@@ -1,45 +1,22 @@
+<?php require_once '../templates/common.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/profile.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/profile.css" />
     <title>sixer - profile</title>
   </head>
 
   <body>
-    <header>
-      <a href="index.html">
-        <img src="assets/logo-w.png" id="logo" alt="sixer" />
-      </a>
-      <div class="searchbar">
-        <a href="">
-          <span class="categories-text">categories</span
-          ><img class="icon" src="assets/icons/dropdown.svg" alt="" />
-        </a>
-        <form action="search.html" method="get">
-          <input
-            type="text"
-            name="q"
-            placeholder="what do you need to get done?"
-          />
-          <button type="submit">
-            <img class="icon" src="assets/icons/search.svg" alt="search" />
-          </button>
-        </form>
-      </div>
-      <div class="account">
-        <a href="profile.html">profile</a>
-        <a href="login.html" class="simple-button">logout</a>
-      </div>
-    </header>
+    <?php drawHeader(); ?>
     <main>
       <div class="profile-container">
         <div class="profile-header">
           <div class="profile-avatar">
             <img
-              src="assets/images/johndoe.png"
+              src="../assets/images/johndoe.png"
               alt="John Doe's Profile Picture"
             />
           </div>

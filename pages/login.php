@@ -1,39 +1,16 @@
+<?php require_once '../templates/common.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/auth.css" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <link rel="stylesheet" href="../css/auth.css" />
     <title>sixer - login</title>
   </head>
 
   <body class="main-background">
-    <header>
-      <a href="index.html">
-        <img src="assets/logo-w.png" id="logo" alt="sixer" />
-      </a>
-      <div class="searchbar">
-        <a href="">
-          <span class="categories-text">categories</span
-          ><img class="icon" src="assets/icons/dropdown.svg" alt="" />
-        </a>
-        <form action="search.html" method="get">
-          <input
-            type="text"
-            name="q"
-            placeholder="what do you need to get done?"
-          />
-          <button type="submit">
-            <img class="icon" src="assets/icons/search.svg" alt="search" />
-          </button>
-        </form>
-      </div>
-      <div class="account">
-        <a href="signup.html">sign-up</a>
-        <a href="login.html" class="simple-button">login</a>
-      </div>
-    </header>
+    <?php drawHeader(); ?>
     <main>
       <div class="auth-container">
         <div class="auth-box">
@@ -62,7 +39,7 @@
             <button type="submit" class="auth-button">Login</button>
           </form>
           <p class="auth-switch">
-            Don't have an account? <a href="signup.html">Sign up</a>
+            Don't have an account? <a href="signup.php">Sign up</a>
           </p>
         </div>
       </div>
@@ -71,8 +48,7 @@
       function handleLogin(event) {
         event.preventDefault();
         // For now, just redirect to profile page
-        // In a real application, you would validate credentials here
-        window.location.href = "profile.html";
+        window.location.href = "profile.php";
       }
     </script>
   </body>
