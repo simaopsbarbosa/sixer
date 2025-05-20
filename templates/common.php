@@ -12,6 +12,7 @@
       <input
         type="text"
         name="q"
+        id="main-search"
         placeholder="what do you need to get done?"
       />
       <button type="submit">
