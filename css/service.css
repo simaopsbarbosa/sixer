@@ -296,6 +296,8 @@
   background: #09090b;
   color: #ffffff;
   font-weight: 100;
+  padding: 0.8em 1em;
+  font-size: 1em;
 }
 
 .reviews-header {
@@ -498,14 +500,145 @@
   box-shadow: 0 1px 2px rgba(76,175,80,0.04);
 } 
 
+
+/* Responsive styles for service header */
+@media (max-width: 1024px) {
+  .service-header {
+    flex-direction: column;
+    height: auto;
+    min-height: 0;
+    gap: 1.5em;
+    padding: 1em 0.5em;
+  }
+  .service-image {
+    width: 100%;
+    height: 220px;
+    min-width: 0;
+    max-width: 100vw;
+  }
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1em;
+    margin-bottom: 1.2em;
+  }
+  .reviews-stats {
+    flex-direction: row;
+    gap: 2em;
+    margin-top: 0.5em;
+  }
+}
+
 @media (max-width: 768px) {
   .about-service-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5em;
   }
+
   .about-service-section .service-eta {
     align-self: flex-start;
     margin-top: 0.3em;
+  }
+
+  .reviews-subtitle {
+    text-align: left;
+  }
+  .service-header {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    gap: 1em;
+    padding: 1em 0.2em;
+  }
+  .service-image {
+    width: 100%;
+    height: 160px;
+    min-width: 0;
+    max-width: 100vw;
+  }
+  .service-info {
+    padding: 0.2em 0;
+  }
+  .service-info h1 {
+    font-size: 1.3em;
+  }
+  .service-meta {
+    flex-direction: column;
+    gap: 0.7em;
+    align-items: flex-start;
+  }
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.7em;
+    margin-bottom: 1em;
+  }
+  .reviews-stats {
+    flex-direction: column;
+    gap: 0.7em;
+    margin-top: 0.5em;
+    width: 100%;
+  }
+  .reviews-stats .stat {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5em;
+  }
+  .reviews-stats .stat-label {
+    font-size: 0.9em;
+  }
+}
+
+@media (max-width: 480px) {
+  .service-header {
+    padding: 0.5em 0.1em;
+    gap: 0.5em;
+  }
+  .service-image {
+    width: 100%;
+    height: 100px;
+    min-width: 0;
+    max-width: 100vw;
+  }
+  .service-info h1 {
+    font-size: 1.05em;
+  }
+  .service-meta {
+    gap: 0.5em;
+  }
+  .service-actions {
+    flex-direction: column;
+    gap: 0.5em;
+    padding : 1em 0.5em 0 0.5em;
+  }
+  .hire-button {
+    width: 100%;
+  }
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5em;
+    margin-bottom: 0.7em;
+  }
+  .reviews-title h2 {
+    font-size: 1.1em;
+  }
+  .reviews-stats {
+    flex-direction: column;
+    gap: 0.5em;
+    margin-top: 0.3em;
+    width: 100%;
+  }
+  .reviews-stats .stat {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.4em;
+  }
+  .reviews-stats .stat-value {
+    font-size: 1.1em;
+  }
+  .reviews-stats .stat-label {
+    font-size: 0.8em;
   }
 }
