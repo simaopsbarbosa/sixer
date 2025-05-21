@@ -414,6 +414,19 @@ main p {
   text-align: left;
 }
 
+/* Hide spacer at 1024px and below */
+@media screen and (max-width: 1024px) {
+  .spacer {
+    display: none !important;
+  }
+  .account .new-service-text {
+    display: none;
+  }
+  .account .new-service-plus {
+    display: inline;
+  }
+}
+
 /* Responsive styles */
 @media screen and (max-width: 768px) {
   body > header {

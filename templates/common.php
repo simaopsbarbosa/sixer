@@ -1,8 +1,12 @@
 <?php function drawHeader() { ?>
 <header>
-  <a href="../index.php">
-    <img src="../assets/logo-w.png" id="logo" alt="sixer" />
-  </a>
+  <div>
+    <a href="../index.php">
+      <img src="../assets/logo-w.png" id="logo" alt="sixer" />
+    </a>
+    <!-- should only be visible is user is logged in (this is header alignment) -->
+    <div class="spacer" style="width: 10vw; display: inline-block;"></div>
+  </div>
   <div class="searchbar">
     <a href="#" id="filters-btn">
       <span class="filters-text">filters</span>
@@ -21,6 +25,11 @@
     </form>
   </div>
   <div class="account">
+    <!-- should only be visible is user is logged in -->
+    <a href="create_service.php" class="simple-button">
+      <span class="new-service-plus">+</span>
+      <span class="new-service-text"> new service</span>
+    </a>
     <a href="signup.php">sign-up</a>
     <a href="login.php" class="simple-button">login</a>
   </div>
