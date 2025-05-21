@@ -44,8 +44,11 @@
         </div>
 
         <div class="service-content">
-          <div class="service-section">
-            <h2>About This Service</h2>
+          <div class="service-section about-service-section">
+            <div class="about-service-header">
+              <h2>About This Service</h2>
+              <span>Delivery in  <span class="service-eta">2 weeks</span></span>
+            </div>
             <p>
               I will build you a complete e-commerce website with modern UI/UX
               design, secure payment processing, and inventory management
