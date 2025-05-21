@@ -30,10 +30,11 @@
                 >
               </div>
               <div class="search-card-stats">
-                <span class="search-card-price"
-                  >from <span class="search-card-price-bold">6$</span></span
-                >
-                <span class="search-card-rating">4.2 ★★★★★</span>
+                <div class="search-card-info">
+                  <span class="search-card-delivery">1 week</span>
+                  <span class="search-card-rating">4.2 ★★★★★</span>
+                </div>
+                <span class="search-card-price">from <span class="search-card-price-bold">6$</span></span>
               </div>
             </div>
           </a>
@@ -48,10 +49,11 @@
                 >
               </div>
               <div class="search-card-stats">
-                <span class="search-card-price"
-                  >from <span class="search-card-price-bold">87$</span></span
-                >
-                <span class="search-card-rating">4.1 ★★★★☆</span>
+                <div class="search-card-info">
+                  <span class="search-card-delivery">1 week</span>
+                  <span class="search-card-rating">4.1 ★★★★☆</span>
+                </div>
+                <span class="search-card-price">from <span class="search-card-price-bold">87$</span></span>
               </div>
             </div>
           </a>
@@ -66,10 +68,11 @@
                 >
               </div>
               <div class="search-card-stats">
-                <span class="search-card-price"
-                  >from <span class="search-card-price-bold">6$</span></span
-                >
-                <span class="search-card-rating">4.3 ★★★★☆</span>
+                <div class="search-card-info">
+                  <span class="search-card-delivery">2 weeks</span>
+                  <span class="search-card-rating">4.3 ★★★★☆</span>
+                </div>
+                <span class="search-card-price">from <span class="search-card-price-bold">6$</span></span>
               </div>
             </div>
           </a>
@@ -84,10 +87,11 @@
                 >
               </div>
               <div class="search-card-stats">
-                <span class="search-card-price"
-                  >from <span class="search-card-price-bold">7$</span></span
-                >
-                <span class="search-card-rating">4.0 ★★★★☆</span>
+                <div class="search-card-info">
+                  <span class="search-card-delivery">3 weeks</span>
+                  <span class="search-card-rating">4.0 ★★★★☆</span>
+                </div>
+                <span class="search-card-price">from <span class="search-card-price-bold">7$</span></span>
               </div>
             </div>
           </a>
@@ -102,10 +106,11 @@
                 >
               </div>
               <div class="search-card-stats">
-                <span class="search-card-price"
-                  >from <span class="search-card-price-bold">999$</span></span
-                >
-                <span class="search-card-rating">3.9 ★★★☆☆</span>
+                <div class="search-card-info">
+                  <span class="search-card-delivery">1 week</span>
+                  <span class="search-card-rating">3.9 ★★★☆☆</span>
+                </div>
+                <span class="search-card-price">from <span class="search-card-price-bold">999$</span></span>
               </div>
             </div>
           </a>
