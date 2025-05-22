@@ -15,7 +15,7 @@
       <div class="auth-container">
         <div class="auth-box">
           <h2>Create Account</h2>
-          <form class="auth-form" action="#" method="post">
+          <form class="auth-form" action="../action/signup.php" method="post">
             <div class="form-group">
               <label for="name">Full Name</label>
               <input
@@ -55,14 +55,6 @@
                 placeholder="Confirm your password"
                 required
               />
-            </div>
-            <div class="form-group">
-              <label for="country">Country</label>
-              <select id="country" name="country" required>
-                <option value="" disabled selected>Select your country</option>
-                <option value="en">English</option>
-                <option value="pt">Portuguese</option>
-              </select>
             </div>
             <button type="submit" class="auth-button">Sign Up</button>
           </form>

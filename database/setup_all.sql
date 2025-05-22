@@ -1,4 +1,4 @@
 -- setup_all.sql
-.read create_db.sql
-.read insert_langs.sql
-.read insert_skills.sql
+.read database/create_db.sql
+.read database/insert_langs.sql
+.read database/insert_skills.sql
