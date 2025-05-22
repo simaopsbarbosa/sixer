@@ -22,7 +22,7 @@ CREATE TABLE user_registry
 
     user_picture BLOB DEFAULT NULL,
 
-    username TEXT, /* This was changed bc 'name' is somehow a sql keyword. Is still suposed to be the user actual name */
+    full_name TEXT,
     email TEXT UNIQUE NOT NULL,
     join_date DATETIME NOT NULL,
 

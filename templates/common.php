@@ -1,11 +1,19 @@
-<?php function drawHeader() { ?>
+<?php 
+require_once __DIR__ . '/../utils/session.php';
+function drawHeader() { 
+  $session = Session::getInstance();
+  $loggedIn = $session->isLoggedIn();
+  $user = $session->getUser();
+?>
 <header>
   <div>
     <a href="../index.php">
       <img src="../assets/logo-w.png" id="logo" alt="sixer" />
     </a>
     <!-- should only be visible is user is logged in (this is header alignment) -->
-    <div class="spacer" style="width: 10vw; display: inline-block;"></div>
+      <?php if ($loggedIn): ?>
+        <div class="spacer" style="width: 10vw; display: inline-block;"></div>
+      <?php endif; ?>
   </div>
   <div class="searchbar">
     <a href="#" id="filters-btn">
@@ -25,13 +33,17 @@
     </form>
   </div>
   <div class="account">
-    <!-- should only be visible is user is logged in -->
-    <a href="create_service.php" class="simple-button">
+    <?php if ($loggedIn): ?>
+      <a href="create_service.php" class="simple-button">
       <span class="new-service-plus">+</span>
       <span class="new-service-text"> new service</span>
-    </a>
-    <a href="signup.php">sign-up</a>
-    <a href="login.php" class="simple-button">login</a>
+      </a>
+      <a href="profile.php">profile</a>
+      <a href="../action/logout.php" class="simple-button">sign out</a>
+    <?php else: ?>
+      <a href="signup.php">sign-up</a>
+      <a href="login.php" class="simple-button">login</a>
+    <?php endif; ?>
   </div>
 </header>
 <div id="filters-modal" class="filters-modal">

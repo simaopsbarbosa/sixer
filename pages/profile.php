@@ -1,34 +1,26 @@
 <?php
-require_once '../utils/database.php';
+declare(strict_types=1);
+require_once '../utils/session.php';
 require_once '../templates/common.php';
-session_start();
 
-// Redirect if not logged in
-if (!isset($_SESSION['user_id'])) {
+$session = Session::getInstance();
+if (!$session->isLoggedIn()) {
     header('Location: ../pages/login.php');
     exit;
 }
 
-try {
-    $db = Database::getInstance()->getConnection();
-    $stmt = $db->prepare('SELECT username, email, user_picture, join_date, aboutme FROM user_registry WHERE user_id = ?');
-    $stmt->execute([$_SESSION['user_id']]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!$user) {
-        session_destroy();
-        header('Location: ../pages/login.php');
-        exit;
-    }
-
-    $user['user_picture'] = $user['user_picture'] ?? '../assets/images/default.jpg';
-
-} catch (PDOException $e) {
-    echo "Database error: " . htmlspecialchars($e->getMessage());
+$user = $session->getUser();
+if (!$user) {
+    session_destroy();
+    header('Location: ../pages/login.php');
     exit;
 }
-?>
 
+$user_picture = $user['user_picture'] ?? '../assets/images/default.jpg';
+$full_name = $user['full_name'] ?? '';
+$email = $user['email'] ?? '';
+$join_date = $user['join_date'] ?? '';
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -38,23 +30,19 @@ try {
     <link rel="stylesheet" href="../css/profile.css" />
     <title>sixer - profile</title>
   </head>
-
   <body>
     <?php drawHeader(); ?>
     <main>
       <div class="profile-container">
         <div class="profile-header">
           <div class="profile-avatar">
-            <img
-              src="<?= htmlspecialchars($user['user_picture']) ?>"
-              alt="<?= htmlspecialchars($user['username']) ?>'s Profile Picture"
-            />
+            <img src="<?= htmlspecialchars($user_picture) ?>" alt="<?= htmlspecialchars($full_name) ?>'s Profile Picture" />
           </div>
           <div class="profile-info">
             <div class="profile-info-top">
-              <h1><?= htmlspecialchars($user['username']) ?></h1>
-              <p class="profile-email"><?= htmlspecialchars($user['email']) ?></p>
-              <p class="profile-join-date">Member since <?= date('F Y', strtotime($user['join_date'])) ?></p>
+              <h1><?= htmlspecialchars($full_name) ?></h1>
+              <p class="profile-email"><?= htmlspecialchars($email) ?></p>
+              <p class="profile-join-date">Member since <?= $join_date ? date('F Y', strtotime($join_date)) : '' ?></p>
             </div>
             <div class="profile-stats">
               <div class="stat">
@@ -73,8 +61,9 @@ try {
           <h2>About</h2>
             <p>
               <?php 
-                if (!empty(trim($user['aboutme']))) {
-                  echo htmlspecialchars($user['aboutme']);
+                $aboutme = $user['aboutme'] ?? null;
+                if (!empty($aboutme) && trim((string)$aboutme) !== '') {
+                  echo htmlspecialchars($aboutme);
                 } else {
                   echo "User has not added a description yet.";
                 }
