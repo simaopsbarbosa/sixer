@@ -20,6 +20,9 @@
       <div class="service-container">
         <form class="service-form" action="#" method="post" enctype="multipart/form-data">
           <h1>Create a New Service</h1>
+          <h2 class="service-subtitle">
+            <span>You will be able to access your new service on your profile,<br>under <span style="font-weight:bold;">Current Services</span>.</span>
+          </h2>
           <div class="service-header efficient-layout">
             <div class="service-image-upload">
               <span>Select Image</span>
