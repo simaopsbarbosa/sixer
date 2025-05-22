@@ -23,6 +23,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
+    if (strlen($password) < 8) {
+        $_SESSION['error'] = 'Password must be at least 8 characters long.';
+        header('Location: ../pages/signup.php');
+        exit;
+    }
+
+    if (!preg_match('/[a-zA-Z]/', $password) || !preg_match('/\d/', $password)) {
+        $_SESSION['error'] = 'Password must contain at least one letter and one number.';
+        header('Location: ../pages/signup.php');
+        exit;
+    }
+
     if ($password !== $confirmPassword) {
         $_SESSION['error'] = 'Passwords do not match.';
         header('Location: ../pages/signup.php');
