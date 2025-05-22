@@ -1,5 +1,6 @@
 <?php
 require_once '../utils/database.php';
+session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -11,15 +12,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Basic validation
     if (empty($name) || empty($email) || empty($password) || empty($confirmPassword)) {
-        die('All fields are required.');
+        $_SESSION['error'] = 'All fields are required.';
+        header('Location: ../pages/signup.php');
+        exit;
     }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        die('Invalid email address.');
+        $_SESSION['error'] = 'Invalid email address.';
+        header('Location: ../pages/signup.php');
+        exit;
     }
 
     if ($password !== $confirmPassword) {
-        die('Passwords do not match.');
+        $_SESSION['error'] = 'Passwords do not match.';
+        header('Location: ../pages/signup.php');
+        exit;
     }
 
     // Hash the password
@@ -33,11 +40,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $db->prepare("SELECT COUNT(*) FROM user_registry WHERE email = :email");
         $stmt->execute(['email' => $email]);
         if ($stmt->fetchColumn() > 0) {
-            die('Email is already registered.');
+            $_SESSION['error'] = 'Email is already registered.';
+            header('Location: ../pages/signup.php');
+            exit;
         }
 
         // Insert user to DB with default acess_level (client)
-
         $stmt = $db->prepare("INSERT INTO user_registry (username, email, password_hash, join_date) VALUES (:name, :email, :password, DATETIME('now'))");
         $stmt->execute([
             'name' => $name,
@@ -45,12 +53,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'password' => $hashedPassword
         ]);
 
-        echo 'Signup successful!';
-        header('Location: ../pages/login.php'); // Redirect to login
+        unset($_SESSION['error']);
+        $_SESSION['success'] = 'Signup successful! You can now log in.';
+        header('Location: ../pages/login.php');
         exit;
     } catch (PDOException $e) {
-        die('Database error: ' . $e->getMessage());
+        $_SESSION['error'] = 'Database error: ' . htmlspecialchars($e->getMessage());
+        header('Location: ../pages/signup.php');
+        exit;
     }
 } else {
-    die('Invalid request method.');
+    http_response_code(405);
+    echo "Only POST requests are allowed.";
 }

@@ -1,4 +1,6 @@
-<?php require_once '../templates/common.php'; ?>
+<?php require_once '../templates/common.php'; 
+session_start();
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -15,6 +17,14 @@
       <div class="auth-container">
         <div class="auth-box">
           <h2>Create Account</h2>
+
+          <?php if (!empty($_SESSION['error'])): ?>
+            <div class="alert alert-error">
+              <?php echo htmlspecialchars($_SESSION['error']); ?>
+            </div>
+            <?php unset($_SESSION['error']); ?>
+          <?php endif; ?>
+
           <form class="auth-form" action="../action/signup.php" method="post">
             <div class="form-group">
               <label for="name">Full Name</label>
