@@ -102,14 +102,14 @@ CREATE TABLE purchases
 CREATE TABLE messages
 (
     message_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    client_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
     service_id INTEGER NOT NULL,
 
     message_text TEXT NOT NULL,
     date_time DATETIME NOT NULL,
     is_reply BOOLEAN NOT NULL,
 
-    FOREIGN KEY(client_id) REFERENCES purchases(client_id),
+    FOREIGN KEY(user_id) REFERENCES user_registry(user_id),
     FOREIGN KEY(service_id) REFERENCES services(service_id)
 ); 
  
