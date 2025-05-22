@@ -25,7 +25,7 @@
           </h2>
           <div class="service-header efficient-layout">
             <div class="service-image-upload">
-              <span>Select Image</span>
+              <span style="margin-bottom:1em;">Select Image</span>
               <input type="file" id="service-image" name="image" accept="image/*" required style="cursor:pointer;" />
             </div>
             <div class="service-main-fields">
