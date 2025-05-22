@@ -1,4 +1,34 @@
-<?php require_once '../templates/common.php'; ?>
+<?php
+require_once '../utils/database.php';
+require_once '../templates/common.php';
+session_start();
+
+// Redirect if not logged in
+if (!isset($_SESSION['user_id'])) {
+    header('Location: ../pages/login.php');
+    exit;
+}
+
+try {
+    $db = Database::getInstance()->getConnection();
+    $stmt = $db->prepare('SELECT username, email, user_picture, join_date, aboutme FROM user_registry WHERE user_id = ?');
+    $stmt->execute([$_SESSION['user_id']]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$user) {
+        session_destroy();
+        header('Location: ../pages/login.php');
+        exit;
+    }
+
+    $user['user_picture'] = $user['user_picture'] ?? '../assets/images/default.jpg';
+
+} catch (PDOException $e) {
+    echo "Database error: " . htmlspecialchars($e->getMessage());
+    exit;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -16,15 +46,15 @@
         <div class="profile-header">
           <div class="profile-avatar">
             <img
-              src="../assets/images/johndoe.png"
-              alt="John Doe's Profile Picture"
+              src="<?= htmlspecialchars($user['user_picture']) ?>"
+              alt="<?= htmlspecialchars($user['username']) ?>'s Profile Picture"
             />
           </div>
           <div class="profile-info">
             <div class="profile-info-top">
-              <h1>John Doe</h1>
-              <p class="profile-email">john.doe@example.com</p>
-              <p class="profile-join-date">Member since May 2025</p>
+              <h1><?= htmlspecialchars($user['username']) ?></h1>
+              <p class="profile-email"><?= htmlspecialchars($user['email']) ?></p>
+              <p class="profile-join-date">Member since <?= date('F Y', strtotime($user['join_date'])) ?></p>
             </div>
             <div class="profile-stats">
               <div class="stat">
@@ -39,14 +69,18 @@
           </div>
         </div>
 
-        <div class="profile-content">
-          <div class="profile-section">
-            <h2>About</h2>
+        <div class="profile-section">
+          <h2>About</h2>
             <p>
-              Experienced freelancer specializing in web development and
-              programming. Based in Portugal.
+              <?php 
+                if (!empty(trim($user['aboutme']))) {
+                  echo htmlspecialchars($user['aboutme']);
+                } else {
+                  echo "User has not added a description yet.";
+                }
+              ?>
             </p>
-          </div>
+        </div>
 
           <div class="profile-section">
             <h2>Skills</h2>
@@ -62,6 +96,7 @@
           <div class="profile-section">
             <h2>Your Current Services</h2>
             <div class="recent-work">
+              <!-- Hardcoded example, replace with dynamic data later -->
               <div class="work-item">
                 <div class="work-header">
                   <div class="work-title-group">
@@ -71,23 +106,7 @@
                   <div class="work-rating">5.0 <span style="font-weight: 100; color: #999">(75)</span></div>
                 </div>
                 <p class="work-description">
-                  I will build you a complete e-commerce website with modern
-                  UI/UX design, secure payment processing, and inventory
-                  management system.
-                </p>
-              </div>
-              <div class="work-item">
-                <div class="work-header">
-                  <div class="work-title-group">
-                    <h3>Custom API & Backend Development</h3>
-                    <span class="work-date">Starting from $299</span>
-                  </div>
-                  <div class="work-rating">4.8 <span style="font-weight: 100; color: #999">(52)</span></div>
-                </div>
-                <p class="work-description">
-                  I will create a robust backend system with RESTful APIs,
-                  database architecture, and complete documentation for your web
-                  or mobile application.
+                  I will build you a complete e-commerce website with modern UI/UX design, secure payment processing, and inventory management system.
                 </p>
               </div>
             </div>
@@ -106,19 +125,6 @@
                 </div>
                 <p class="work-description">
                   Professional logo design tailored to your brand identity. Includes 3 initial concepts and unlimited revisions.
-                </p>
-                <button class="review-btn" disabled>Review after delivery</button>
-              </div>
-              <div class="work-item">
-                <div class="work-header">
-                  <div class="work-title-group">
-                    <h3>SEO Optimization</h3>
-                    <span class="work-date">Paid $150 on 05/05/2025</span>
-                  </div>
-                  <div class="work-rating">4.8 <span style="font-weight: 100; color: #999">(55)</span></div>
-                </div>
-                <p class="work-description">
-                  Full website SEO audit and optimization for better search engine ranking and visibility.
                 </p>
                 <button class="review-btn" disabled>Review after delivery</button>
               </div>
@@ -149,49 +155,22 @@
                   <p class="review-text">Great work! Fast delivery and exactly what I needed.</p>
                 </div>
               </div>
-              <div class="work-item">
-                <div class="work-header">
-                  <div class="work-title-group">
-                    <h3>Landing Page Copywriting</h3>
-                    <span class="work-date">Paid $80 on 28/03/2025</span>
-                  </div>
-                  <div class="work-rating">4.6 <span style="font-weight: 100; color: #999">(6)</span></div>
-                </div>
-                <p class="work-description">
-                  Engaging and high-converting copy for your product or service landing page.
-                </p>
-                <button class="review-btn" type="button">Review</button>
-                <form class="review-form review-form-styled" style="display:none; margin-top: 16px;" method="post">
-                  <label for="review-rating" style="color:#aaa; font-size:0.9em; margin-bottom:0.5em;">Rating:</label>
-                  <select id="review-rating" name="rating" required class="styled-select">
-                    <option value="" disabled selected>Select rating</option>
-                    <option value="5">5 (excellent)</option>
-                    <option value="4">4 (good)</option>
-                    <option value="3">3 (average)</option>
-                    <option value="2">2 (poor)</option>
-                    <option value="1">1 (terrible)</option>
-                  </select>
-                  <label for="review-text" style="color:#aaa; font-size:0.9em; margin-bottom:0.5em; margin-top:1em;">Review:</label>
-                  <textarea id="review-text" name="review" rows="3" required class="styled-textarea"></textarea>
-                  <button type="submit" class="submit-button" style="margin-top:1em;">Submit</button>
-                </form>
-              </div>
             </div>
           </div>
         </div>
       </div>
     </main>
     <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.review-btn').forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        var form = btn.nextElementSibling;
-        if (form && form.classList.contains('review-form')) {
-          form.style.display = (form.style.display === 'none') ? 'block' : 'none';
-        }
+      document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.review-btn').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var form = btn.nextElementSibling;
+            if (form && form.classList.contains('review-form')) {
+              form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            }
+          });
+        });
       });
-    });
-  });
-</script>
+    </script>
   </body>
 </html>

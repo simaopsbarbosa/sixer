@@ -15,7 +15,7 @@
       <div class="auth-container">
         <div class="auth-box">
           <h2>Welcome Back</h2>
-          <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
+          <form class="auth-form" id="loginForm" method="POST" action="../action/login.php">
             <div class="form-group">
               <label for="email">Email</label>
               <input
@@ -44,12 +44,5 @@
         </div>
       </div>
     </main>
-    <script>
-      function handleLogin(event) {
-        event.preventDefault();
-        // For now, just redirect to profile page
-        window.location.href = "profile.php";
-      }
-    </script>
   </body>
 </html>

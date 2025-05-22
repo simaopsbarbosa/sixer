@@ -18,7 +18,7 @@ CREATE TABLE user_registry
 (
     user_id INTEGER PRIMARY KEY AUTOINCREMENT,
     password_hash TEXT NOT NULL,
-    access_level TEXT NOT NULL,
+    access_level TEXT DEFAULT "client" NOT NULL,
 
     user_picture BLOB DEFAULT NULL,
 
@@ -42,8 +42,10 @@ CREATE TABLE user_skills
     skill_name TEXT NOT NULL,
     
     PRIMARY KEY(user_id, skill_name),
-    FOREIGN KEY(user_id) REFERENCES user_registry(user_id),
+    FOREIGN KEY(user_id) REFERENCES user_registry(user_id)
     FOREIGN KEY(skill_name) REFERENCES skills(skill_name)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 CREATE TABLE languages
@@ -62,6 +64,8 @@ CREATE TABLE user_languages
     PRIMARY KEY(user_id, lang_code),
     FOREIGN KEY(user_id) REFERENCES user_registry(user_id),
     FOREIGN KEY(lang_code) REFERENCES languages(lang_code)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
 );
 
 CREATE TABLE services_list
@@ -73,6 +77,8 @@ CREATE TABLE services_list
     service_price REAL NOT NULL,
     service_info TEXT NOT NULL,
     service_eta TEXT NOT NULL,
+
+    service_delisted BOOLEAN DEFAULT FALSE NOT NULL,
 
     service_picture BLOB DEFAULT NULL,
 
@@ -96,14 +102,14 @@ CREATE TABLE purchases
 CREATE TABLE messages
 (
     message_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    client_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
     service_id INTEGER NOT NULL,
 
     message_text TEXT NOT NULL,
     date_time DATETIME NOT NULL,
     is_reply BOOLEAN NOT NULL,
 
-    FOREIGN KEY(client_id) REFERENCES purchases(client_id),
+    FOREIGN KEY(user_id) REFERENCES user_registry(user_id),
     FOREIGN KEY(service_id) REFERENCES services(service_id)
 ); 
  
