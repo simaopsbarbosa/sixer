@@ -87,8 +87,8 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    background: #101010;
-    border: 1px solid #181a20;
+    background: #00000029;
+    border: 1px solid #333333;
     padding: 1.5rem 1rem;
     color: #fff;
     min-height: 100%;

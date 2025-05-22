@@ -642,3 +642,221 @@
     font-size: 0.8em;
   }
 }
+
+/* forum things */
+.forum-section {
+  padding: 1.5em 1em 1em 1em;
+  border: 1px solid #333333;
+  background-color: #09090b;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  margin-bottom: 1.5em;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+.forum-section h2 {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin: 0 0 1em 0;
+  text-align: left;
+  color: #ffffff;
+}
+
+.forum-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  margin-bottom: 1em;
+}
+
+.forum-message {
+  padding: 1.5em;
+  border: 1px solid #333333;
+  background: linear-gradient(to bottom right, #0a0a0a, #0f0f0f);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-start;
+  gap: 1em;
+  border-radius: 0;
+}
+
+.forum-message:hover {
+  border-color: #444444;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+  transform: translateY(-2px);
+}
+
+.forum-avatar {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #333333;
+  object-fit: cover;
+  background: #181920;
+  border-radius: 0;
+}
+
+.forum-message-content {
+  flex: 1;
+}
+
+.forum-message-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0.2em;
+}
+
+.forum-username {
+  font-weight: bold;
+  font-size: 0.9em;
+  color: #ffffff;
+}
+
+.forum-date {
+  color: #888888;
+  font-size: 0.8em;
+}
+
+.forum-text {
+  color: #cccccc;
+  font-size: 0.95em;
+  line-height: 1.6;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 0;
+}
+
+.forum-form {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5em;
+  align-items: center;
+}
+
+.forum-input {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 2.2em;
+  padding: 0 1em;
+  border: 1px solid #333333;
+  background: transparent;
+  outline: none;
+  transition: border 0.2s;
+  box-sizing: border-box;
+  margin: 0;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  text-align: left;
+  display: block;
+  font-family: inherit;
+  font-size: 0.9em;
+  font-weight: 200;
+  color: #fff;
+}
+
+.forum-input::placeholder {
+  color: #888;
+  opacity: 1;
+  font-size: 1em;
+  font-family: inherit;
+}
+
+.forum-form button {
+  background: #fff;
+  color: #000;
+  font-weight: 400;
+  border: 1px solid #333333;
+  padding: 0 2em;
+  height: 2.2em;
+  font-size: 1em;
+  cursor: pointer;
+  font-family: "Inter", Courier, monospace;
+  transition: all 0.3s ease;
+  margin-left: 0.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+}
+
+.forum-form button .send-icon {
+  display: none;
+}
+
+.forum-notify-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: 0.7em;
+  font-size: 0.8em;
+  font-weight: 300;
+  color: #868686;
+  user-select: none;
+}
+
+.forum-notify-label input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  accent-color: unset;
+  width: 1.3em;
+  height: 1.3em;
+  margin: 0;
+  cursor: pointer;
+  border: 1px solid #333333;
+  background-color: #000;
+  border-radius: 0;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  transition: background 0.15s, border 0.15s;
+}
+
+.forum-notify-label input[type="checkbox"]:checked {
+  background-color: #fff;
+  border: 1px solid #333333;
+}
+
+.forum-notify-label input[type="checkbox"]:checked::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0.35em;
+  top: 0.15em;
+  width: 0.4em;
+  height: 0.7em;
+  border: solid #333333;
+  border-width: 0 0.18em 0.18em 0;
+  transform: rotate(45deg);
+}
+
+@media (max-width: 480px) {
+  .forum-form {
+    gap: 0.3em;
+  }
+  .forum-input {
+    font-size: 0.95em;
+    padding: 0 0.7em;
+  }
+  .forum-form button {
+    padding: 0;
+    min-width: 40px;
+    width: 40px;
+    height: 2.2em;
+    margin-left: 0.3em;
+    justify-content: center;
+  }
+  .forum-form button .send-text {
+    display: none;
+  }
+  .forum-form button .send-icon {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    vertical-align: middle;
+  }
+}

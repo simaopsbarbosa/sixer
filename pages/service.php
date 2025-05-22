@@ -35,19 +35,61 @@
               </div>
             </div>
             <div class="service-actions">
-              <button class="contact-button">Contact Freelancer</button>
+              <button class="contact-button" id="toggleForumBtn">Contact Freelancer</button>
               <a href="payment.php">
                 <button class="hire-button">Hire Now</button>
               </a>
             </div>
           </div>
+        </div> <!-- end of service-header -->
+
+        <div id="forumSection" class="service-section forum-section" style="display: none;">
+          <h2>Private Forum with Freelancer</h2>
+          <div class="forum-messages">
+            <div class="forum-message">
+              <img src="../assets/images/johndoe.png" alt="John Doe" class="forum-avatar" />
+              <div class="forum-message-content">
+                <div class="forum-message-header">
+                  <span class="forum-username">John Doe</span>
+                  <span class="forum-date">2025-05-20</span>
+                </div>
+                <div class="forum-text">Hello! How can I help you with your e-commerce project?</div>
+              </div>
+            </div>
+            <div class="forum-message">
+              <img src="../assets/images/johndoe.png" alt="You" class="forum-avatar" />
+              <div class="forum-message-content">
+                <div class="forum-message-header">
+                  <span class="forum-username">You</span>
+                  <span class="forum-date">2025-05-21</span>
+                </div>
+                <div class="forum-text">Hi! I have some questions about payment integration.</div>
+              </div>
+            </div>
+          </div>
+          <form class="forum-form" method="post">
+            <input type="text" name="message" placeholder="Write a message..." required class="forum-input" />
+            <button type="submit" aria-label="Send">
+              <span class="send-text">Send</span>
+              <span class="send-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </span>
+            </button>
+          </form>
+          <label class="forum-notify-label">
+            <input type="checkbox" name="notify_email" />
+            Send email nofitication for new messages
+          </label>
         </div>
 
         <div class="service-content">
           <div class="service-section about-service-section">
             <div class="about-service-header">
               <h2>About This Service</h2>
-              <span>Delivery in  <span class="service-eta">2 weeks</span></span>
+              <span
+                >Delivery in
+                <span class="service-eta">2 weeks</span>
+              </span>
             </div>
             <p>
               I will build you a complete e-commerce website with modern UI/UX
@@ -169,5 +211,17 @@
         </div>
       </div>
     </main>
+    <script>
+      document.getElementById('toggleForumBtn').addEventListener('click', function() {
+        var forum = document.getElementById('forumSection');
+        if (forum.style.display === 'none') {
+          forum.style.display = 'block';
+          this.textContent = 'Hide Forum';
+        } else {
+          forum.style.display = 'none';
+          this.textContent = 'Contact Freelancer';
+        }
+      });
+    </script>
   </body>
 </html>
