@@ -60,7 +60,7 @@
           </div>
 
           <div class="profile-section">
-            <h2>Current Services</h2>
+            <h2>Your Current Services</h2>
             <div class="recent-work">
               <div class="work-item">
                 <div class="work-header">
@@ -89,6 +89,78 @@
                   database architecture, and complete documentation for your web
                   or mobile application.
                 </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-section">
+            <h2>Ongoing Purchases</h2>
+            <div class="recent-work">
+              <div class="work-item">
+                <div class="work-header">
+                  <div class="work-title-group">
+                    <h3>Logo Design Package</h3>
+                    <span class="work-date">Paid $99 on 01/05/2025</span>
+                  </div>
+                  <div class="work-rating">4.1 <span style="font-weight: 100; color: #999">(105)</span></div>
+                </div>
+                <p class="work-description">
+                  Professional logo design tailored to your brand identity. Includes 3 initial concepts and unlimited revisions.
+                </p>
+                <button class="review-btn" disabled>Review after delivery</button>
+              </div>
+              <div class="work-item">
+                <div class="work-header">
+                  <div class="work-title-group">
+                    <h3>SEO Optimization</h3>
+                    <span class="work-date">Paid $150 on 05/05/2025</span>
+                  </div>
+                  <div class="work-rating">4.8 <span style="font-weight: 100; color: #999">(55)</span></div>
+                </div>
+                <p class="work-description">
+                  Full website SEO audit and optimization for better search engine ranking and visibility.
+                </p>
+                <button class="review-btn" disabled>Review after delivery</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-section">
+            <h2>Past Purchases</h2>
+            <div class="recent-work">
+              <div class="work-item">
+                <div class="work-header">
+                  <div class="work-title-group">
+                    <h3>Business Card Design</h3>
+                    <span class="work-date">Paid $49 on 10/04/2025</span>
+                  </div>
+                  <div class="work-rating">4.7 <span style="font-weight: 100; color: #999">(12)</span></div>
+                </div>
+                <p class="work-description">
+                  Custom business card design with print-ready files and unique branding.
+                </p>
+
+                <label class="review-label">You reviewed:</label>
+                <div class="review-block">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <span class="review-stars">★★★★★</span>
+                    <span class="review-score">5.0</span>
+                  </div>
+                  <p class="review-text">Great work! Fast delivery and exactly what I needed.</p>
+                </div>
+              </div>
+              <div class="work-item">
+                <div class="work-header">
+                  <div class="work-title-group">
+                    <h3>Landing Page Copywriting</h3>
+                    <span class="work-date">Paid $80 on 28/03/2025</span>
+                  </div>
+                  <div class="work-rating">4.6 <span style="font-weight: 100; color: #999">(6)</span></div>
+                </div>
+                <p class="work-description">
+                  Engaging and high-converting copy for your product or service landing page.
+                </p>
+                <button class="review-btn">Review</button>
               </div>
             </div>
           </div>

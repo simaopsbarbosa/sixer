@@ -204,6 +204,10 @@ header a {
   padding: 5px;
 }
 
+.new-service-text {
+  margin-left: 0.6em;
+}
+
 .simple-button {
   height: 2em;
   display: flex;
