@@ -95,25 +95,25 @@ body {
     min-height: 100%;
     align-self: stretch;
     box-sizing: border-box;
+    z-index: 2;
 }
 
-.service-image-preview {
+.service-image-upload input[type="file"] {
+  position: relative;
+  z-index: 2;
+  opacity: 1;
+  pointer-events: auto;
   width: 100%;
-  max-width: 160px;
-  height: 160px;
-  object-fit: cover;
-  border: 1px solid #444;
+  height: auto;
+  background: none;
+  border: 1px solid #333;
+  color: #fff;
+  font-size: 1em;
+  box-sizing: border-box;
   margin-bottom: 1em;
-  background: #181a20;
-  display: none;
-}
-
-.service-image-preview.active {
-  display: block;
 }
 
 .service-info {
-
     min-width: 0;
     width: 100%;
     display: flex;
@@ -259,15 +259,4 @@ body {
 #service-category,
 #service-tags {
     max-width: 100%;
-}
-
-#service-image {
-    border: 1px dashed #444;
-    padding: 1em;
-    text-align: center;
-    cursor: pointer;
-    background-color: #1a1a1a;
-}
-#service-image:hover {
-    border-color: #666;
 }

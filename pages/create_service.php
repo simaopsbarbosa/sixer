@@ -22,9 +22,8 @@
           <h1>Create a New Service</h1>
           <div class="service-header efficient-layout">
             <div class="service-image-upload">
-              <label for="service-image" id="service-image-label" style="cursor:pointer;">Service Image</label>
-              <img id="service-image-preview" class="service-image-preview" alt="Preview" style="cursor:pointer;" />
-              <input type="file" id="service-image" name="service_image" accept="image/*" required style="display:block;" />
+              <span>Select Image</span>
+              <input type="file" id="service-image" name="image" accept="image/*" required style="cursor:pointer;" />
             </div>
             <div class="service-main-fields">
               <div class="service-title">
@@ -70,31 +69,5 @@
         </form>
       </div>
     </main>
-    <script>
-document.addEventListener('DOMContentLoaded', function () {
-  const input = document.getElementById('service-image');
-  const preview = document.getElementById('service-image-preview');
-  const label = document.getElementById('service-image-label');
-
-  // Clicking the label or preview opens the file picker
-  label.addEventListener('click', function() { input.click(); });
-  preview.addEventListener('click', function() { input.click(); });
-
-  input.addEventListener('change', function (e) {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (ev) {
-        preview.src = ev.target.result;
-        preview.classList.add('active');
-      };
-      reader.readAsDataURL(file);
-    } else {
-      preview.src = '';
-      preview.classList.remove('active');
-    }
-  });
-});
-</script>
   </body>
 </html>
