@@ -204,6 +204,10 @@ header a {
   padding: 5px;
 }
 
+.new-service-text {
+  margin-left: 0.6em;
+}
+
 .simple-button {
   height: 2em;
   display: flex;
@@ -372,30 +376,23 @@ main p {
 }
 .filters-modal-content button.simple-button {
   margin-top: 10px;
-  background: #09090b;
-  color: #fff;
+  background: white;
+  color: black;
   border: 1px solid #333333;
   border-radius: 0;
-  padding: 0.7em 1.5em;
-  font-weight: 100;
-  letter-spacing: 1px;
-  font-size: 1em;
+  padding: 1.5em 1.5em;
+  margin-bottom: 0.7em;
+  font-weight: 200;
   font-family: "Inter", Courier, monospace;
   box-shadow: none;
   transition: background 0.2s, color 0.2s, border 0.2s;
-}
-.filters-modal-content button.simple-button:hover {
-  background: #181818;
-  border-color: #aaaaaa;
-  color: #fff;
-  box-shadow: none;
-}
+} 
+
 .filters-modal-content .price-fields {
   display: flex;
   gap: 4%;
   width: 100%;
   align-items: center;
-  margin-bottom: 0.7em;
 }
 .filters-modal-content .price-separator {
   width: 4%;

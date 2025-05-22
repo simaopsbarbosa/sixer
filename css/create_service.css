@@ -21,7 +21,6 @@ body {
     font-weight: bold;
     color: #fff;
     text-align: left;
-    margin-bottom: 1.5em;
     letter-spacing: 1px;
     font-family: 'Inter', sans-serif;
     line-height: 1.1;
@@ -259,4 +258,18 @@ body {
 #service-category,
 #service-tags {
     max-width: 100%;
+}
+
+.create-service-subtitle, .service-form .service-subtitle {
+    font-family: Inter, sans-serif;
+    font-size: 1.2em;
+    font-weight: 100;
+    text-align: left;
+    margin-bottom: 2em;
+}
+
+
+.create-service-subtitle span strong, .service-form .service-subtitle span strong, .service-form .service-subtitle span span {
+  font-weight: bold;
+  color: #fff;
 }
