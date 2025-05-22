@@ -34,7 +34,7 @@
                 <div class="service-card-meta">
                   <div class="freelancer-info-compact">
                     <img
-                      src="../assets/images/johndoe.png"
+                      src="../assets/images/default.jpg"
                       alt="John Doe"
                       class="freelancer-avatar-small"
                     />

@@ -47,7 +47,7 @@
           <h2>Private Forum with Freelancer</h2>
           <div class="forum-messages">
             <div class="forum-message">
-              <img src="../assets/images/johndoe.png" alt="John Doe" class="forum-avatar" />
+              <img src="../assets/images/default.jpg" alt="John Doe" class="forum-avatar" />
               <div class="forum-message-content">
                 <div class="forum-message-header">
                   <span class="forum-username">John Doe</span>
@@ -57,7 +57,7 @@
               </div>
             </div>
             <div class="forum-message">
-              <img src="../assets/images/johndoe.png" alt="You" class="forum-avatar" />
+              <img src="../assets/images/default.jpg" alt="You" class="forum-avatar" />
               <div class="forum-message-content">
                 <div class="forum-message-header">
                   <span class="forum-username">You</span>
@@ -124,7 +124,7 @@
                 <div class="review-header">
                   <div class="reviewer-info">
                     <img
-                      src="../assets/images/johndoe.png"
+                      src="../assets/images/default.jpg"
                       alt="Sarah Johnson"
                       class="reviewer-avatar"
                     />
@@ -146,7 +146,7 @@
                 <div class="review-header">
                   <div class="reviewer-info">
                     <img
-                      src="../assets/images/johndoe.png"
+                      src="../assets/images/default.jpg"
                       alt="Michael Chen"
                       class="reviewer-avatar"
                     />
@@ -168,7 +168,7 @@
                 <div class="review-header">
                   <div class="reviewer-info">
                     <img
-                      src="../assets/images/johndoe.png"
+                      src="../assets/images/default.jpg"
                       alt="Emma Rodriguez"
                       class="reviewer-avatar"
                     />
@@ -193,7 +193,7 @@
             <div class="freelancer-info">
               <div class="freelancer-header">
                 <img
-                  src="../assets/images/johndoe.png"
+                  src="../assets/images/default.jpg"
                   alt="John Doe"
                   class="freelancer-avatar"
                 />
