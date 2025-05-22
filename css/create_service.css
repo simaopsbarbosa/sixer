@@ -79,59 +79,41 @@ body {
   align-items: flex-start;
   flex-wrap: wrap;
   overflow: visible;
+  align-items: stretch;
 }
 
 .service-image-upload {
-  flex: 0 0 180px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  background: #23272f;
-  border: 2px solid #181a20;
-  border-radius: 0.5rem;
-  padding: 1.5rem 1rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
-  color: #fff;
+    flex: 0 0 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background: #101010;
+    border: 1px solid #181a20;
+    padding: 1.5rem 1rem;
+    color: #fff;
+    min-height: 100%;
+    align-self: stretch;
+    box-sizing: border-box;
 }
 
-.service-image-upload label {
-  margin-bottom: 0.7rem;
-  font-weight: 600;
-  color: #fff;
-  letter-spacing: 0.02em;
-}
-
-.service-image-upload input[type="file"] {
-  background: #181a20;
-  color: #fff;
-  border: 2px solid #23272f;
-  border-radius: 0.4rem;
-  padding: 0.5rem 0.7rem;
-  font-size: 1rem;
-  cursor: pointer;
+.service-image-preview {
   width: 100%;
-  transition: border 0.2s;
+  max-width: 160px;
+  height: 160px;
+  object-fit: cover;
+  border: 1px solid #444;
+  margin-bottom: 1em;
+  background: #181a20;
+  display: none;
 }
 
-.service-image-upload input[type="file"]::-webkit-file-upload-button {
-  background: #23272f;
-  color: #fff;
-  border: none;
-  border-radius: 0.4rem;
-  padding: 0.5rem 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-.service-image-upload input[type="file"]:hover,
-.service-image-upload input[type="file"]:focus {
-  border: 2px solid #3a3f4b;
+.service-image-preview.active {
+  display: block;
 }
 
 .service-info {
-    flex: 2 1 0;
+
     min-width: 0;
     width: 100%;
     display: flex;
@@ -157,6 +139,7 @@ body {
     display: flex;
     gap: 1.2rem;
     flex-wrap: wrap;
+    align-items: flex-end;
 }
 
 .service-field {
@@ -171,7 +154,6 @@ body {
     margin-bottom: 0.5em;
     font-size: 1em;
     color: #aaa;
-    /* Remove top margin for better alignment */
 }
 
 #service-title {
@@ -199,17 +181,26 @@ body {
     padding-right: 3em;
 }
 
+.service-title {
+  flex-grow: 1;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  justify-content: space-between;
+  position: relative;
+  z-index: 2;
+}
+
 .form-actions {
     text-align: center;
     margin-top: 2em;
 }
 
 .submit-button {
-    background-color: #8a2be2;
     color: white;
     padding: 0.8em 1.8em;
     border: none;
-    border-radius: 0px;
     font-family: 'Inter', sans-serif;
     font-size: 1.1em;
     font-weight: 100;
