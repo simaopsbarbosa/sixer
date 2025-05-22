@@ -8,8 +8,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'] ?? '';
 
     if (empty($email) || empty($password)) {
-        http_response_code(400);
-        echo "Email and password are required.";
+        $_SESSION['error'] = 'Email and password are required.';
+        header('Location: ../pages/login.php');
         exit;
     }
 
@@ -22,22 +22,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if (!$user) {
-            http_response_code(404);
-            echo "Email not found. Please consider signing up.";
+            $_SESSION['error'] = 'Email not found. Please consider signing up.';
+            header('Location: ../pages/login.php');
+            exit;
 
         } elseif (!password_verify($password, $user['password_hash'])) {
-            http_response_code(401);
-            echo "Incorrect password.";
+            $_SESSION['error'] = 'Incorrect password.';
+            header('Location: ../pages/login.php');
+            exit;
 
         } else {
             // Successful login
+            unset($_SESSION['error']);
             $_SESSION['user_id'] = $user['user_id'];
             header('Location: ../pages/profile.php');
             exit;
         }
     } catch (PDOException $e) {
-        http_response_code(500);
-        echo "Database error: " . htmlspecialchars($e->getMessage());
+        $_SESSION['error'] = 'Database error: ' . htmlspecialchars($e->getMessage());
+        header('Location: ../pages/login.php');
+        exit;
     }
 } else {
     http_response_code(405); // Method Not Allowed
