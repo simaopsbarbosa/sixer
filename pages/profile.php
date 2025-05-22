@@ -100,7 +100,7 @@
                 <div class="work-header">
                   <div class="work-title-group">
                     <h3>Logo Design Package</h3>
-                    <span class="work-date">Paid $99 on 01/05/2025</span>
+                    <span class="work-date">Paid $99 on 09/05/2025</span>
                   </div>
                   <div class="work-rating">4.1 <span style="font-weight: 100; color: #999">(105)</span></div>
                 </div>
@@ -160,12 +160,38 @@
                 <p class="work-description">
                   Engaging and high-converting copy for your product or service landing page.
                 </p>
-                <button class="review-btn">Review</button>
+                <button class="review-btn" type="button">Review</button>
+                <form class="review-form review-form-styled" style="display:none; margin-top: 16px;" method="post">
+                  <label for="review-rating" style="color:#aaa; font-size:0.9em; margin-bottom:0.5em;">Rating:</label>
+                  <select id="review-rating" name="rating" required class="styled-select">
+                    <option value="" disabled selected>Select rating</option>
+                    <option value="5">5 (excellent)</option>
+                    <option value="4">4 (good)</option>
+                    <option value="3">3 (average)</option>
+                    <option value="2">2 (poor)</option>
+                    <option value="1">1 (terrible)</option>
+                  </select>
+                  <label for="review-text" style="color:#aaa; font-size:0.9em; margin-bottom:0.5em; margin-top:1em;">Review:</label>
+                  <textarea id="review-text" name="review" rows="3" required class="styled-textarea"></textarea>
+                  <button type="submit" class="submit-button" style="margin-top:1em;">Submit</button>
+                </form>
               </div>
             </div>
           </div>
         </div>
       </div>
     </main>
+    <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.review-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var form = btn.nextElementSibling;
+        if (form && form.classList.contains('review-form')) {
+          form.style.display = (form.style.display === 'none') ? 'block' : 'none';
+        }
+      });
+    });
+  });
+</script>
   </body>
 </html>
