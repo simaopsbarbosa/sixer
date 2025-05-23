@@ -124,25 +124,20 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
               Edit
             </button>
           <?php endif; ?>
-          <div id="skills-container">
-            <p id="skills-text" style="margin-bottom:0;">
+          <div id="skills-container" class="skills-container">
+            <span id="skills-text">
               <?php 
                 if (empty($user_skills)) {
                   echo "No skills have been added yet.";
                 } else {
-                  ?>
-                  <div class="skills-container">
-                    <?php
-                    foreach ($user_skills as $skill) {
-                      echo '<div class="skill-tag">' . htmlspecialchars($skill) . '</div> ';
-                    }
-                    ?>
-                  </div>
-                <?php
+                  echo '<div class="skills-list">';
+                  foreach ($user_skills as $skill) {
+                    echo '<span class="skill-tag">' . htmlspecialchars($skill) . '</span> ';
+                  }
+                  echo '</div>';
                 }
               ?>
-            </p>
-
+            </span>
             <form id="skills_dropdown" class="skills-dropdown" style="display:none;">
               <?php foreach ($all_skills as $skill): ?>
                 <label style="display:block; margin-bottom:4px;">
@@ -279,7 +274,7 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
     </main>
     <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Review button logic (existing)
+
     document.querySelectorAll('.review-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var form = btn.nextElementSibling;
@@ -289,7 +284,6 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
       });
     });
 
-    // Profile picture change logic
     const profilePicImg = document.getElementById('profile-pic-img');
     const profilePicInput = document.getElementById('profile-pic-input');
     const profilePicForm = document.getElementById('profile-pic-form');
@@ -324,7 +318,6 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
     <?php endif; ?>
 
-    // About section edit logic
     const editBtn = document.getElementById('edit-about-btn');
     const aboutContainer = document.getElementById('aboutme-container');
     const aboutText = document.getElementById('aboutme-text');
@@ -332,7 +325,7 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
     if (editBtn && aboutText) {
       editBtn.addEventListener('click', function() {
         if (editBtn.textContent === 'Edit') {
-          // Switch to edit mode
+           
           aboutText.setAttribute('contenteditable', 'true');
           aboutText.style.outline = 'none';
           aboutText.style.background = 'none';
@@ -340,14 +333,14 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
           editBtn.textContent = 'Save';
           editBtn.style.backgroundColor = '#ffffff'; 
           editBtn.style.color = '#000000'; 
-          // Add Cancel button
+           
           let cancelBtn = document.createElement('button');
           cancelBtn.textContent = 'Cancel';
           cancelBtn.className = 'edit-profile-btn';
           cancelBtn.style.marginRight = '80px';
           cancelBtn.id = 'cancel-about-btn';
           editBtn.parentNode.insertBefore(cancelBtn, editBtn);
-          // Cancel logic
+           
           cancelBtn.addEventListener('click', function() {
             aboutText.textContent = originalAbout;
             aboutText.removeAttribute('contenteditable');
@@ -357,7 +350,7 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
             cancelBtn.remove();
           });
         } else if (editBtn.textContent === 'Save') {
-          // Save logic
+           
           const newAbout = aboutText.textContent.trim();
           editBtn.disabled = true;
           fetch('../action/edit_profile_description.php', {
@@ -386,27 +379,36 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
       });
     }
 
-    // Skills section edit logic
     const addSkillBtn = document.getElementById('add_skills-btn');
     const editSkillsBtn = document.getElementById('edit_skills-btn');
     const skillsDropdown = document.getElementById('skills_dropdown');
     const skillsText = document.getElementById('skills-text');
     let originalSkills = skillsText ? skillsText.innerHTML : '';
+    let originalChecked = [];
+
+    function getCheckedSkills() {
+      return Array.from(skillsDropdown.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+    }
+
+    function setCheckedSkills(skills) {
+      skillsDropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.checked = skills.includes(cb.value);
+      });
+    }
 
     function enterEditSkillsMode() {
-      // Show dropdown
+
+      originalChecked = getCheckedSkills();
       skillsDropdown.style.display = 'block';
       if (addSkillBtn) addSkillBtn.style.display = 'none';
       if (editSkillsBtn) editSkillsBtn.style.display = 'none';
 
-      // Create Cancel button
       let cancelBtn = document.createElement('button');
       cancelBtn.textContent = 'Cancel';
       cancelBtn.className = 'edit-profile-btn';
       cancelBtn.id = 'cancel-skills-btn';
       cancelBtn.style.marginRight = '80px';
 
-      // Create Save button
       let saveBtn = document.createElement('button');
       saveBtn.textContent = 'Save';
       saveBtn.className = 'edit-profile-btn';
@@ -414,29 +416,22 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
       saveBtn.style.background = '#fff';
       saveBtn.style.color = '#000';
 
-      // Insert buttons before dropdown
       skillsDropdown.parentNode.insertBefore(cancelBtn, skillsDropdown);
       skillsDropdown.parentNode.insertBefore(saveBtn, skillsDropdown);
 
-      // Cancel logic
-      cancelBtn.addEventListener('click', function() {
+      cancelBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        setCheckedSkills(originalChecked);
         skillsDropdown.style.display = 'none';
         cancelBtn.remove();
         saveBtn.remove();
-        skillsText.innerHTML = originalSkills;
-        if (skillsText.textContent.trim() === 'No skills have been added yet.') {
-          if (addSkillBtn) addSkillBtn.style.display = 'inline-block';
-          if (editSkillsBtn) editSkillsBtn.style.display = 'none';
-        } else {
-          if (addSkillBtn) addSkillBtn.style.display = 'none';
-          if (editSkillsBtn) editSkillsBtn.style.display = 'inline-block';
-        }
+        if (addSkillBtn) addSkillBtn.style.display = originalSkills.includes('No skills') ? 'inline-block' : 'none';
+        if (editSkillsBtn) editSkillsBtn.style.display = originalSkills.includes('No skills') ? 'none' : 'inline-block';
       });
 
-      // Save logic
       saveBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        const checked = Array.from(skillsDropdown.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+        const checked = getCheckedSkills();
         fetch('../action/edit_profile_skills.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -446,8 +441,10 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
         .then(data => {
           if (data.success) {
             skillsText.innerHTML = data.skills.length
-              ? data.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join(' ')
+              ? '<div class="skills-list">' + data.skills.map(skill => `<span class=\"skill-tag\">${skill}</span>`).join(' ') + '</div>'
               : 'No skills have been added yet.';
+            originalSkills = skillsText.innerHTML;
+            setCheckedSkills(data.skills);
             if (addSkillBtn) addSkillBtn.style.display = data.skills.length ? 'none' : 'inline-block';
             if (editSkillsBtn) editSkillsBtn.style.display = data.skills.length ? 'inline-block' : 'none';
             skillsDropdown.style.display = 'none';
@@ -460,7 +457,7 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
         .catch(() => alert('Error saving skills.'));
       });
     }
-    
+
     if (addSkillBtn) addSkillBtn.addEventListener('click', enterEditSkillsMode);
     if (editSkillsBtn) editSkillsBtn.addEventListener('click', enterEditSkillsMode);
   });
