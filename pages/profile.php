@@ -26,7 +26,12 @@ if (!$user_data) {
 }
 
 // For display
-$user_picture = $user_data['user_picture'] ?? '../assets/images/default.jpg';
+if (!empty($user_data['user_picture'])) {
+    // Serve image via a separate endpoint
+    $user_picture = '../action/get_profile_picture.php?id=' . $profile_user_id;
+} else {
+    $user_picture = '../assets/images/default.jpg';
+}
 $full_name = $user_data['full_name'] ?? '';
 $email = $user_data['email'] ?? '';
 $join_date = $user_data['join_date'] ?? '';
@@ -52,8 +57,14 @@ $is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
             ) && $is_own_profile): ?>
             <a href="edit_profile.php" class="edit-profile-btn" title="Edit Profile">Edit</a>
           <?php endif; ?>
-          <div class="profile-avatar" style="z-index: 1;">
-            <img src="<?= htmlspecialchars($user_picture) ?>" alt="<?= htmlspecialchars($full_name) ?>'s Profile Picture" />
+          <div class="profile-avatar" style="z-index: 1; position: relative; cursor: pointer;">
+            <form id="profile-pic-form" action="../action/edit_profile_picture.php" method="post" enctype="multipart/form-data" style="display:none;">
+              <input type="file" id="profile-pic-input" name="profile_picture" accept="image/*" style="display:none;" />
+            </form>
+            <img id="profile-pic-img" src="<?= htmlspecialchars($user_picture) ?>" alt="<?= htmlspecialchars($full_name) ?>'s Profile Picture" style="object-fit: cover; aspect-ratio: 1/1; width: 100%; height: 100%; border-radius: 0; cursor: pointer;" />
+            <?php if ($is_own_profile): ?>
+              <div id="profile-pic-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.25); color:#fff; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.2s; border-radius:0; pointer-events:none; font-size:1.1em;">Change</div>
+            <?php endif; ?>
           </div>
           <div class="profile-info">
             <div class="profile-info-top">
@@ -237,6 +248,41 @@ $is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
         }
       });
     });
+
+    // Profile picture change logic
+    const profilePicImg = document.getElementById('profile-pic-img');
+    const profilePicInput = document.getElementById('profile-pic-input');
+    const profilePicForm = document.getElementById('profile-pic-form');
+    const profilePicOverlay = document.getElementById('profile-pic-overlay');
+    <?php if ($is_own_profile): ?>
+    if (profilePicImg && profilePicInput && profilePicForm) {
+      profilePicImg.addEventListener('mouseenter', function() {
+        if (profilePicOverlay) profilePicOverlay.style.opacity = 1;
+      });
+      profilePicImg.addEventListener('mouseleave', function() {
+        if (profilePicOverlay) profilePicOverlay.style.opacity = 0;
+      });
+      profilePicImg.addEventListener('click', function() {
+        profilePicInput.click();
+      });
+      if (profilePicOverlay) {
+        profilePicOverlay.addEventListener('mouseenter', function() {
+          profilePicOverlay.style.opacity = 1;
+        });
+        profilePicOverlay.addEventListener('mouseleave', function() {
+          profilePicOverlay.style.opacity = 0;
+        });
+        profilePicOverlay.addEventListener('click', function() {
+          profilePicInput.click();
+        });
+      }
+      profilePicInput.addEventListener('change', function() {
+        if (profilePicInput.files && profilePicInput.files[0]) {
+          profilePicForm.submit();
+        }
+      });
+    }
+    <?php endif; ?>
 
     // About section edit logic
     const editBtn = document.getElementById('edit-about-btn');
