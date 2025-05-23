@@ -1,54 +1,40 @@
-# ltw-project-ltw17g06
+# ltw01g01
 
-## tema
+## Features
 
-fiver mas melhor (sixer)
+**User:**
+- [x] Register a new account.
+- [x] Log in and out.
+- [x] Edit their profile, including their name, username, password, and email.
 
-### semana 7 
+**Freelancers:**
+- [ ] List new services, providing details such as category, pricing, delivery time, and service description, along with images or videos.
+- [x] Track and manage their offered services.
+- [x] Respond to inquiries from clients regarding their services and provide custom offers if needed.
+- [x] Mark services as completed once delivered.
 
-- [ ] mockups of first main pages
-- [x] first draft of database 
+**Clients:**
+- [ ] Browse services using filters like category, price, and rating.
+- [ ] Engage with freelancers to ask questions or request custom orders.
+- [ ] Hire freelancers and proceed to checkout (simulate payment process).
+- [ ] Leave ratings and reviews for completed services.
 
-### semana 8
+**Admins:**
+- [ ] Elevate a user to admin status.
+- [ ] Introduce new service categories and other pertinent entities.
+- [ ] Oversee and ensure the smooth operation of the entire system.
 
-- [ ] finalize database script and create database
-- [ ] partial implementation of some main pages
+**Extra:**
+- [x] Users can add and edit a profile description.
+- [x] Users can select their skills to show on the user's profile.
 
-## database
+## Running
 
-### user registry 
+    sqlite3 database/sixer.db < database/setup_all.sql
+    php -S localhost:9000
 
-- id 
-- access level
-- password hash
+## Credentials
 
-### user info 
-
-- id
-- nome 
-- mail
-- join date
-...
-
-### services
-
-- id service
-- id freelancer
-- (foreign) service info 
-- (foreign) ratings
-
-### service info 
-
-- id service
-- nome
-- description
-- price
-...
-
-### service ratings
-
-- id service
-- ratings
-- stats
-...
-
+[TODO - build nice looking profiles to share here]
+- admin/p4s5w0rd
+- johndoe/1234
