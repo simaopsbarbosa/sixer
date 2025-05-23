@@ -1,11 +1,48 @@
 <?php
 require_once '../utils/session.php';
 require_once '../templates/common.php';
+require_once '../database/service_class.php';
 
 $session = Session::getInstance();
 if (!$session->isLoggedIn()) {
     header('Location: login.php');
     exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $user = $session->getUser();
+    $freelancer_id = $user['user_id'] ?? null;
+    $title = trim($_POST['title'] ?? '');
+    $price = $_POST['price'] ?? '';
+    $delivery_time = $_POST['delivery_time'] ?? '';
+    $description = trim($_POST['description'] ?? '');
+    $category = trim($_POST['category'] ?? '');
+
+    // Validate all fields are present and not empty
+    $errors = [];
+    if (!$freelancer_id) $errors[] = 'User not found.';
+    if ($title === '') $errors[] = 'Title is required.';
+    if ($price === '' || !is_numeric($price) || $price <= 0) $errors[] = 'Valid price is required.';
+    if ($delivery_time === '' || !is_numeric($delivery_time) || $delivery_time <= 0) $errors[] = 'Valid delivery time is required.';
+    if ($description === '') $errors[] = 'Description is required.';
+    if ($category === '') $errors[] = 'Category is required.';
+    if (!isset($_FILES['image']) || $_FILES['image']['error'] !== UPLOAD_ERR_OK) $errors[] = 'Image is required.';
+
+    if (count($errors) === 0) {
+        // Read image as blob
+        $image_blob = file_get_contents($_FILES['image']['tmp_name']);
+        // Compose info: description + category
+        $info = $description . "\nCategory: " . $category;
+        $eta = $delivery_time . ' days';
+        $service_id = Service::create($freelancer_id, $title, $price, $info, $eta, $image_blob);
+        // Redirect to the service page (currently hardcoded, update as needed)
+        header('Location: service.php?id=' . $service_id);
+        exit;
+    } else {
+        // Show errors (simple alert, can be improved)
+        echo '<script>alert("' . implode('\\n', $errors) . '"); window.history.back();</script>';
+        exit;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -32,24 +69,27 @@ if (!$session->isLoggedIn()) {
           <h2 class="service-subtitle">
             <span>You will be able to access your new service on your profile,<br>under <span style="font-weight:bold;">Current Services</span>.</span>
           </h2>
-          <div class="service-header efficient-layout">
-            <div class="service-image-upload">
-              <span style="margin-bottom:1em;">Select Image</span>
-              <input type="file" id="service-image" name="image" accept="image/*" required style="cursor:pointer;" />
+          <div class="service-header">
+            <div class="service-image-upload service-image-upload-picker" style="aspect-ratio: 16/9; position: relative; overflow: hidden; cursor: pointer;">
+              <input type="file" id="service-image" name="image" accept="image/*" style="display:none;" />
+              <div id="service-image-preview" class="service-image-preview" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#18181b;border:1px dashed #444;aspect-ratio:16/9;position:relative;">
+                <span id="service-image-placeholder" style="color:#bbb;font-size:1.2em;pointer-events:none;transition:opacity 0.2s;">Select Image</span>
+                <div id="service-image-hover" style="display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.32);color:#fff;align-items:center;justify-content:center;font-size:1.1em;z-index:2;pointer-events:none;transition:opacity 0.2s;">Change Image</div>
+              </div>
             </div>
             <div class="service-main-fields">
               <div class="service-title">
                 <label for="service-title">Title</label>
-                <input type="text" id="service-title" name="title" maxlength="100" required />
+                <input type="text" class="input-field" id="service-title" name="title" maxlength="100" required />
               </div>
               <div class="service-fields-row">
                 <div class="service-field">
                   <label for="service-price">Base Price ($)</label>
-                  <input type="number" id="service-price" name="price" min="1" step="0.01" required />
+                  <input type="number" class="input-field" id="service-price" name="price" min="1" step="0.01" />
                 </div>
                 <div class="service-field">
                   <label for="service-delivery">Base Delivery Time (days)</label>
-                  <input type="number" id="service-delivery" name="delivery_time" min="1" max="60" required />
+                  <input type="number" class="input-field" id="service-delivery" name="delivery_time" min="1" max="60" />
                 </div>
               </div>
             </div>
@@ -81,5 +121,66 @@ if (!$session->isLoggedIn()) {
         </form>
       </div>
     </main>
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+  const fileInput = document.getElementById('service-image');
+  const preview = document.getElementById('service-image-preview');
+  const placeholder = document.getElementById('service-image-placeholder');
+  const hoverOverlay = document.getElementById('service-image-hover');
+
+  // Click on preview or placeholder opens file dialog
+  preview.addEventListener('click', function(e) {
+    e.stopPropagation();
+    fileInput.click();
+  });
+  if (placeholder) {
+    placeholder.addEventListener('click', function(e) {
+      e.stopPropagation();
+      fileInput.click();
+    });
+  }
+
+  // Show hover overlay only if image is present
+  preview.addEventListener('mouseenter', function() {
+    const img = preview.querySelector('img');
+    if (img) {
+      hoverOverlay.style.display = 'flex';
+      hoverOverlay.style.opacity = '1';
+    } else {
+      hoverOverlay.style.display = 'none';
+      hoverOverlay.style.opacity = '0';
+    }
+  });
+  preview.addEventListener('mouseleave', function() {
+    hoverOverlay.style.opacity = '0';
+    setTimeout(() => { hoverOverlay.style.display = 'none'; }, 200);
+  });
+
+  // When file is selected, show preview
+  fileInput.addEventListener('change', function() {
+    if (fileInput.files && fileInput.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        let img = preview.querySelector('img');
+        if (!img) {
+          img = document.createElement('img');
+          preview.appendChild(img);
+        }
+        img.src = e.target.result;
+        img.style.display = 'block';
+        placeholder.style.display = 'none';
+      };
+      reader.readAsDataURL(fileInput.files[0]);
+    } else {
+      // Reset to placeholder
+      const img = preview.querySelector('img');
+      if (img) img.remove();
+      placeholder.style.display = 'block';
+      hoverOverlay.style.display = 'none';
+      hoverOverlay.style.opacity = '0';
+    }
+  });
+});
+</script>
   </body>
 </html>

@@ -28,7 +28,7 @@ body {
 
 .service-form label {
     display: block;
-    margin-bottom: 0.5em;
+    margin-bottom: 0.2em;
     color: #aaa;
     font-size: 0.9em;
 }
@@ -40,7 +40,6 @@ body {
 .service-form select {
     width: 100%;
     padding: 0.8em 1em;
-    margin-bottom: 1em;
     background-color: #09090b;
     border: 1px solid #333;
     color: #fff;
@@ -66,22 +65,19 @@ body {
 }
 
 .service-header {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: 1.5em;
-}
-
-.service-header.efficient-layout {
-  display: flex;
-  gap: 2rem;
-  align-items: flex-start;
-  flex-wrap: wrap;
-  overflow: visible;
-  align-items: stretch;
+    display: grid;
+    grid-template-columns: 1.2fr 2fr;
+    grid-template-rows: auto auto;
+    gap: 2.2rem 2.2rem;
+    align-items: center;
+    background: none;
+    position: relative;
+    z-index: 1; 
 }
 
 .service-image-upload {
+    grid-row: 1 / span 2;
+    grid-column: 1 / 2;
     flex: 0 0 180px;
     display: flex;
     flex-direction: column;
@@ -91,8 +87,10 @@ body {
     border: 1px solid #333333;
     padding: 1.5rem 1rem;
     color: #fff;
-    min-height: 100%;
-    align-self: stretch;
+    height: auto;
+    max-height: none;
+    min-height: 0;
+    align-self: center;
     box-sizing: border-box;
     z-index: 2;
 }
@@ -121,11 +119,18 @@ body {
 }
 
 .service-main-fields {
+  grid-row: 1 / span 2;
+  grid-column: 2 / 3;
   flex: 1 1 300px;
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
+  height: 100%;
+  justify-content:space-between;
   min-width: 0;
+  padding: 0.5em 0 1em 0;
+  position: relative;
+  z-index: 2; 
 }
 
 .service-main-info {
@@ -135,10 +140,9 @@ body {
 }
 
 .service-fields-row {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     gap: 1.2rem;
-    flex-wrap: wrap;
-    align-items: flex-end;
 }
 
 .service-field {
@@ -150,12 +154,12 @@ body {
 
 .service-image-upload label,
 .service-info label {
-    margin-bottom: 0.5em;
+    margin-bottom: 0.2em;
     font-size: 1em;
     color: #aaa;
 }
 
-#service-title {
+.input-field {
     width: 100%;
     min-width: 0;
     box-sizing: border-box;
@@ -181,12 +185,10 @@ body {
 }
 
 .service-title {
-  flex-grow: 1;
-  padding: 0.5em;
   display: flex;
   flex-direction: column;
   align-items: start;
-  justify-content: space-between;
+  justify-content: center;
   position: relative;
   z-index: 2;
 }
@@ -268,8 +270,86 @@ body {
     margin-bottom: 2em;
 }
 
-
 .create-service-subtitle span strong, .service-form .service-subtitle span strong, .service-form .service-subtitle span span {
   font-weight: bold;
   color: #fff;
+}
+
+.service-image-upload-picker {
+  aspect-ratio: 16/9;
+  width: 100%;
+  min-width: 180px;
+  min-height: 120px;
+  max-width: 420px;
+  max-height: 240px;
+  background: none;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+}
+.service-image-preview {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16/9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #18181b;
+  border: 1.5px dashed #444;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.service-image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 16/9;
+  display: block;
+}
+.service-image-preview:hover {
+  border-color: #aaa;
+}
+#service-image-hover {
+  display: flex !important;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.service-image-preview:hover #service-image-hover {
+  opacity: 1;
+}
+.service-image-preview:hover #service-image-placeholder {
+  opacity: 0.7;
+}
+#service-image-placeholder {
+  z-index: 1;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+/* Custom number input arrows for create service form */
+.service-form input[type="number"]::-webkit-inner-spin-button, 
+.service-form input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+.service-form input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+  position: relative;
+  padding-right: 2.5em;
+}
+/* Custom arrow container */
+.service-form input[type="number"] {
+  background-image: url('data:image/svg+xml;utf8,<svg width="18" height="36" viewBox="0 0 18 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 12L13 16H5L9 12Z" fill="%23aaa"/><path d="M9 24L5 20H13L9 24Z" fill="%23aaa"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 1em center;
+  background-size: 1.2em 2.4em;
 }
