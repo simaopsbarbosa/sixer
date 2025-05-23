@@ -36,6 +36,16 @@ $full_name = $user_data['full_name'] ?? '';
 $email = $user_data['email'] ?? '';
 $join_date = $user_data['join_date'] ?? '';
 $is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
+
+$user_skills = [];
+$stmt = $db->prepare('SELECT skill_name FROM user_skills WHERE user_id = ?');
+$stmt->execute([$profile_user_id]);
+$user_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+$all_skills = [];
+$stmt = $db->prepare('SELECT skill_name FROM skills ORDER BY skill_name ASC');
+$stmt->execute();
+$all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -104,17 +114,42 @@ $is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
           </div>
         </div>
 
-          <div class="profile-section">
-            <h2>Skills</h2>
-            <div class="skills-list">
-              <span class="skill-tag">Web Development</span>
-              <span class="skill-tag">JavaScript</span>
-              <span class="skill-tag">Python</span>
-              <span class="skill-tag">UI/UX Design</span>
-              <span class="skill-tag">Database Design</span>
-            </div>
+        <div class="profile-section" style="position: relative;">
+          <h2>Skills</h2>
+          <?php if ($is_own_profile): ?>
+            <button id="add_skills-btn" class="edit-profile-btn" style="display: <?= empty($user_skills) ? 'inline-block' : 'none' ?>;">
+              Edit
+            </button>
+            <button id="edit_skills-btn" class="edit-profile-btn" type="button" style="display: <?= empty($user_skills) ? 'none' : 'inline-block' ?>;">
+              Edit
+            </button>
+          <?php endif; ?>
+          <div id="skills-container" class="skills-container">
+            <span id="skills-text">
+              <?php 
+                if (empty($user_skills)) {
+                  echo "No skills have been added yet.";
+                } else {
+                  echo '<div class="skills-list">';
+                  foreach ($user_skills as $skill) {
+                    echo '<span class="skill-tag">' . htmlspecialchars($skill) . '</span> ';
+                  }
+                  echo '</div>';
+                }
+              ?>
+            </span>
+            <form id="skills_dropdown" class="skills-dropdown" style="display:none;">
+              <?php foreach ($all_skills as $skill): ?>
+                <label style="display:block; margin-bottom:4px;">
+                  <input type="checkbox" name="skills[]" value="<?= htmlspecialchars($skill) ?>"
+                    <?= in_array($skill, $user_skills) ? 'checked' : '' ?>>
+                  <?= htmlspecialchars($skill) ?>
+                </label>
+              <?php endforeach; ?>
+            </form>
           </div>
-
+        </div>
+          
           <div class="profile-section">
             <h2>Your Current Services</h2>
             <div class="recent-work">
@@ -239,7 +274,7 @@ $is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
     </main>
     <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Review button logic (existing)
+
     document.querySelectorAll('.review-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var form = btn.nextElementSibling;
@@ -249,7 +284,6 @@ $is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
       });
     });
 
-    // Profile picture change logic
     const profilePicImg = document.getElementById('profile-pic-img');
     const profilePicInput = document.getElementById('profile-pic-input');
     const profilePicForm = document.getElementById('profile-pic-form');
@@ -284,7 +318,6 @@ $is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
     }
     <?php endif; ?>
 
-    // About section edit logic
     const editBtn = document.getElementById('edit-about-btn');
     const aboutContainer = document.getElementById('aboutme-container');
     const aboutText = document.getElementById('aboutme-text');
@@ -292,7 +325,7 @@ $is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
     if (editBtn && aboutText) {
       editBtn.addEventListener('click', function() {
         if (editBtn.textContent === 'Edit') {
-          // Switch to edit mode
+           
           aboutText.setAttribute('contenteditable', 'true');
           aboutText.style.outline = 'none';
           aboutText.style.background = 'none';
@@ -300,14 +333,14 @@ $is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
           editBtn.textContent = 'Save';
           editBtn.style.backgroundColor = '#ffffff'; 
           editBtn.style.color = '#000000'; 
-          // Add Cancel button
+           
           let cancelBtn = document.createElement('button');
           cancelBtn.textContent = 'Cancel';
           cancelBtn.className = 'edit-profile-btn';
           cancelBtn.style.marginRight = '80px';
           cancelBtn.id = 'cancel-about-btn';
           editBtn.parentNode.insertBefore(cancelBtn, editBtn);
-          // Cancel logic
+           
           cancelBtn.addEventListener('click', function() {
             aboutText.textContent = originalAbout;
             aboutText.removeAttribute('contenteditable');
@@ -317,7 +350,7 @@ $is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
             cancelBtn.remove();
           });
         } else if (editBtn.textContent === 'Save') {
-          // Save logic
+           
           const newAbout = aboutText.textContent.trim();
           editBtn.disabled = true;
           fetch('../action/edit_profile_description.php', {
@@ -345,7 +378,90 @@ $is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
         }
       });
     }
+
+    const addSkillBtn = document.getElementById('add_skills-btn');
+    const editSkillsBtn = document.getElementById('edit_skills-btn');
+    const skillsDropdown = document.getElementById('skills_dropdown');
+    const skillsText = document.getElementById('skills-text');
+    let originalSkills = skillsText ? skillsText.innerHTML : '';
+    let originalChecked = [];
+
+    function getCheckedSkills() {
+      return Array.from(skillsDropdown.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+    }
+
+    function setCheckedSkills(skills) {
+      skillsDropdown.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        cb.checked = skills.includes(cb.value);
+      });
+    }
+
+    function enterEditSkillsMode() {
+
+      originalChecked = getCheckedSkills();
+      skillsDropdown.style.display = 'block';
+      if (addSkillBtn) addSkillBtn.style.display = 'none';
+      if (editSkillsBtn) editSkillsBtn.style.display = 'none';
+
+      let cancelBtn = document.createElement('button');
+      cancelBtn.textContent = 'Cancel';
+      cancelBtn.className = 'edit-profile-btn';
+      cancelBtn.id = 'cancel-skills-btn';
+      cancelBtn.style.marginRight = '80px';
+
+      let saveBtn = document.createElement('button');
+      saveBtn.textContent = 'Save';
+      saveBtn.className = 'edit-profile-btn';
+      saveBtn.id = 'save-skills-btn';
+      saveBtn.style.background = '#fff';
+      saveBtn.style.color = '#000';
+
+      skillsDropdown.parentNode.insertBefore(cancelBtn, skillsDropdown);
+      skillsDropdown.parentNode.insertBefore(saveBtn, skillsDropdown);
+
+      cancelBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        setCheckedSkills(originalChecked);
+        skillsDropdown.style.display = 'none';
+        cancelBtn.remove();
+        saveBtn.remove();
+        if (addSkillBtn) addSkillBtn.style.display = originalSkills.includes('No skills') ? 'inline-block' : 'none';
+        if (editSkillsBtn) editSkillsBtn.style.display = originalSkills.includes('No skills') ? 'none' : 'inline-block';
+      });
+
+      saveBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const checked = getCheckedSkills();
+        fetch('../action/edit_profile_skills.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ skills: checked })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            skillsText.innerHTML = data.skills.length
+              ? '<div class="skills-list">' + data.skills.map(skill => `<span class=\"skill-tag\">${skill}</span>`).join(' ') + '</div>'
+              : 'No skills have been added yet.';
+            originalSkills = skillsText.innerHTML;
+            setCheckedSkills(data.skills);
+            if (addSkillBtn) addSkillBtn.style.display = data.skills.length ? 'none' : 'inline-block';
+            if (editSkillsBtn) editSkillsBtn.style.display = data.skills.length ? 'inline-block' : 'none';
+            skillsDropdown.style.display = 'none';
+            cancelBtn.remove();
+            saveBtn.remove();
+          } else {
+            alert('Error saving skills.');
+          }
+        })
+        .catch(() => alert('Error saving skills.'));
+      });
+    }
+
+    if (addSkillBtn) addSkillBtn.addEventListener('click', enterEditSkillsMode);
+    if (editSkillsBtn) editSkillsBtn.addEventListener('click', enterEditSkillsMode);
   });
+
 </script>
   </body>
 </html>
