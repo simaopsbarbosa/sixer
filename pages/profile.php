@@ -36,6 +36,16 @@ $full_name = $user_data['full_name'] ?? '';
 $email = $user_data['email'] ?? '';
 $join_date = $user_data['join_date'] ?? '';
 $is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
+
+$user_skills = [];
+$stmt = $db->prepare('SELECT skill_name FROM user_skills WHERE user_id = ?');
+$stmt->execute([$profile_user_id]);
+$user_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+$all_skills = [];
+$stmt = $db->prepare('SELECT skill_name FROM skills ORDER BY skill_name ASC');
+$stmt->execute();
+$all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -104,17 +114,41 @@ $is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
           </div>
         </div>
 
-          <div class="profile-section">
-            <h2>Skills</h2>
-            <div class="skills-list">
-              <span class="skill-tag">Web Development</span>
-              <span class="skill-tag">JavaScript</span>
-              <span class="skill-tag">Python</span>
-              <span class="skill-tag">UI/UX Design</span>
-              <span class="skill-tag">Database Design</span>
-            </div>
-          </div>
+        <div class="profile-section" style="position: relative;">
+          <h2>Skills</h2>
+          <?php if ($is_own_profile): ?>
+            <button id="add_skills-btn" class="edit-profile-btn" style="display: <?= empty($user_skills) ? 'inline-block' : 'none' ?>;">
+              Add +
+            </button>
+            <button id="edit_skills-btn" class="edit-profile-btn" type="button" style="display: <?= empty($user_skills) ? 'none' : 'inline-block' ?>;">
+              Edit
+            </button>
+          <?php endif; ?>
+          <div id="skills-container">
+            <p id="skills-text" style="margin-bottom:0;">
+              <?php 
+                if (empty($user_skills)) {
+                  echo "No skills have been added yet.";
+                } else {
+                  foreach ($user_skills as $skill) {
+                    echo '<span class="skill-tag">' . htmlspecialchars($skill) . '</span> ';
+                  }
+                }
+              ?>
+            </p>
 
+            <form id="skills_dropdown" class="skills-dropdown" style="display:none;">
+              <?php foreach ($all_skills as $skill): ?>
+                <label style="display:block; margin-bottom:4px;">
+                  <input type="checkbox" name="skills[]" value="<?= htmlspecialchars($skill) ?>"
+                    <?= in_array($skill, $user_skills) ? 'checked' : '' ?>>
+                  <?= htmlspecialchars($skill) ?>
+                </label>
+              <?php endforeach; ?>
+            </form>
+          </div>
+        </div>
+          
           <div class="profile-section">
             <h2>Your Current Services</h2>
             <div class="recent-work">
@@ -345,7 +379,86 @@ $is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
         }
       });
     }
+
+    // Skills section edit logic
+    const addSkillBtn = document.getElementById('add_skills-btn');
+    const editSkillsBtn = document.getElementById('edit_skills-btn');
+    const skillsDropdown = document.getElementById('skills_dropdown');
+    const skillsText = document.getElementById('skills-text');
+    let originalSkills = skillsText ? skillsText.innerHTML : '';
+
+    function enterEditSkillsMode() {
+      // Show dropdown
+      skillsDropdown.style.display = 'block';
+      if (addSkillBtn) addSkillBtn.style.display = 'none';
+      if (editSkillsBtn) editSkillsBtn.style.display = 'none';
+
+      // Create Cancel button
+      let cancelBtn = document.createElement('button');
+      cancelBtn.textContent = 'Cancel';
+      cancelBtn.className = 'edit-profile-btn';
+      cancelBtn.id = 'cancel-skills-btn';
+      cancelBtn.style.marginRight = '80px';
+
+      // Create Save button
+      let saveBtn = document.createElement('button');
+      saveBtn.textContent = 'Save';
+      saveBtn.className = 'edit-profile-btn';
+      saveBtn.id = 'save-skills-btn';
+      saveBtn.style.background = '#fff';
+      saveBtn.style.color = '#000';
+
+      // Insert buttons before dropdown
+      skillsDropdown.parentNode.insertBefore(cancelBtn, skillsDropdown);
+      skillsDropdown.parentNode.insertBefore(saveBtn, skillsDropdown);
+
+      // Cancel logic
+      cancelBtn.addEventListener('click', function() {
+        skillsDropdown.style.display = 'none';
+        cancelBtn.remove();
+        saveBtn.remove();
+        skillsText.innerHTML = originalSkills;
+        if (skillsText.textContent.trim() === 'No skills have been added yet.') {
+          if (addSkillBtn) addSkillBtn.style.display = 'inline-block';
+          if (editSkillsBtn) editSkillsBtn.style.display = 'none';
+        } else {
+          if (addSkillBtn) addSkillBtn.style.display = 'none';
+          if (editSkillsBtn) editSkillsBtn.style.display = 'inline-block';
+        }
+      });
+
+      // Save logic
+      saveBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const checked = Array.from(skillsDropdown.querySelectorAll('input[type="checkbox"]:checked')).map(cb => cb.value);
+        fetch('../action/edit_profile_skills.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ skills: checked })
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            skillsText.innerHTML = data.skills.length
+              ? data.skills.map(skill => `<span class="skill-tag">${skill}</span>`).join(' ')
+              : 'No skills have been added yet.';
+            if (addSkillBtn) addSkillBtn.style.display = data.skills.length ? 'none' : 'inline-block';
+            if (editSkillsBtn) editSkillsBtn.style.display = data.skills.length ? 'inline-block' : 'none';
+            skillsDropdown.style.display = 'none';
+            cancelBtn.remove();
+            saveBtn.remove();
+          } else {
+            alert('Error saving skills.');
+          }
+        })
+        .catch(() => alert('Error saving skills.'));
+      });
+    }
+    
+    if (addSkillBtn) addSkillBtn.addEventListener('click', enterEditSkillsMode);
+    if (editSkillsBtn) editSkillsBtn.addEventListener('click', enterEditSkillsMode);
   });
+
 </script>
   </body>
 </html>
