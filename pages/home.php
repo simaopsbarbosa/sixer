@@ -15,7 +15,7 @@
       <p>keep it simple.</p>
       <div class="main-buttons">
         <button class="simple-button light" id="work-done-btn">i need work done</button>
-        <button class="simple-button">i'm a freelancer</button>
+        <button class="simple-button" onclick="window.location.href='create_service.php'">i'm a freelancer</button>
       </div>
     </main>
     <script>

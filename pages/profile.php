@@ -1,34 +1,42 @@
 <?php
-require_once '../utils/database.php';
+declare(strict_types=1);
+require_once '../utils/session.php';
 require_once '../templates/common.php';
-session_start();
 
-// Redirect if not logged in
-if (!isset($_SESSION['user_id'])) {
+$session = Session::getInstance();
+if (!$session->isLoggedIn()) {
     header('Location: ../pages/login.php');
     exit;
 }
 
-try {
-    $db = Database::getInstance()->getConnection();
-    $stmt = $db->prepare('SELECT username, email, user_picture, join_date, aboutme FROM user_registry WHERE user_id = ?');
-    $stmt->execute([$_SESSION['user_id']]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+// Determine which user's profile to show
+$profile_user_id = isset($_GET['id']) ? intval($_GET['id']) : $session->getUser()['user_id'];
 
-    if (!$user) {
-        session_destroy();
-        header('Location: ../pages/login.php');
-        exit;
-    }
-
-    $user['user_picture'] = $user['user_picture'] ?? '../assets/images/default.jpg';
-
-} catch (PDOException $e) {
-    echo "Database error: " . htmlspecialchars($e->getMessage());
+// Fetch user from database by id
+require_once '../database/user_class.php';
+$user_data = null;
+$db = Database::getInstance();
+$stmt = $db->prepare('SELECT * FROM user_registry WHERE user_id = ?');
+$stmt->execute([$profile_user_id]);
+$user_data = $stmt->fetch();
+if (!$user_data) {
+    // User not found, redirect or show error
+    echo '<main><div class="profile-container"><h2>User not found.</h2></div></main>';
     exit;
 }
-?>
 
+// For display
+if (!empty($user_data['user_picture'])) {
+    // Serve image via a separate endpoint
+    $user_picture = '../action/get_profile_picture.php?id=' . $profile_user_id;
+} else {
+    $user_picture = '../assets/images/default.jpg';
+}
+$full_name = $user_data['full_name'] ?? '';
+$email = $user_data['email'] ?? '';
+$join_date = $user_data['join_date'] ?? '';
+$is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -38,23 +46,31 @@ try {
     <link rel="stylesheet" href="../css/profile.css" />
     <title>sixer - profile</title>
   </head>
-
   <body>
     <?php drawHeader(); ?>
     <main>
       <div class="profile-container">
-        <div class="profile-header">
-          <div class="profile-avatar">
-            <img
-              src="<?= htmlspecialchars($user['user_picture']) ?>"
-              alt="<?= htmlspecialchars($user['username']) ?>'s Profile Picture"
-            />
+        <div class="profile-header" style="position: relative;">
+          <?php if (
+            isset(
+              $is_own_profile
+            ) && $is_own_profile): ?>
+            <a href="edit_profile.php" class="edit-profile-btn" title="Edit Profile">Edit</a>
+          <?php endif; ?>
+          <div class="profile-avatar" style="z-index: 1; position: relative; cursor: pointer;">
+            <form id="profile-pic-form" action="../action/edit_profile_picture.php" method="post" enctype="multipart/form-data" style="display:none;">
+              <input type="file" id="profile-pic-input" name="profile_picture" accept="image/*" style="display:none;" />
+            </form>
+            <img id="profile-pic-img" src="<?= htmlspecialchars($user_picture) ?>" alt="<?= htmlspecialchars($full_name) ?>'s Profile Picture" style="object-fit: cover; aspect-ratio: 1/1; width: 100%; height: 100%; border-radius: 0; cursor: pointer;" />
+            <?php if ($is_own_profile): ?>
+              <div id="profile-pic-overlay" style="position:absolute; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.25); color:#fff; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity 0.2s; border-radius:0; pointer-events:none; font-size:1.1em;">Change</div>
+            <?php endif; ?>
           </div>
           <div class="profile-info">
             <div class="profile-info-top">
-              <h1><?= htmlspecialchars($user['username']) ?></h1>
-              <p class="profile-email"><?= htmlspecialchars($user['email']) ?></p>
-              <p class="profile-join-date">Member since <?= date('F Y', strtotime($user['join_date'])) ?></p>
+              <h1><?= htmlspecialchars($full_name) ?></h1>
+              <p class="profile-email"><?= htmlspecialchars($email) ?></p>
+              <p class="profile-join-date">Member since <?= $join_date ? date('F Y', strtotime($join_date)) : '' ?></p>
             </div>
             <div class="profile-stats">
               <div class="stat">
@@ -69,17 +85,23 @@ try {
           </div>
         </div>
 
-        <div class="profile-section">
+        <div class="profile-section about-section" style="position: relative;">
           <h2>About</h2>
-            <p>
+          <?php if ($is_own_profile): ?>
+            <button id="edit-about-btn" class="edit-profile-btn">Edit</button>
+          <?php endif; ?>
+          <div id="aboutme-container">
+            <p id="aboutme-text" style="margin-bottom:0;">
               <?php 
-                if (!empty(trim($user['aboutme']))) {
-                  echo htmlspecialchars($user['aboutme']);
+                $aboutme = $user_data['aboutme'] ?? null;
+                if (!empty($aboutme) && trim((string)$aboutme) !== '') {
+                  echo htmlspecialchars($aboutme);
                 } else {
                   echo "User has not added a description yet.";
                 }
               ?>
             </p>
+          </div>
         </div>
 
           <div class="profile-section">
@@ -217,6 +239,7 @@ try {
     </main>
     <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Review button logic (existing)
     document.querySelectorAll('.review-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var form = btn.nextElementSibling;
@@ -225,6 +248,103 @@ try {
         }
       });
     });
+
+    // Profile picture change logic
+    const profilePicImg = document.getElementById('profile-pic-img');
+    const profilePicInput = document.getElementById('profile-pic-input');
+    const profilePicForm = document.getElementById('profile-pic-form');
+    const profilePicOverlay = document.getElementById('profile-pic-overlay');
+    <?php if ($is_own_profile): ?>
+    if (profilePicImg && profilePicInput && profilePicForm) {
+      profilePicImg.addEventListener('mouseenter', function() {
+        if (profilePicOverlay) profilePicOverlay.style.opacity = 1;
+      });
+      profilePicImg.addEventListener('mouseleave', function() {
+        if (profilePicOverlay) profilePicOverlay.style.opacity = 0;
+      });
+      profilePicImg.addEventListener('click', function() {
+        profilePicInput.click();
+      });
+      if (profilePicOverlay) {
+        profilePicOverlay.addEventListener('mouseenter', function() {
+          profilePicOverlay.style.opacity = 1;
+        });
+        profilePicOverlay.addEventListener('mouseleave', function() {
+          profilePicOverlay.style.opacity = 0;
+        });
+        profilePicOverlay.addEventListener('click', function() {
+          profilePicInput.click();
+        });
+      }
+      profilePicInput.addEventListener('change', function() {
+        if (profilePicInput.files && profilePicInput.files[0]) {
+          profilePicForm.submit();
+        }
+      });
+    }
+    <?php endif; ?>
+
+    // About section edit logic
+    const editBtn = document.getElementById('edit-about-btn');
+    const aboutContainer = document.getElementById('aboutme-container');
+    const aboutText = document.getElementById('aboutme-text');
+    let originalAbout = aboutText ? aboutText.textContent : '';
+    if (editBtn && aboutText) {
+      editBtn.addEventListener('click', function() {
+        if (editBtn.textContent === 'Edit') {
+          // Switch to edit mode
+          aboutText.setAttribute('contenteditable', 'true');
+          aboutText.style.outline = 'none';
+          aboutText.style.background = 'none';
+          aboutText.focus();
+          editBtn.textContent = 'Save';
+          editBtn.style.backgroundColor = '#ffffff'; 
+          editBtn.style.color = '#000000'; 
+          // Add Cancel button
+          let cancelBtn = document.createElement('button');
+          cancelBtn.textContent = 'Cancel';
+          cancelBtn.className = 'edit-profile-btn';
+          cancelBtn.style.marginRight = '80px';
+          cancelBtn.id = 'cancel-about-btn';
+          editBtn.parentNode.insertBefore(cancelBtn, editBtn);
+          // Cancel logic
+          cancelBtn.addEventListener('click', function() {
+            aboutText.textContent = originalAbout;
+            aboutText.removeAttribute('contenteditable');
+            editBtn.textContent = 'Edit';
+            editBtn.style.backgroundColor = '#111'; 
+            editBtn.style.color = '#ffffff'; 
+            cancelBtn.remove();
+          });
+        } else if (editBtn.textContent === 'Save') {
+          // Save logic
+          const newAbout = aboutText.textContent.trim();
+          editBtn.disabled = true;
+          fetch('../action/edit_profile_description.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ aboutme: newAbout })
+          })
+          .then(r => r.json())
+          .then(data => {
+            if (data.success) {
+              aboutText.textContent = newAbout || 'User has not added a description yet.';
+              originalAbout = aboutText.textContent;
+              aboutText.removeAttribute('contenteditable');
+              editBtn.textContent = 'Edit';
+              editBtn.style.backgroundColor = '#111'; 
+              editBtn.style.color = '#ffffff'; 
+              const cancelBtn = document.getElementById('cancel-about-btn');
+              if (cancelBtn) cancelBtn.remove();
+            } else {
+              alert('Error saving description.');
+            }
+          })
+          .catch(() => alert('Error saving description.'))
+          .finally(() => { editBtn.disabled = false; });
+        }
+      });
+    }
   });
 </script>
   </body>
