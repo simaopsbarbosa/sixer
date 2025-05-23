@@ -19,11 +19,11 @@ class Session {
     }
 
     public function isLoggedIn() {
-        return $_SESSION["user"] !== null;
+        return isset($_SESSION["user"]) && $_SESSION["user"] !== null;
     }
 
     public function getUser() {
-        return $_SESSION["user"];
+        return $_SESSION["user"] ?? null;
     }
 
     public function login($user) {

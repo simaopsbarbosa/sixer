@@ -1,8 +1,17 @@
 <?php
-require_once '../utils/database.php';
-session_start();
+declare(strict_types=1);
 
-// Check if POST data is present
+require_once(__DIR__ . '/../utils/database.php');
+require_once(__DIR__ . '/../utils/session.php');
+require_once(__DIR__ . '/../database/user_class.php');
+
+$session = Session::getInstance();
+
+if ($session->isLoggedIn()) {
+    header('Location: ../pages/profile.php');
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'] ?? '';
     $password = $_POST['password'] ?? '';
@@ -13,38 +22,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    try {
-        $db = Database::getInstance()->getConnection();
-
-        // Fetch user by email
-        $stmt = $db->prepare('SELECT user_id, password_hash FROM user_registry WHERE email = ?');
-        $stmt->execute([$email]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$user) {
-            $_SESSION['error'] = 'Email not found. Please consider signing up.';
-            header('Location: ../pages/login.php');
-            exit;
-
-        } elseif (!password_verify($password, $user['password_hash'])) {
-            $_SESSION['error'] = 'Incorrect password.';
-            header('Location: ../pages/login.php');
-            exit;
-
-        } else {
-            // Successful login
-            unset($_SESSION['error']);
-            $_SESSION['user_id'] = $user['user_id'];
-            header('Location: ../pages/profile.php');
-            exit;
-        }
-    } catch (PDOException $e) {
-        $_SESSION['error'] = 'Database error: ' . htmlspecialchars($e->getMessage());
+    $user = User::get_user_by_email_password($email, $password);
+    if ($user) {
+        $session->login($user);
+        unset($_SESSION['error']);
+        header('Location: ../pages/profile.php');
+        exit;
+    } else {
+        $_SESSION['error'] = 'Invalid email or password.';
         header('Location: ../pages/login.php');
         exit;
     }
 } else {
     http_response_code(405); // Method Not Allowed
     echo "Only POST requests are allowed.";
+    exit;
 }
 ?>

@@ -1,4 +1,13 @@
-<?php require_once '../templates/common.php'; ?>
+<?php
+require_once '../utils/session.php';
+require_once '../templates/common.php';
+
+$session = Session::getInstance();
+if (!$session->isLoggedIn()) {
+    header('Location: login.php');
+    exit;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
