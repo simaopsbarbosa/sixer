@@ -33,12 +33,14 @@ function drawHeader() {
     </form>
   </div>
   <div class="account">
-    <?php if ($loggedIn): ?>
+    <?php if (
+      $loggedIn && isset($user['user_id'])
+    ): ?>
+      <a href="profile.php?id=<?= urlencode($user['user_id']) ?>">profile</a>
       <a href="create_service.php" class="simple-button">
-      <span class="new-service-plus">+</span>
-      <span class="new-service-text"> new service</span>
+        <span class="new-service-plus">+</span>
+        <span class="new-service-text"> new service</span>
       </a>
-      <a href="profile.php">profile</a>
       <a href="../action/logout.php" class="simple-button">sign out</a>
     <?php else: ?>
       <a href="signup.php">sign-up</a>

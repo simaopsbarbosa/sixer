@@ -9,17 +9,28 @@ if (!$session->isLoggedIn()) {
     exit;
 }
 
-$user = $session->getUser();
-if (!$user) {
-    session_destroy();
-    header('Location: ../pages/login.php');
+// Determine which user's profile to show
+$profile_user_id = isset($_GET['id']) ? intval($_GET['id']) : $session->getUser()['user_id'];
+
+// Fetch user from database by id
+require_once '../database/user_class.php';
+$user_data = null;
+$db = Database::getInstance();
+$stmt = $db->prepare('SELECT * FROM user_registry WHERE user_id = ?');
+$stmt->execute([$profile_user_id]);
+$user_data = $stmt->fetch();
+if (!$user_data) {
+    // User not found, redirect or show error
+    echo '<main><div class="profile-container"><h2>User not found.</h2></div></main>';
     exit;
 }
 
-$user_picture = $user['user_picture'] ?? '../assets/images/default.jpg';
-$full_name = $user['full_name'] ?? '';
-$email = $user['email'] ?? '';
-$join_date = $user['join_date'] ?? '';
+// For display
+$user_picture = $user_data['user_picture'] ?? '../assets/images/default.jpg';
+$full_name = $user_data['full_name'] ?? '';
+$email = $user_data['email'] ?? '';
+$join_date = $user_data['join_date'] ?? '';
+$is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -34,8 +45,14 @@ $join_date = $user['join_date'] ?? '';
     <?php drawHeader(); ?>
     <main>
       <div class="profile-container">
-        <div class="profile-header">
-          <div class="profile-avatar">
+        <div class="profile-header" style="position: relative;">
+          <?php if (
+            isset(
+              $is_own_profile
+            ) && $is_own_profile): ?>
+            <a href="edit_profile.php" class="edit-profile-btn" title="Edit Profile">Edit</a>
+          <?php endif; ?>
+          <div class="profile-avatar" style="z-index: 1;">
             <img src="<?= htmlspecialchars($user_picture) ?>" alt="<?= htmlspecialchars($full_name) ?>'s Profile Picture" />
           </div>
           <div class="profile-info">
@@ -57,11 +74,15 @@ $join_date = $user['join_date'] ?? '';
           </div>
         </div>
 
-        <div class="profile-section">
+        <div class="profile-section about-section" style="position: relative;">
           <h2>About</h2>
-            <p>
+          <?php if ($is_own_profile): ?>
+            <button id="edit-about-btn" class="edit-profile-btn">Edit</button>
+          <?php endif; ?>
+          <div id="aboutme-container">
+            <p id="aboutme-text" style="margin-bottom:0;">
               <?php 
-                $aboutme = $user['aboutme'] ?? null;
+                $aboutme = $user_data['aboutme'] ?? null;
                 if (!empty($aboutme) && trim((string)$aboutme) !== '') {
                   echo htmlspecialchars($aboutme);
                 } else {
@@ -69,6 +90,7 @@ $join_date = $user['join_date'] ?? '';
                 }
               ?>
             </p>
+          </div>
         </div>
 
           <div class="profile-section">
@@ -206,6 +228,7 @@ $join_date = $user['join_date'] ?? '';
     </main>
     <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Review button logic (existing)
     document.querySelectorAll('.review-btn').forEach(function(btn) {
       btn.addEventListener('click', function() {
         var form = btn.nextElementSibling;
@@ -214,6 +237,68 @@ $join_date = $user['join_date'] ?? '';
         }
       });
     });
+
+    // About section edit logic
+    const editBtn = document.getElementById('edit-about-btn');
+    const aboutContainer = document.getElementById('aboutme-container');
+    const aboutText = document.getElementById('aboutme-text');
+    let originalAbout = aboutText ? aboutText.textContent : '';
+    if (editBtn && aboutText) {
+      editBtn.addEventListener('click', function() {
+        if (editBtn.textContent === 'Edit') {
+          // Switch to edit mode
+          aboutText.setAttribute('contenteditable', 'true');
+          aboutText.style.outline = 'none';
+          aboutText.style.background = 'none';
+          aboutText.focus();
+          editBtn.textContent = 'Save';
+          editBtn.style.backgroundColor = '#ffffff'; 
+          editBtn.style.color = '#000000'; 
+          // Add Cancel button
+          let cancelBtn = document.createElement('button');
+          cancelBtn.textContent = 'Cancel';
+          cancelBtn.className = 'edit-profile-btn';
+          cancelBtn.style.marginRight = '80px';
+          cancelBtn.id = 'cancel-about-btn';
+          editBtn.parentNode.insertBefore(cancelBtn, editBtn);
+          // Cancel logic
+          cancelBtn.addEventListener('click', function() {
+            aboutText.textContent = originalAbout;
+            aboutText.removeAttribute('contenteditable');
+            editBtn.textContent = 'Edit';
+            editBtn.style.backgroundColor = '#111'; 
+            editBtn.style.color = '#ffffff'; 
+            cancelBtn.remove();
+          });
+        } else if (editBtn.textContent === 'Save') {
+          // Save logic
+          const newAbout = aboutText.textContent.trim();
+          editBtn.disabled = true;
+          fetch('../action/edit_profile_description.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ aboutme: newAbout })
+          })
+          .then(r => r.json())
+          .then(data => {
+            if (data.success) {
+              aboutText.textContent = newAbout || 'User has not added a description yet.';
+              originalAbout = aboutText.textContent;
+              aboutText.removeAttribute('contenteditable');
+              editBtn.textContent = 'Edit';
+              editBtn.style.backgroundColor = '#111'; 
+              editBtn.style.color = '#ffffff'; 
+              const cancelBtn = document.getElementById('cancel-about-btn');
+              if (cancelBtn) cancelBtn.remove();
+            } else {
+              alert('Error saving description.');
+            }
+          })
+          .catch(() => alert('Error saving description.'))
+          .finally(() => { editBtn.disabled = false; });
+        }
+      });
+    }
   });
 </script>
   </body>
