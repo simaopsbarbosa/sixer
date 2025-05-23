@@ -474,6 +474,13 @@
   border-color: #444;
 }
 
+.skills-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5em;
+  justify-content: flex-start;
+}
+
 .skills-dropdown {
   display: none;
   position: absolute;

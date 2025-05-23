@@ -118,7 +118,7 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
           <h2>Skills</h2>
           <?php if ($is_own_profile): ?>
             <button id="add_skills-btn" class="edit-profile-btn" style="display: <?= empty($user_skills) ? 'inline-block' : 'none' ?>;">
-              Add +
+              Edit
             </button>
             <button id="edit_skills-btn" class="edit-profile-btn" type="button" style="display: <?= empty($user_skills) ? 'none' : 'inline-block' ?>;">
               Edit
@@ -130,9 +130,15 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
                 if (empty($user_skills)) {
                   echo "No skills have been added yet.";
                 } else {
-                  foreach ($user_skills as $skill) {
-                    echo '<span class="skill-tag">' . htmlspecialchars($skill) . '</span> ';
-                  }
+                  ?>
+                  <div class="skills-container">
+                    <?php
+                    foreach ($user_skills as $skill) {
+                      echo '<div class="skill-tag">' . htmlspecialchars($skill) . '</div> ';
+                    }
+                    ?>
+                  </div>
+                <?php
                 }
               ?>
             </p>
