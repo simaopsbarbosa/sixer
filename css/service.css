@@ -736,6 +736,7 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 0.2em;
+  text-align: left;
 }
 
 .forum-username {

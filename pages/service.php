@@ -145,9 +145,14 @@ if ($service) {
             <?php 
               if ($selected_client_id) {
                 $messages = Service::get_service_messages($service->id, $selected_client_id);
+                // Ensure correct client user for freelancer
+                $active_cuser = null;
+                if ($is_freelancer && $selected_client_id) {
+                  $active_cuser = Database::getInstance()->query('SELECT * FROM user_registry WHERE user_id = ' . (int)$selected_client_id)->fetch();
+                }
                 foreach ($messages as $msg) {
                   drawMessage($msg, !$msg['is_reply'],
-                    $is_freelancer ? ($cuser ?? $user) : $user,
+                    $is_freelancer ? ($active_cuser ?? $user) : $user,
                     $freelancer
                   );
                 }
