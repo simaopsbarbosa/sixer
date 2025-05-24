@@ -108,5 +108,21 @@ function drawHeader() {
       });
     }
   });
+
+  document.getElementById('filters-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const q = document.getElementById('main-search') ? document.getElementById('main-search').value : '';
+    const category = document.getElementById('filter-category').value;
+    const min_price = this.elements['min_price'].value;
+    const max_price = this.elements['max_price'].value;
+
+    let url = 'search.php?';
+    if (q) url += 'q=' + encodeURIComponent(q) + '&';
+    if (category) url += 'category=' + encodeURIComponent(category) + '&';
+    if (min_price) url += 'min_price=' + encodeURIComponent(min_price) + '&';
+    if (max_price) url += 'max_price=' + encodeURIComponent(max_price) + '&';
+    window.location.href = url;
+});
 </script>
 <?php } ?>

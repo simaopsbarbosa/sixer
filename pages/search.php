@@ -2,29 +2,37 @@
 require_once '../templates/common.php';
 require_once '../database/service_class.php';
 
-$services = [];
-// Fetch all services (delisted = 0)
-$db = Database::getInstance();
-$stmt = $db->prepare('SELECT service_id FROM services_list WHERE service_delisted = 0');
-$stmt->execute();
-$service_ids = $stmt->fetchAll();
-foreach ($service_ids as $row) {
-    $services[] = $row['service_id'];
-}
-
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
-$services = [];
+$category = isset($_GET['category']) ? trim($_GET['category']) : '';
+$min_price = isset($_GET['min_price']) && $_GET['min_price'] !== '' ? floatval($_GET['min_price']) : null;
+$max_price = isset($_GET['max_price']) && $_GET['max_price'] !== '' ? floatval($_GET['max_price']) : null;
+
+$params = [];
+$sql = 'SELECT service_id FROM services_list WHERE service_delisted = 0';
+
+if ($q !== '') {
+    $sql .= ' AND service_title LIKE ?';
+    $params[] = '%' . $q . '%';
+}
+if ($category !== '') {
+    $sql .= ' AND service_category = ?';
+    $params[] = $category;
+}
+if ($min_price !== null) {
+    $sql .= ' AND service_price >= ?';
+    $params[] = $min_price;
+}
+if ($max_price !== null) {
+    $sql .= ' AND service_price <= ?';
+    $params[] = $max_price;
+}
 
 $db = Database::getInstance();
-if ($q !== '') {
-    $stmt = $db->prepare('SELECT service_id FROM services_list WHERE service_delisted = 0 AND service_title LIKE ?');
-    $like = '%' . $q . '%';
-    $stmt->execute([$like]);
-} else {
-    $stmt = $db->prepare('SELECT service_id FROM services_list WHERE service_delisted = 0');
-    $stmt->execute();
-}
+$stmt = $db->prepare($sql);
+$stmt->execute($params);
 $service_ids = $stmt->fetchAll();
+
+$services = [];
 foreach ($service_ids as $row) {
     $services[] = $row['service_id'];
 }
