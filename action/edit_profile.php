@@ -20,6 +20,14 @@ if (!$user) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $token = $_POST['csrf_token'] ?? '';
+    if (!CSRF::validateToken($token)) {
+        $_SESSION['error'] = 'Invalid CSRF token.';
+        header('Location: ../pages/edit_profile.php');
+        exit;
+    }
+
     $full_name = trim($_POST['full_name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $current_password = $_POST['current_password'] ?? '';

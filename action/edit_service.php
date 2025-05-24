@@ -14,6 +14,11 @@ if (!$service || $service->freelancer_id !== $user_id) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if (!verifyCSRF($csrf_token)) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
+    exit;
+  }
   if (isset($_POST['delete'])) {
     // Delete service
     Service::delete_by_id($service_id);

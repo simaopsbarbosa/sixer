@@ -18,6 +18,11 @@ if (!$user) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verifyCSRF($csrf_token)) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
+    exit;
+    }
     $service_id = isset($_POST['service_id']) ? (int)$_POST['service_id'] : null;
     if (!$service_id) {
         header('Location: ../pages/payment.php?error=missing_service');

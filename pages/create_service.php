@@ -10,6 +10,11 @@ if (!$session->isLoggedIn()) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!verifyCSRF($csrf_token)) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
+    exit;
+    }
     $user = $session->getUser();
     $freelancer_id = $user['user_id'] ?? null;
     $title = trim($_POST['title'] ?? '');
@@ -41,6 +46,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+
+$csrf_token = getToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -62,6 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <main>
       <div class="service-container">
         <form class="service-form" action="#" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
           <h1>Create a New Service</h1>
           <h2 class="service-subtitle">
             <span>You will be able to access your new service on your profile,<br>under <span style="font-weight:bold;">Current Services</span>.</span>

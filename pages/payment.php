@@ -5,7 +5,9 @@ if (!$session->isLoggedIn()) {
     header('Location: ../pages/login.php');
     exit;
 }
-require_once '../templates/common.php'; ?>
+require_once '../templates/common.php'; 
+$csrf_token = getToken();
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -79,6 +81,7 @@ require_once '../templates/common.php'; ?>
             </div>
 
             <form class="payment-form" method="post" action="../action/hire_service.php">
+              <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
               <input type="hidden" name="service_id" value="<?= htmlspecialchars($_GET['service_id'] ?? '') ?>" />
               <div class="form-group">
                 <label for="phone">MB WAY - Phone Number</label>

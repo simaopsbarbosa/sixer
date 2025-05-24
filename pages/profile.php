@@ -24,6 +24,9 @@ require_once '../database/user_class.php';
 require_once '../database/service_class.php';
 require_once '../templates/profile_service_card.php';
 require_once '../templates/profile_purchase_card.php';
+require_once '../utils/csrf.php';
+
+$csrf_token = getToken();
 
 // Fetch user from database by id
 $user_data = null;
@@ -99,6 +102,9 @@ foreach ($user_purchases as $purchase) {
     <title>sixer - profile</title>
   </head>
   <body>
+    <script>
+    const CSRF_TOKEN = <?= json_encode($csrf_token) ?>;
+    </script>
     <?php drawHeader(); ?>
     <main>
       <div class="profile-container">
@@ -112,6 +118,7 @@ foreach ($user_purchases as $purchase) {
           <div class="profile-avatar" style="z-index: 1; position: relative; cursor: pointer;">
             <form id="profile-pic-form" action="../action/edit_profile_picture.php" method="post" enctype="multipart/form-data" style="display:none;">
               <input type="file" id="profile-pic-input" name="profile_picture" accept="image/*" style="display:none;" />
+              <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
             </form>
             <img id="profile-pic-img" src="<?= htmlspecialchars($user_picture) ?>" alt="<?= htmlspecialchars($full_name) ?>'s Profile Picture" style="object-fit: cover; aspect-ratio: 1/1; width: 100%; height: 100%; border-radius: 0; cursor: pointer;" />
             <?php if ($is_own_profile): ?>
@@ -317,9 +324,13 @@ foreach ($user_purchases as $purchase) {
           editBtn.disabled = true;
           fetch('../action/edit_profile_description.php', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ aboutme: newAbout })
+            headers: { 
+              'Content-Type': 'application/json',
+              'X-CSRF-Token': CSRF_TOKEN
+            },
+            body: JSON.stringify({ aboutme: newAbout, csrf_token: CSRF_TOKEN })
           })
+
           .then(r => r.json())
           .then(data => {
             if (data.success) {
@@ -395,10 +406,14 @@ foreach ($user_purchases as $purchase) {
         e.preventDefault();
         const checked = getCheckedSkills();
         fetch('../action/edit_profile_skills.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ skills: checked })
-        })
+  method: 'POST',
+  headers: { 
+    'Content-Type': 'application/json',
+    'X-CSRF-Token': CSRF_TOKEN
+  },
+  body: JSON.stringify({ skills: checked, csrf_token: CSRF_TOKEN })
+})
+
         .then r => r.json())
         .then(data => {
           if (data.success) {

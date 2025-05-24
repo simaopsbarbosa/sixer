@@ -15,6 +15,7 @@ if ($service) {
   $stmt->execute([$service->freelancer_id]);
   $freelancer = $stmt->fetch();
 }
+$csrf_token = getToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -169,6 +170,7 @@ if ($service) {
                 $btnText = $has_uncompleted ? 'Mark as Completed' : 'Marked as Complete';
               ?>
                 <form id="markCompletedForm" method="post" style="display:inline; margin-left: 1em;">
+                  <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
                   <input type="hidden" name="mark_completed" value="1" />
                   <button type="button" id="markCompletedBtn" class="simple-button<?= !$has_uncompleted ? ' mark-completed-disabled' : '' ?>" style="margin-left: auto;<?= !$has_uncompleted ? ' background:#333; color:#bbb; cursor:not-allowed; border:1px solid #444;' : '' ?>" <?= $disabled ?>><?= $btnText ?></button>
                 </form>
@@ -205,6 +207,7 @@ if ($service) {
           </div>
           <?php if ($user && (!$is_freelancer || ($is_freelancer && count($active_clients) > 0))): ?>
           <form class="forum-form" method="post" style="margin-bottom:0;">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
             <input type="text" name="message" placeholder="Write a message..." required class="forum-input" autocomplete="off" />
             <input type="hidden" name="send_message" value="1" />
             <button type="submit" aria-label="Send">
@@ -216,6 +219,7 @@ if ($service) {
           </form>
           <?php elseif ($is_freelancer && count($active_clients) === 0): ?>
           <form class="forum-form" style="margin-bottom:0;">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
             <input type="text" name="message" placeholder="No clients available to message." class="forum-input" disabled />
             <button type="submit" aria-label="Send" disabled style="background: #333; color: #bbb; cursor: not-allowed;">
               <span class="send-text">Send</span>
