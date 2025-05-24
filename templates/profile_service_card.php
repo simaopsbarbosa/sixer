@@ -11,8 +11,11 @@ function drawProfileService($service) {
                 <span class="work-date">Starting from $<?= number_format($service->price, 0) ?></span>
             </div>
             <div class="work-rating">
-                <!-- Placeholder rating, replace with real if available -->
-                5.0 <span style="font-weight: 100; color: #999">(0)</span>
+                <?php 
+                  $rating_info = Service::getServiceRatingInfo($service->id);
+                  echo Service::getStars((float)$rating_info['avg']) . ' ' . htmlspecialchars($rating_info['avg']);
+                ?>
+                <span style="font-weight: 100; color: #999">(<?= $rating_info['count'] ?>)</span>
             </div>
         </div>
         <p class="work-description">

@@ -42,7 +42,12 @@ function drawServiceCard($service_id) {
   ?>
   <?= $eta_display ?> day<?= $service->eta == 1 ? '' : 's' ?>
 </span>
-                    <span class="search-card-rating">4.0 ★★★★☆</span> <!-- placeholder rating -->
+                    <span class="search-card-rating">
+                      <?php
+                        $rating_info = Service::getServiceRatingInfo($service->id);
+                        echo Service::getStars((float)$rating_info['avg']) . ' ' . htmlspecialchars($rating_info['avg']);
+                      ?>
+                    </span>
                 </div>
                 <span class="search-card-price">from <span class="search-card-price-bold"><?= htmlspecialchars($service->price) ?>$</span></span>
             </div>

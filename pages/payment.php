@@ -5,7 +5,28 @@ if (!$session->isLoggedIn()) {
     header('Location: ../pages/login.php');
     exit;
 }
-require_once '../templates/common.php'; ?>
+require_once '../templates/common.php';
+require_once '../database/service_class.php';
+
+$service_id = isset($_GET['service_id']) ? (int)$_GET['service_id'] : null;
+$service = $service_id ? Service::get_by_id($service_id) : null;
+$freelancer = null;
+if ($service) {
+    $db = Database::getInstance();
+    $stmt = $db->prepare('SELECT * FROM user_registry WHERE user_id = ?');
+    $stmt->execute([$service->freelancer_id]);
+    $freelancer = $stmt->fetch();
+}
+$rating_info = $service ? Service::getServiceRatingInfo($service->id) : ['avg' => 0, 'count' => 0];
+$img_src = '../assets/images/e-commerce.jpg';
+if ($service && !empty($service->picture)) {
+    $img_src = 'data:image/jpeg;base64,' . base64_encode($service->picture);
+}
+$freelancer_name = $freelancer ? htmlspecialchars($freelancer['full_name']) : 'Unknown';
+$freelancer_pic = ($freelancer && !empty($freelancer['user_picture'])) ? '../action/get_profile_picture.php?id=' . $freelancer['user_id'] : '../assets/images/default.jpg';
+$service_title = $service ? htmlspecialchars($service->title) : 'Service Not Found';
+$service_price = $service ? number_format($service->price, 2) : '0.00';
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -23,7 +44,7 @@ require_once '../templates/common.php'; ?>
         <div class="payment-header">
           <h1>Complete Your Purchase</h1>
           <p class="payment-subtitle">
-            You're about to hire a John Doe for this service
+            You're about to hire a <?= $freelancer_name ?> for this service
           </p>
         </div>
 
@@ -32,24 +53,25 @@ require_once '../templates/common.php'; ?>
             <div class="service-card">
               <div class="service-card-image">
                 <img
-                  src="../assets/images/e-commerce.jpg"
-                  alt="E-commerce Website Service"
+                  src="<?= $img_src ?>"
+                  alt="<?= $service_title ?>"
                 />
               </div>
               <div class="service-card-info">
-                <h2>Full E-commerce Website Development</h2>
+                <h2><?= $service_title ?></h2>
                 <div class="service-card-meta">
                   <div class="freelancer-info-compact">
                     <img
-                      src="../assets/images/default.jpg"
-                      alt="John Doe"
+                      src="<?= $freelancer_pic ?>"
+                      alt="<?= $freelancer_name ?>"
                       class="freelancer-avatar-small"
                     />
-                    <span class="freelancer-name">John Doe</span>
+                    <span class="freelancer-name"><?= $freelancer_name ?></span>
                   </div>
                   <div class="service-card-rating">
-                    <span class="rating-value">5.0</span>
-                    <span class="rating-stars">★★★★★</span>
+                    <span class="rating-value"><?= htmlspecialchars($rating_info['avg']) ?></span>
+                    <span class="rating-stars"><?= Service::getStars((float)$rating_info['avg']) ?></span>
+                    <span class="rating-count">(<?= $rating_info['count'] ?> review<?= $rating_info['count'] == 1 ? '' : 's' ?>)</span>
                   </div>
                 </div>
               </div>
@@ -60,11 +82,11 @@ require_once '../templates/common.php'; ?>
               <div class="payment-breakdown">
                 <div class="payment-row">
                   <span class="payment-item">Service Price</span>
-                  <span class="payment-value">$499.00</span>
+                  <span class="payment-value">$<?= $service_price ?></span>
                 </div>
                 <div class="payment-row total">
                   <span class="payment-item">Total</span>
-                  <span class="payment-value">$499.00</span>
+                  <span class="payment-value">$<?= $service_price ?></span>
                 </div>
               </div>
             </div>
@@ -79,7 +101,7 @@ require_once '../templates/common.php'; ?>
             </div>
 
             <form class="payment-form" method="post" action="../action/hire_service.php">
-              <input type="hidden" name="service_id" value="<?= htmlspecialchars($_GET['service_id'] ?? '') ?>" />
+              <input type="hidden" name="service_id" value="<?= htmlspecialchars($service_id) ?>" />
               <div class="form-group">
                 <label for="phone">MB WAY - Phone Number</label>
                 <input
@@ -107,7 +129,7 @@ require_once '../templates/common.php'; ?>
                   >I agree to the Terms of Service and Privacy Policy</label
                 >
               </div>
-              <button type="submit" class="pay-button">Pay $499.00</button>
+              <button type="submit" class="pay-button">Pay $<?= $service_price ?></button>
               <p class="security-note">
                 All transactions are secure and encrypted. By completing this
                 purchase, you agree to sixer's terms and conditions.
