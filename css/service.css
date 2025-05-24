@@ -241,6 +241,13 @@
   gap: 1em;
 }
 
+.freelancer-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
 .freelancer-avatar {
   width: 60px;
   height: 60px;
@@ -254,7 +261,7 @@
   color: #ffffff;
 }
 
-.freelancer-location {
+.freelancer-email {
   color: #888888;
   font-size: 0.9em;
   margin: 0;

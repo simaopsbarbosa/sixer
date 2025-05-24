@@ -81,21 +81,6 @@ class Service {
         }, $services);
     }
 
-    public function update() {
-        $db = Database::getInstance();
-        $stmt = $db->prepare('UPDATE services_list SET service_title = ?, service_price = ?, service_info = ?, service_eta = ?, service_category = ?, service_delisted = ?, service_picture = ? WHERE service_id = ?');
-        $stmt->execute([
-            $this->title,
-            $this->price,
-            $this->info,
-            $this->eta,
-            $this->category,
-            $this->delisted,
-            $this->picture,
-            $this->id
-        ]);
-    }
-
     public static function update_service($service_id, $title, $category, $price, $eta, $info) {
         $db = Database::getInstance();
         $stmt = $db->prepare('UPDATE services_list SET service_title = ?, service_category = ?, service_price = ?, service_eta = ?, service_info = ? WHERE service_id = ?');
@@ -106,5 +91,24 @@ class Service {
         $db = Database::getInstance();
         $stmt = $db->prepare('DELETE FROM services_list WHERE service_id = ?');
         $stmt->execute([$service_id]);
+    }
+
+    // Add a purchase for a user and service
+    public static function addPurchase(int $client_id, int $service_id): bool {
+        $db = Database::getInstance();
+        // Prevent duplicate active purchase
+        $stmt = $db->prepare('SELECT COUNT(*) FROM purchases WHERE client_id = ? AND service_id = ? AND completed = 0');
+        $stmt->execute([$client_id, $service_id]);
+        if ($stmt->fetchColumn() > 0) return false;
+        $stmt = $db->prepare('INSERT INTO purchases (client_id, service_id, completed, review_text, review_rating) VALUES (?, ?, 0, NULL, NULL)');
+        return $stmt->execute([$client_id, $service_id]);
+    }
+
+    // Returns true if user has an active (uncompleted) purchase for this service
+    public static function isUserCustomer(int $user_id, int $service_id): bool {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT COUNT(*) FROM purchases WHERE client_id = ? AND service_id = ? AND completed = 0');
+        $stmt->execute([$user_id, $service_id]);
+        return $stmt->fetchColumn() > 0;
     }
 }

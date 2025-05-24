@@ -71,7 +71,8 @@
               </div>
             </div>
 
-            <form class="payment-form">
+            <form class="payment-form" method="post" action="../action/hire_service.php">
+              <input type="hidden" name="service_id" value="<?= htmlspecialchars($_GET['service_id'] ?? '') ?>" />
               <div class="form-group">
                 <label for="phone">MB WAY - Phone Number</label>
                 <input

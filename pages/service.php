@@ -1,10 +1,19 @@
 <?php 
 require_once '../templates/common.php';
 require_once '../database/service_class.php';
+require_once '../database/user_class.php';
 
 // Get service id from query string
 $service_id = isset($_GET['id']) ? (int)$_GET['id'] : null;
 $service = $service_id ? Service::get_by_id($service_id) : null;
+
+$freelancer = null;
+if ($service) {
+  $db = Database::getInstance();
+  $stmt = $db->prepare('SELECT * FROM user_registry WHERE user_id = ?');
+  $stmt->execute([$service->freelancer_id]);
+  $freelancer = $stmt->fetch();
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,8 +74,10 @@ $service = $service_id ? Service::get_by_id($service_id) : null;
                 <a href="edit_service.php?id=<?= $service->id ?>">
                   <button class="hire-button" type="button">Edit</button>
                 </a>
+              <?php elseif ($user && $service && Service::isUserCustomer($user['user_id'], $service->id)): ?>
+                <div><button class="hire-button" type="button" disabled style="background: #333; color: #bbb; cursor: not-allowed;">Hired</button></div>
               <?php else: ?>
-                <a href="payment.php">
+                <a href="payment.php?service_id=<?= $service->id ?>">
                   <button class="hire-button">Hire Now</button>
                 </a>
               <?php endif; ?>
@@ -218,23 +229,22 @@ $service = $service_id ? Service::get_by_id($service_id) : null;
             </div>
           </div>
 
-          <a href="profile.php" class="service-section">
+          <a href="profile.php?id=<?= $freelancer ? htmlspecialchars($freelancer['user_id']) : '' ?>" class="service-section">
             <h2>About The Freelancer</h2>
             <div class="freelancer-info">
               <div class="freelancer-header">
                 <img
-                  src="../assets/images/default.jpg"
-                  alt="John Doe"
+                  src="<?= $freelancer && !empty($freelancer['user_picture']) ? '../action/get_profile_picture.php?id=' . $freelancer['user_id'] : '../assets/images/default.jpg' ?>"
+                  alt="<?= htmlspecialchars($freelancer['full_name'] ?? 'Freelancer') ?>"
                   class="freelancer-avatar"
                 />
                 <div class="freelancer-details">
-                  <h3>John Doe</h3>
-                  <p class="freelancer-location">Portugal</p>
+                  <h3><?= htmlspecialchars($freelancer['full_name'] ?? 'Unknown') ?></h3>
+                  <p class="freelancer-email"><?= htmlspecialchars($freelancer['email'] ?? '-') ?></p>
                 </div>
               </div>
               <p class="freelancer-description">
-                Experienced freelancer specializing in web development and
-                programming. Based in Portugal.
+                <?= htmlspecialchars($freelancer['aboutme'] ?? 'No description provided.') ?>
               </p>
             </div>
           </a>
