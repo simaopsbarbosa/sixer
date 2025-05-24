@@ -46,4 +46,11 @@ class User {
         $stmt = $db->prepare('UPDATE user_registry SET full_name = ? WHERE user_id = ?');
         $stmt->execute([$this->full_name, $this->id]);
     }
+
+    public static function get_user_purchases($user_id) {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT * FROM purchases WHERE client_id = ?');
+        $stmt->execute([$user_id]);
+        return $stmt->fetchAll();
+    }
 }
