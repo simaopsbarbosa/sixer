@@ -399,7 +399,7 @@ foreach ($user_purchases as $purchase) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ skills: checked })
         })
-        .then r => r.json())
+        .then (r => r.json())
         .then(data => {
           if (data.success) {
             skillsText.innerHTML = data.skills.length
