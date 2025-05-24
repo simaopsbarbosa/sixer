@@ -18,7 +18,7 @@ if (!$user) {
 $user_picture = $user['user_picture'] ?? '../assets/images/default.jpg';
 $full_name = $user['full_name'] ?? '';
 $email = $user['email'] ?? '';
-$csrf_token = getToken();
+$csrf_token = CSRF::getToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -26,7 +26,7 @@ require_once '../templates/profile_service_card.php';
 require_once '../templates/profile_purchase_card.php';
 require_once '../utils/csrf.php';
 
-$csrf_token = getToken();
+$csrf_token = CSRF::getToken();
 
 // Fetch user from database by id
 $user_data = null;
@@ -406,13 +406,13 @@ foreach ($user_purchases as $purchase) {
         e.preventDefault();
         const checked = getCheckedSkills();
         fetch('../action/edit_profile_skills.php', {
-  method: 'POST',
-  headers: { 
-    'Content-Type': 'application/json',
-    'X-CSRF-Token': CSRF_TOKEN
-  },
-  body: JSON.stringify({ skills: checked, csrf_token: CSRF_TOKEN })
-})
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': CSRF_TOKEN
+        },
+        body: JSON.stringify({ skills: checked, csrf_token: CSRF_TOKEN })
+        )
 
         .then r => r.json())
         .then(data => {

@@ -6,7 +6,7 @@ if (!$session->isLoggedIn()) {
     exit;
 }
 require_once '../templates/common.php'; 
-$csrf_token = getToken();
+$csrf_token = CSRF::getToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">

@@ -15,7 +15,7 @@ if ($service) {
   $stmt->execute([$service->freelancer_id]);
   $freelancer = $stmt->fetch();
 }
-$csrf_token = getToken();
+$csrf_token = CSRF::getToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">

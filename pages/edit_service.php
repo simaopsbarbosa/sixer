@@ -18,7 +18,7 @@ if ($service->freelancer_id !== ($user['user_id'] ?? null)) {
   header('Location: profile.php');
   exit();
 }
-$csrf_token = getToken();
+$csrf_token = CSRF::getToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">

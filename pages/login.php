@@ -1,6 +1,6 @@
 <?php require_once '../templates/common.php'; 
 session_start();
-$csrf_token = getToken();
+$csrf_token = CSRF::getToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">
