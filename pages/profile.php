@@ -22,7 +22,7 @@ if (!empty($_GET['id'])) {
 require_once '../templates/common.php';
 require_once '../database/user_class.php';
 require_once '../database/service_class.php';
-require_once '../templates/profile_service.php';
+require_once '../templates/profile_service_card.php';
 require_once '../templates/profile_purchase_card.php';
 
 // Fetch user from database by id
