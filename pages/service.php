@@ -406,7 +406,7 @@ if (
     $db = Database::getInstance();
     $stmt = $db->prepare('INSERT INTO messages (service_id, user_id, message_text, is_reply, date_time) VALUES (?, ?, ?, ?, datetime("now"))');
     $stmt->execute([$service->id, $msg_user_id, $msg_text, $is_reply]);
-    echo '<script>window.location.hash = "#forumSection"; window.location.reload();</script>';
+    header('Location: ' . $_SERVER['REQUEST_URI'] . '#forumSection');
     exit;
 }
 
@@ -417,6 +417,6 @@ if (
     Service::isUserCustomer($selected_client_id, $service->id)
 ) {
     Service::markPurchaseCompleted($selected_client_id, $service->id);
-    echo '<script>window.location.hash = "#forumSection"; window.location.reload();</script>';
+    header('Location: ' . $_SERVER['REQUEST_URI'] . '#forumSection');
     exit;
 }
