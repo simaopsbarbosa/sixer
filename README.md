@@ -8,10 +8,10 @@
 - [x] Edit their profile, including their name, username, password, and email.
 
 **Freelancers:**
-- [ ] List new services, providing details such as category, pricing, delivery time, and service description, along with images or videos.
+- [x] List new services, providing details such as category, pricing, delivery time, and service description, along with images or videos.
 - [x] Track and manage their offered services.
-- [x] Respond to inquiries from clients regarding their services and provide custom offers if needed.
-- [x] Mark services as completed once delivered.
+- [ ] Respond to inquiries from clients regarding their services and provide custom offers if needed.
+- [ ] Mark services as completed once delivered.
 
 **Clients:**
 - [ ] Browse services using filters like category, price, and rating.
