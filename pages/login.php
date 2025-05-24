@@ -1,4 +1,5 @@
-<?php require_once '../templates/common.php'; 
+<?php require_once '../templates/common.php';
+require_once '../utils/csrf.php';
 session_start();
 $csrf_token = CSRF::getToken();
 ?>

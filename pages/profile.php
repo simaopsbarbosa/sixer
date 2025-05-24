@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+require_once '../utils/csrf.php';
 
 // Initialize session only if needed for own profile
 $session = null;

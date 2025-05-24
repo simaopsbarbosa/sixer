@@ -1,6 +1,7 @@
 <?php
 require_once '../templates/common.php';
 require_once '../database/service_class.php';
+require_once '../utils/csrf.php';
 
 $services = [];
 // Fetch all services (delisted = 0)

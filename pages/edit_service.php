@@ -2,6 +2,7 @@
 require_once '../templates/common.php';
 require_once '../database/service_class.php';
 require_once '../utils/session.php';
+require_once '../utils/csrf.php';
 
 $service_id = isset($_GET['id']) ? (int)$_GET['id'] : null;
 $service = $service_id ? Service::get_by_id($service_id) : null;

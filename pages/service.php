@@ -3,6 +3,7 @@ require_once '../templates/common.php';
 require_once '../database/service_class.php';
 require_once '../database/user_class.php';
 require_once '../templates/message.php';
+require_once '../utils/csrf.php';
 
 // Get service id from query string
 $service_id = isset($_GET['id']) ? (int)$_GET['id'] : null;

@@ -1,6 +1,7 @@
 <?php
 require_once '../utils/session.php';
 require_once '../templates/common.php';
+require_once '../utils/csrf.php';
 
 $session = Session::getInstance();
 if (!$session->isLoggedIn()) {
