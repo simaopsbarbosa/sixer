@@ -24,12 +24,22 @@ function drawProfilePurchaseCard($purchase, $service, $is_completed) {
       <?php if (!$is_completed): ?>
           <button class="review-btn" disabled>Review after delivery</button>
       <?php else: ?>
-          <button class="review-btn" type="button">Review</button>
+           <button class="review-btn" type="button">Review</button>
+            <form class="review-form review-form-styled" style="display:none; margin-top: 16px;" method="post">
+              <label style="color:#aaa; font-size:0.9em; margin-bottom:0.5em;">Rating:</label>
+              <select name="rating" required class="styled-select">
+                <option value="" disabled selected>Select rating</option>
+                <option value="5">5 (excellent)</option>
+                <option value="4">4 (good)</option>
+                <option value="3">3 (average)</option>
+                <option value="2">2 (poor)</option>
+                <option value="1">1 (terrible)</option>
+              </select>
+              <label style="color:#aaa; font-size:0.9em; margin-bottom:0.5em; margin-top:1em;">Review:</label>
+              <textarea name="review" rows="3" required class="styled-textarea"></textarea>
+              <button type="submit" class="submit-button" style="margin-top:1em;">Submit</button>
+            </form>
       <?php endif; ?>
     </div>
-    <style>
-      .service-title-link { cursor: pointer; }
-      .work-item { cursor: default; }
-    </style>
     <?php
 }
