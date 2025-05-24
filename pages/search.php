@@ -11,6 +11,24 @@ $service_ids = $stmt->fetchAll();
 foreach ($service_ids as $row) {
     $services[] = $row['service_id'];
 }
+
+$q = isset($_GET['q']) ? trim($_GET['q']) : '';
+$services = [];
+
+$db = Database::getInstance();
+if ($q !== '') {
+    $stmt = $db->prepare('SELECT service_id FROM services_list WHERE service_delisted = 0 AND service_title LIKE ?');
+    $like = '%' . $q . '%';
+    $stmt->execute([$like]);
+} else {
+    $stmt = $db->prepare('SELECT service_id FROM services_list WHERE service_delisted = 0');
+    $stmt->execute();
+}
+$service_ids = $stmt->fetchAll();
+foreach ($service_ids as $row) {
+    $services[] = $row['service_id'];
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
