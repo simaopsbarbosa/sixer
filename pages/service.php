@@ -1,4 +1,11 @@
-<?php require_once '../templates/common.php'; ?>
+<?php 
+require_once '../templates/common.php';
+require_once '../database/service_class.php';
+
+// Get service id from query string
+$service_id = isset($_GET['id']) ? (int)$_GET['id'] : null;
+$service = $service_id ? Service::get_by_id($service_id) : null;
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -22,11 +29,16 @@
           </div>
           <div class="service-info">
             <div class="service-info-top">
-              <h1>Full E-commerce Website Development</h1>
+              <h1><?= htmlspecialchars($service ? $service->title : 'Service Not Found') ?></h1>
               <div class="service-meta">
+                <span class="service-category">
+                  <?= $service ? htmlspecialchars($service->category) : '-' ?>
+                </span>
                 <span class="service-price"
                   >Starting from
-                  <span style="font-weight: bold">$499</span></span
+                  <span style="font-weight: bold">
+                    <?= htmlspecialchars($service ? $service->price : '-') ?>$
+                  </span></span
                 >
                 <div class="service-rating">
                   <span class="rating-value">5.0</span>
@@ -35,10 +47,21 @@
               </div>
             </div>
             <div class="service-actions">
+              <?php 
+                require_once '../utils/session.php';
+                $session = Session::getInstance();
+                $user = $session->getUser();
+              ?>
+              <?php if ($user && $service && $user['user_id'] == $service->freelancer_id): ?>
+                <a href="edit_service.php?id=<?= $service->id ?>">
+                  <button class="hire-button" type="button">Edit</button>
+                </a>
+              <?php else: ?>
+                <a href="payment.php">
+                  <button class="hire-button">Hire Now</button>
+                </a>
+              <?php endif; ?>
               <button class="contact-button" id="toggleForumBtn">Contact Freelancer</button>
-              <a href="payment.php">
-                <button class="hire-button">Hire Now</button>
-              </a>
             </div>
           </div>
         </div> <!-- end of service-header -->
@@ -86,17 +109,15 @@
           <div class="service-section about-service-section">
             <div class="about-service-header">
               <h2>About This Service</h2>
-              <span
-                >Delivery in
-                <span class="service-eta">2 weeks</span>
+              <span>
+                Delivery in
+                <span class="service-eta">
+                  <?= $service ? ($service->eta . ' day' . ($service->eta == 1 ? '' : 's')) : '-' ?>
+                </span>
               </span>
             </div>
             <p>
-              I will build you a complete e-commerce website with modern UI/UX
-              design, secure payment processing, and inventory management
-              system. The website will be fully responsive, optimized for all
-              devices, and include all essential features for a successful
-              online store.
+              <?= $service ? nl2br(htmlspecialchars($service->info)) : 'Service not found.' ?>
             </p>
           </div>
 

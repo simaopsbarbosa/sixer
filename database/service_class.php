@@ -8,7 +8,8 @@ class Service {
     public string $title;
     public float $price;
     public string $info;
-    public string $eta;
+    public int $eta;
+    public string $category;
     public bool $delisted;
     public $picture; // Can be null or binary
 
@@ -18,7 +19,8 @@ class Service {
         string $title,
         float $price,
         string $info,
-        string $eta,
+        int $eta,
+        string $category,
         bool $delisted = false,
         $picture = null
     ) {
@@ -28,14 +30,15 @@ class Service {
         $this->price = $price;
         $this->info = $info;
         $this->eta = $eta;
+        $this->category = $category;
         $this->delisted = $delisted;
         $this->picture = $picture;
     }
 
-    public static function create($freelancer_id, $title, $price, $info, $eta, $picture = null) {
+    public static function create($freelancer_id, $title, $price, $info, $eta, $category, $picture = null) {
         $db = Database::getInstance();
-        $stmt = $db->prepare('INSERT INTO services_list (freelancer_id, service_title, service_price, service_info, service_eta, service_picture) VALUES (?, ?, ?, ?, ?, ?)');
-        $stmt->execute([$freelancer_id, $title, $price, $info, $eta, $picture]);
+        $stmt = $db->prepare('INSERT INTO services_list (freelancer_id, service_title, service_price, service_info, service_eta, service_category, service_picture) VALUES (?, ?, ?, ?, ?, ?, ?)');
+        $stmt->execute([$freelancer_id, $title, $price, $info, $eta, $category, $picture]);
         return $db->lastInsertId();
     }
 
@@ -51,7 +54,8 @@ class Service {
             $service['service_title'],
             $service['service_price'],
             $service['service_info'],
-            $service['service_eta'],
+            (int)$service['service_eta'],
+            $service['service_category'],
             (bool)$service['service_delisted'],
             $service['service_picture'] ?? null
         );
@@ -69,7 +73,8 @@ class Service {
                 $service['service_title'],
                 $service['service_price'],
                 $service['service_info'],
-                $service['service_eta'],
+                (int)$service['service_eta'],
+                $service['service_category'],
                 (bool)$service['service_delisted'],
                 $service['service_picture'] ?? null
             );
@@ -78,15 +83,28 @@ class Service {
 
     public function update() {
         $db = Database::getInstance();
-        $stmt = $db->prepare('UPDATE services_list SET service_title = ?, service_price = ?, service_info = ?, service_eta = ?, service_delisted = ?, service_picture = ? WHERE service_id = ?');
+        $stmt = $db->prepare('UPDATE services_list SET service_title = ?, service_price = ?, service_info = ?, service_eta = ?, service_category = ?, service_delisted = ?, service_picture = ? WHERE service_id = ?');
         $stmt->execute([
             $this->title,
             $this->price,
             $this->info,
             $this->eta,
+            $this->category,
             $this->delisted,
             $this->picture,
             $this->id
         ]);
+    }
+
+    public static function update_service($service_id, $title, $category, $price, $eta, $info) {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('UPDATE services_list SET service_title = ?, service_category = ?, service_price = ?, service_eta = ?, service_info = ? WHERE service_id = ?');
+        $stmt->execute([$title, $category, $price, $eta, $info, $service_id]);
+    }
+
+    public static function delete_by_id($service_id) {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('DELETE FROM services_list WHERE service_id = ?');
+        $stmt->execute([$service_id]);
     }
 }

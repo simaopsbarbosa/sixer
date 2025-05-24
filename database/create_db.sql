@@ -76,7 +76,8 @@ CREATE TABLE services_list
     service_title TEXT NOT NULL,
     service_price REAL NOT NULL,
     service_info TEXT NOT NULL,
-    service_eta TEXT NOT NULL,
+    service_eta INTEGER NOT NULL,
+    service_category TEXT NOT NULL,
 
     service_delisted BOOLEAN DEFAULT FALSE NOT NULL,
 

@@ -270,6 +270,18 @@ body {
     margin-bottom: 2em;
 }
 
+.cancel-button {
+    background-color: #09090b;
+    color: #fff;
+    text-decoration: none;
+}
+
+.delete-button {
+    background-color: #ac0000;
+    color: #fff;
+    text-decoration: none;
+}
+
 .create-service-subtitle span strong, .service-form .service-subtitle span strong, .service-form .service-subtitle span span {
   font-weight: bold;
   color: #fff;
