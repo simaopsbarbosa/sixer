@@ -115,10 +115,17 @@ if ($service) {
         <div id="forumSection" class="service-section forum-section" style="display: none;">
           <?php if ($is_freelancer): ?>
             <h2>Active Clients</h2>
-            <p class="active-clients-info">
-              You can chat with your active clients here.<br>
+            <?php if (empty($active_clients)): ?>
+              <p class="active-clients-info">
+              You have no active clients yet.<br>
+              Once a client hires you or sends a message, they will appear here.
+              </p>
+            <?php else: ?>
+              <p class="active-clients-info">
+              You can chat with your clients here.<br>
               Select a client to view the conversation.
-            </p>
+              </p>
+            <?php endif; ?>
             <?php else: ?>
             <h2>Private Messages with Freelancer</h2>
             <?php endif; ?>
