@@ -21,6 +21,7 @@ function drawHeader() {
       <img class="icon" src="../assets/icons/dropdown.svg" alt="" />
     </a>
     <form action="search.php" method="get">
+      <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
       <input
         type="text"
         name="q"
@@ -56,6 +57,7 @@ function drawHeader() {
     <button id="close-filters" type="button">&times;</button>
     <h3>Filters</h3>
     <form id="filters-form">
+      <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
       <label for="filter-category">Category:</label>
       <select id="filter-category" name="category">
         <!-- we should find a better way to do this -->
