@@ -208,6 +208,17 @@ header a {
   margin-left: 0.6em;
 }
 
+.alert {
+  padding: 10px 20px;
+  border-radius: 0px;
+  margin-bottom: 20px;
+}
+
+.alert-error {
+  background-color: #ac0000;
+  color:white;
+}
+
 .simple-button {
   height: 2em;
   display: flex;
