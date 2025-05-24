@@ -5,12 +5,7 @@
 declare(strict_types=1);
 require_once '../utils/database.php';
 require_once '../utils/csrf.php';
-
-if (!verifyCSRF($csrf_token)) {
-http_response_code(403);
-echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
-exit;
-}
+require_once '../utils/session.php';
 
 $user_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if (!$user_id) {

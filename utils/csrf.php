@@ -19,7 +19,7 @@ class CSRF {
         return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($token, ENT_QUOTES, 'UTF-8') . '">';
     }
 
-    public static function validateToken(?string $token): bool {
+    public static function verifyCSRF(?string $token): bool {
         return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token ?? '');
     }
 }

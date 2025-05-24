@@ -7,15 +7,17 @@ require_once '../utils/session.php';
 require_once '../utils/database.php';
 require_once '../utils/csrf.php';
 
-if (!verifyCSRF($csrf_token)) {
+header('Content-Type: application/json');
+
+$session = Session::getInstance();
+
+$csrf_token = $_POST['csrf_token'] ?? '';
+if (!CSRF::verifyCSRF($csrf_token)) {
 http_response_code(403);
 echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
 exit;
 }
 
-header('Content-Type: application/json');
-
-$session = Session::getInstance();
 if (!$session->isLoggedIn()) {
     http_response_code(401);
     echo json_encode(['success' => false, 'error' => 'Not logged in']);

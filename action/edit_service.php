@@ -3,13 +3,15 @@ require_once '../database/service_class.php';
 require_once '../utils/session.php';
 require_once '../utils/csrf.php';
 
-if (!verifyCSRF($csrf_token)) {
+$session = Session::getInstance();
+
+$csrf_token = $_POST['csrf_token'] ?? '';
+if (!CSRF::verifyCSRF($csrf_token)) {
 http_response_code(403);
 echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
 exit;
 }
 
-$session = Session::getInstance();
 $user_id = $session->getUser()['user_id'] ?? null;
 
 $service_id = isset($_GET['id']) ? (int)$_GET['id'] : null;
@@ -21,11 +23,6 @@ if (!$service || $service->freelancer_id !== $user_id) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  if (!verifyCSRF($csrf_token)) {
-    http_response_code(403);
-    echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
-    exit;
-  }
   if (isset($_POST['delete'])) {
     // Delete service
     Service::delete_by_id($service_id);
