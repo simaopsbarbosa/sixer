@@ -10,14 +10,16 @@ if (!$session->isLoggedIn()) {
     exit;
 }
 
-$csrf_token = $_POST['csrf_token'] ?? '';
-if (!CSRF::verifyCSRF($csrf_token)) {
-http_response_code(403);
-echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
-exit;
-}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+  $csrf_token = $_POST['csrf_token'] ?? '';
+  if (!CSRF::verifyCSRF($csrf_token)) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
+  exit;
+  }
+
     $user = $session->getUser();
     $freelancer_id = $user['user_id'] ?? null;
     $title = trim($_POST['title'] ?? '');
@@ -50,7 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$csrf_token = CSRF::getToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">
