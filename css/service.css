@@ -663,7 +663,7 @@
 .forum-section h2 {
   font-size: 1.3em;
   font-weight: bold;
-  margin: 0 0 1em 0;
+  margin: 0 !important;
   text-align: left;
   color: #ffffff;
 }
@@ -847,7 +847,7 @@
   gap: 1em;
   flex-wrap: wrap;
   margin-top: 1.5em;
-  margin-bottom: 0.5em;
+  margin-bottom: 1.5em;
 }
 
 .forum-section {
@@ -934,4 +934,13 @@
     height: 20px;
     vertical-align: middle;
   }
+}
+
+.mark-completed-disabled {
+  background: #1a1a1a !important;
+  color: #bbb !important;
+  cursor: not-allowed !important;
+  border: 1px solid #444 !important;
+  pointer-events: none;
+  opacity: 1;
 }

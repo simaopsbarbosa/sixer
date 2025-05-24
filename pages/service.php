@@ -148,7 +148,34 @@ if ($service) {
                   echo $active_user ? htmlspecialchars($active_user['full_name']) : 'User ' . $selected_client_id;
                 ?>
               </span></h2>
-              <!-- Optionally, add Mark as Completed button here if needed -->
+              <?php
+              $has_uncompleted = $is_freelancer && $selected_client_id && Service::isUserCustomer($selected_client_id, $service->id);
+              $has_completed = false;
+              if ($is_freelancer && $selected_client_id) {
+                $db = Database::getInstance();
+                $stmt = $db->prepare('SELECT COUNT(*) FROM purchases WHERE client_id = ? AND service_id = ? AND completed = 1');
+                $stmt->execute([$selected_client_id, $service->id]);
+                $has_completed = $stmt->fetchColumn() > 0;
+              }
+              if ($is_freelancer && $selected_client_id && ($has_uncompleted || $has_completed)):
+                $disabled = $has_uncompleted ? '' : 'disabled';
+                $btnText = $has_uncompleted ? 'Mark as Completed' : 'Marked as Complete';
+              ?>
+                <form id="markCompletedForm" method="post" style="display:inline; margin-left: 1em;">
+                  <input type="hidden" name="mark_completed" value="1" />
+                  <button type="button" id="markCompletedBtn" class="simple-button<?= !$has_uncompleted ? ' mark-completed-disabled' : '' ?>" style="margin-left: auto;<?= !$has_uncompleted ? ' background:#333; color:#bbb; cursor:not-allowed; border:1px solid #444;' : '' ?>" <?= $disabled ?>><?= $btnText ?></button>
+                </form>
+                <script>
+                  var markBtn = document.getElementById('markCompletedBtn');
+                  if (markBtn && !markBtn.disabled) {
+                    markBtn.addEventListener('click', function(e) {
+                      if (confirm('Are you sure you want to mark this purchase as completed?')) {
+                        document.getElementById('markCompletedForm').submit();
+                      }
+                    });
+                  }
+                </script>
+              <?php endif; ?>
             </div>
           <?php endif; ?>
           <div class="forum-messages">
@@ -372,6 +399,17 @@ if (
     $db = Database::getInstance();
     $stmt = $db->prepare('INSERT INTO messages (service_id, user_id, message_text, is_reply, date_time) VALUES (?, ?, ?, ?, datetime("now"))');
     $stmt->execute([$service->id, $msg_user_id, $msg_text, $is_reply]);
+    echo '<script>window.location.hash = "#forumSection"; window.location.reload();</script>';
+    exit;
+}
+
+// Handle Mark as Completed
+if (
+    isset($_POST['mark_completed']) &&
+    $is_freelancer && $service && $selected_client_id &&
+    Service::isUserCustomer($selected_client_id, $service->id)
+) {
+    Service::markPurchaseCompleted($selected_client_id, $service->id);
     echo '<script>window.location.hash = "#forumSection"; window.location.reload();</script>';
     exit;
 }

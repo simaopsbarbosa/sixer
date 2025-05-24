@@ -130,4 +130,14 @@ class Service {
         $stmt->execute([$service_id]);
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
+
+    // Mark a purchase as completed for a given client and service (if uncompleted)
+    public static function markPurchaseCompleted(int $client_id, int $service_id): bool {
+        $db = Database::getInstance();
+        // Only update if there is an uncompleted purchase
+        $stmt = $db->prepare('UPDATE purchases SET completed = 1 WHERE client_id = ? AND service_id = ? AND completed = 0');
+        $stmt->execute([$client_id, $service_id]);
+        // Return true if any row was updated
+        return $stmt->rowCount() > 0;
+    }
 }
