@@ -668,6 +668,11 @@
 }
 
 /* forum things */
+
+.active-clients-info {
+  margin-bottom: 1.5em !important;
+}
+
 .forum-section {
   padding: 1.5em 1em 1em 1em;
   border: 1px solid #333333;

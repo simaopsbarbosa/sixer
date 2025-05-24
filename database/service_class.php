@@ -124,4 +124,10 @@ class Service {
         $stmt->execute([$service_id]);
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
+    public static function get_all_message_users_for_service($service_id) {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT DISTINCT user_id FROM messages WHERE service_id = ?');
+        $stmt->execute([$service_id]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
 }

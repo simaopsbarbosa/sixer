@@ -73,10 +73,10 @@ if ($service) {
 
                 // Determine conversation context
                 $is_freelancer = $user && $service && $user['user_id'] == $service->freelancer_id;
-                $active_clients = $is_freelancer ? Service::get_active_clients_for_service($service->id) : [];
+                // Update: allow any user to send a message to a freelancer
+                $active_clients = $is_freelancer ? Service::get_all_message_users_for_service($service->id) : [];
                 $selected_client_id = null;
                 if ($is_freelancer) {
-                    // Select client from GET or default to first
                     if (isset($_GET['client_id']) && in_array((int)$_GET['client_id'], $active_clients)) {
                         $selected_client_id = (int)$_GET['client_id'];
                     } elseif (!empty($active_clients)) {
@@ -103,7 +103,15 @@ if ($service) {
         </div> <!-- end of service-header -->
 
         <div id="forumSection" class="service-section forum-section" style="display: none;">
-          <h2>Private Forum with Freelancer</h2>
+          <?php if ($is_freelancer): ?>
+            <h2>Active Clients</h2>
+            <p class="active-clients-info">
+              You can chat with your active clients here.<br>
+              Select a client to view the conversation.
+            </p>
+            <?php else: ?>
+            <h2>Private Messages with Freelancer</h2>
+            <?php endif; ?>
           <?php if ($is_freelancer && count($active_clients) > 0): ?>
             <div class="conversation-tabs-container">
               <div class="conversation-tabs">
@@ -120,8 +128,8 @@ if ($service) {
                 <?php endforeach; ?>
               </div>
             </div>
-            z<div class="forum-header-row">
-              <h2 style="margin: 0;">Private Forum with <span id="activeUser">
+            <div class="forum-header-row">
+              <h2>Private Messages with <span id="activeUser">
                 <?php
                   $active_cuser = null;
                   if ($selected_client_id) {
@@ -146,7 +154,7 @@ if ($service) {
               }
             ?>
           </div>
-          <?php if ($user && ($is_freelancer || Service::isUserCustomer($user['user_id'], $service->id))): ?>
+          <?php if ($user): ?>
           <form class="forum-form" method="post" style="margin-bottom:0;">
             <input type="text" name="message" placeholder="Write a message..." required class="forum-input" autocomplete="off" />
             <input type="hidden" name="send_message" value="1" />
@@ -331,8 +339,7 @@ if ($service) {
 // Handle message sending
 if (
     isset($_POST['send_message'], $_POST['message']) &&
-    $user && $service && $selected_client_id && trim($_POST['message']) !== '' &&
-    ($is_freelancer || Service::isUserCustomer($user['user_id'], $service->id))
+    $user && $service && $selected_client_id && trim($_POST['message']) !== ''
 ) {
     $msg_text = trim($_POST['message']);
     $is_reply = $is_freelancer ? 1 : 0;
