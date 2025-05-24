@@ -5,6 +5,12 @@
 declare(strict_types=1);
 require_once '../utils/database.php';
 
+if (!verifyCSRF($csrf_token)) {
+http_response_code(403);
+echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
+exit;
+}
+
 $user_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if (!$user_id) {
     header('Location: ../assets/images/default.jpg');
