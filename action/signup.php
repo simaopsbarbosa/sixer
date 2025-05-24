@@ -55,12 +55,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // Create user
     User::create($full_name, $email, $password);
     unset($_SESSION['error']);
-    $_SESSION['success'] = 'Signup successful! You can now log in.';
-    header('Location: ../pages/login.php');
-    exit;
+
+    $user = User::get_user_by_email_password($email, $password);
+    if ($user) {
+        $session->login($user);
+        header('Location: ../pages/profile.php');
+        exit;
+    } else {
+        $_SESSION['error'] = 'Signup failed. Please try again.';
+        header('Location: ../pages/signup.php');
+        exit;
+    }
 } else {
     http_response_code(405);
     echo "Only POST requests are allowed.";

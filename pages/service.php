@@ -21,11 +21,20 @@ $service = $service_id ? Service::get_by_id($service_id) : null;
     <main>
       <div class="service-container">
         <div class="service-header">
-          <div class="service-image">
-            <img
-              src="../assets/images/e-commerce.jpg"
-              alt="E-commerce Website Service"
-            />
+          <div class="service-image" style="aspect-ratio: 16/9; width: 100%; background: #18181b; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+            <?php if ($service && $service->picture): ?>
+              <img
+                src="data:image/jpeg;base64,<?= base64_encode($service->picture) ?>"
+                alt="Service Image"
+                style="width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16/9;"
+              />
+            <?php else: ?>
+              <img
+                src="../assets/images/e-commerce.jpg"
+                alt="E-commerce Website Service"
+                style="width: 100%; height: 100%; object-fit: cover; aspect-ratio: 16/9;"
+              />
+            <?php endif; ?>
           </div>
           <div class="service-info">
             <div class="service-info-top">
