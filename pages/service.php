@@ -73,8 +73,14 @@ if ($service) {
 
                 // Determine conversation context
                 $is_freelancer = $user && $service && $user['user_id'] == $service->freelancer_id;
-                // Update: allow any user to send a message to a freelancer
-                $active_clients = $is_freelancer ? Service::get_all_message_users_for_service($service->id) : [];
+                // Show all clients with ongoing purchases AND all clients that have sent a message (no repeats)
+                if ($is_freelancer) {
+                  $clients_from_purchases = Service::get_active_clients_for_service($service->id); // completed == false
+                  $clients_from_messages = Service::get_all_message_users_for_service($service->id); // all who sent a message
+                  $active_clients = array_unique(array_merge($clients_from_purchases, $clients_from_messages));
+                } else {
+                  $active_clients = [];
+                }
                 $selected_client_id = null;
                 if ($is_freelancer) {
                     if (isset($_GET['client_id']) && in_array((int)$_GET['client_id'], $active_clients)) {
@@ -97,7 +103,11 @@ if ($service) {
                   <button class="hire-button">Hire Now</button>
                 </a>
               <?php endif; ?>
-              <button class="contact-button" id="toggleForumBtn" onclick="if (!<?= $user ? 'true' : 'false' ?>) { window.location.href = 'login.php'; return false; }">Contact Freelancer</button>
+              <?php if ($user && $service && $user['user_id'] == $service->freelancer_id): ?>
+                <button class="contact-button" id="toggleForumBtn" onclick="if (!<?= $user ? 'true' : 'false' ?>) { window.location.href = 'login.php'; return false; }">Contact Clients</button>
+              <?php else: ?>
+                <button class="contact-button" id="toggleForumBtn" onclick="if (!<?= $user ? 'true' : 'false' ?>) { window.location.href = 'login.php'; return false; }">Contact Freelancer</button>
+              <?php endif; ?>
             </div>
           </div>
         </div> <!-- end of service-header -->
@@ -131,11 +141,11 @@ if ($service) {
             <div class="forum-header-row">
               <h2>Private Messages with <span id="activeUser">
                 <?php
-                  $active_cuser = null;
+                  $active_user = null;
                   if ($selected_client_id) {
-                    $active_cuser = Database::getInstance()->query('SELECT * FROM user_registry WHERE user_id = ' . (int)$selected_client_id)->fetch();
+                    $active_user = Database::getInstance()->query('SELECT * FROM user_registry WHERE user_id = ' . (int)$selected_client_id)->fetch();
                   }
-                  echo $active_cuser ? htmlspecialchars($active_cuser['full_name']) : 'User ' . $selected_client_id;
+                  echo $active_user ? htmlspecialchars($active_user['full_name']) : 'User ' . $selected_client_id;
                 ?>
               </span></h2>
               <!-- Optionally, add Mark as Completed button here if needed -->
@@ -146,24 +156,34 @@ if ($service) {
               if ($selected_client_id) {
                 $messages = Service::get_service_messages($service->id, $selected_client_id);
                 // Ensure correct client user for freelancer
-                $active_cuser = null;
+                $active_user = null;
                 if ($is_freelancer && $selected_client_id) {
-                  $active_cuser = Database::getInstance()->query('SELECT * FROM user_registry WHERE user_id = ' . (int)$selected_client_id)->fetch();
+                  $active_user = Database::getInstance()->query('SELECT * FROM user_registry WHERE user_id = ' . (int)$selected_client_id)->fetch();
                 }
                 foreach ($messages as $msg) {
                   drawMessage($msg, !$msg['is_reply'],
-                    $is_freelancer ? ($active_cuser ?? $user) : $user,
+                    $is_freelancer ? ($active_user ?? $user) : $user,
                     $freelancer
                   );
                 }
               }
             ?>
           </div>
-          <?php if ($user): ?>
+          <?php if ($user && (!$is_freelancer || ($is_freelancer && count($active_clients) > 0))): ?>
           <form class="forum-form" method="post" style="margin-bottom:0;">
             <input type="text" name="message" placeholder="Write a message..." required class="forum-input" autocomplete="off" />
             <input type="hidden" name="send_message" value="1" />
             <button type="submit" aria-label="Send">
+              <span class="send-text">Send</span>
+              <span class="send-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </span>
+            </button>
+          </form>
+          <?php elseif ($is_freelancer && count($active_clients) === 0): ?>
+          <form class="forum-form" style="margin-bottom:0;">
+            <input type="text" name="message" placeholder="No clients available to message." class="forum-input" disabled />
+            <button type="submit" aria-label="Send" disabled style="background: #333; color: #bbb; cursor: not-allowed;">
               <span class="send-text">Send</span>
               <span class="send-icon">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
@@ -198,7 +218,7 @@ if ($service) {
               <div class="reviews-title">
                 <h2>Reviews</h2>
                 <span class="reviews-subtitle"
-                  >Here are some recent reviews from satisfied customers</span
+                  >Here are some recent reviews from past customers</span
                 >
               </div>
               <div class="reviews-stats">
@@ -311,7 +331,7 @@ if ($service) {
           this.textContent = 'Hide Forum';
         } else {
           forum.style.display = 'none';
-          this.textContent = 'Contact Freelancer';
+            this.textContent = <?= ($user && $service && $user['user_id'] == $service->freelancer_id) ? "'Contact Clients'" : "'Contact Freelancer'"; ?>;
         }
       });
       // Open forum by default if hash is #forumSection or after sending

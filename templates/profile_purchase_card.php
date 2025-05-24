@@ -1,16 +1,12 @@
 <?php
-// templates/profile_purchase_card.php
-// Renders a purchase card for the profile page
-// Usage: require and call drawProfilePurchaseCard($purchase, $service, $is_completed)
-
 function drawProfilePurchaseCard($purchase, $service, $is_completed) {
-    // $purchase: array with purchase info (including paid amount, date, etc)
-    // $service: instance of Service
-    // $is_completed: bool
+
     $paid = number_format($purchase['paid_amount'] ?? $service->price, 0);
     $date = isset($purchase['purchase_date']) ? date('d/m/Y', strtotime($purchase['purchase_date'])) : '';
+    $service_url = '../pages/service.php?id=' . urlencode($service->id);
     ?>
-    <div class="work-item">
+    <a href="<?= $service_url ?>" style="text-decoration:none;color:inherit;">
+      <div class="work-item" style="cursor:pointer;">
         <div class="work-header">
             <div class="work-title-group">
                 <h3><?= htmlspecialchars($service->title) ?></h3>
@@ -29,6 +25,7 @@ function drawProfilePurchaseCard($purchase, $service, $is_completed) {
         <?php else: ?>
             <button class="review-btn" type="button">Review</button>
         <?php endif; ?>
-    </div>
+      </div>
+    </a>
     <?php
 }

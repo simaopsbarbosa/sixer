@@ -199,34 +199,10 @@
 
 .service-section p {
   line-height: 1.6;
-  color: #cccccc;
   font-size: 0.95em;
   margin: 0;
   padding: 0;
   text-align: left;
-}
-
-.service-features {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1em;
-}
-
-.service-features li {
-  color: #cccccc;
-  font-size: 0.95em;
-  padding-left: 1.5em;
-  position: relative;
-}
-
-.service-features li::before {
-  content: "•";
-  position: absolute;
-  left: 0;
-  color: #666666;
 }
 
 .freelancer-info {
@@ -268,7 +244,7 @@
 }
 
 .freelancer-description {
-  color: #cccccc;
+  color: white;
   font-size: 0.95em;
   line-height: 1.6;
 }
@@ -391,7 +367,7 @@
 }
 
 .review-text {
-  color: #cccccc;
+  color: white;
   font-size: 0.95em;
   line-height: 1.6;
   margin: 0;
@@ -465,7 +441,7 @@
 .reviews-stats .stat {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-end;
 }
 
 .reviews-stats .stat-value {
@@ -485,8 +461,8 @@
 }
 
 .reviews-subtitle {
-  color: #888888;
-  font-size: 0.9em;
+  color: white;
+  font-size: 0.95em;
   font-weight: 100;
 }
 
@@ -751,7 +727,7 @@
 }
 
 .forum-text {
-  color: #cccccc;
+  color: white;
   font-size: 0.95em;
   line-height: 1.6;
   margin: 0;
