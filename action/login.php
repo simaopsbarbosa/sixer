@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-require_once(__DIR__ . '/../utils/database.php');
-require_once(__DIR__ . '/../utils/session.php');
-require_once(__DIR__ . '/../database/user_class.php');
+require_once '/../utils/database.php';
+require_once '/../utils/session.php';
+require_once '/../database/user_class.php';
+require_once '../utils/csrf.php';
 
 if (!verifyCSRF($csrf_token)) {
 http_response_code(403);

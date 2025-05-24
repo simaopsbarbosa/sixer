@@ -4,6 +4,7 @@
 
 declare(strict_types=1);
 require_once '../utils/database.php';
+require_once '../utils/csrf.php';
 
 if (!verifyCSRF($csrf_token)) {
 http_response_code(403);

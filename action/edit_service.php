@@ -1,6 +1,7 @@
 <?php
 require_once '../database/service_class.php';
 require_once '../utils/session.php';
+require_once '../utils/csrf.php';
 
 if (!verifyCSRF($csrf_token)) {
 http_response_code(403);
