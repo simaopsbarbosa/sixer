@@ -2,6 +2,9 @@
 declare(strict_types=1);
 require_once '../utils/session.php';
 require_once '../templates/common.php';
+require_once '../database/user_class.php';
+require_once '../database/service_class.php';
+require_once '../templates/profile_service.php';
 
 $session = Session::getInstance();
 if (!$session->isLoggedIn()) {
@@ -13,7 +16,6 @@ if (!$session->isLoggedIn()) {
 $profile_user_id = isset($_GET['id']) ? intval($_GET['id']) : $session->getUser()['user_id'];
 
 // Fetch user from database by id
-require_once '../database/user_class.php';
 $user_data = null;
 $db = Database::getInstance();
 $stmt = $db->prepare('SELECT * FROM user_registry WHERE user_id = ?');
@@ -37,6 +39,8 @@ $email = $user_data['email'] ?? '';
 $join_date = $user_data['join_date'] ?? '';
 $is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
 
+$user_services = Service::get_by_freelancer($profile_user_id);
+
 $user_skills = [];
 $stmt = $db->prepare('SELECT skill_name FROM user_skills WHERE user_id = ?');
 $stmt->execute([$profile_user_id]);
@@ -46,6 +50,11 @@ $all_skills = [];
 $stmt = $db->prepare('SELECT skill_name FROM skills ORDER BY skill_name ASC');
 $stmt->execute();
 $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+function hasAnyServices($user_services) {
+    return !empty($user_services) && count($user_services) > 0;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -150,39 +159,18 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
           </div>
         </div>
           
-          <div class="profile-section">
-            <h2>Your Current Services</h2>
-            <div class="recent-work">
-              <div class="work-item">
-                <div class="work-header">
-                  <div class="work-title-group">
-                    <h3>Full E-commerce Website Development</h3>
-                    <span class="work-date">Starting from $499</span>
-                  </div>
-                  <div class="work-rating">5.0 <span style="font-weight: 100; color: #999">(75)</span></div>
-                </div>
-                <p class="work-description">
-                  I will build you a complete e-commerce website with modern
-                  UI/UX design, secure payment processing, and inventory
-                  management system.
-                </p>
-              </div>
-              <div class="work-item">
-                <div class="work-header">
-                  <div class="work-title-group">
-                    <h3>Custom API & Backend Development</h3>
-                    <span class="work-date">Starting from $299</span>
-                  </div>
-                  <div class="work-rating">4.8 <span style="font-weight: 100; color: #999">(52)</span></div>
-                </div>
-                <p class="work-description">
-                  I will create a robust backend system with RESTful APIs,
-                  database architecture, and complete documentation for your web
-                  or mobile application.
-                </p>
+          <?php if (hasAnyServices($user_services)): ?>
+            <div class="profile-section">
+              <h2>Your Current Services</h2>
+              <div class="recent-work">
+                <?php 
+                  foreach ($user_services as $service) {
+                    drawProfileService($service);
+                  }
+                ?>
               </div>
             </div>
-          </div>
+          <?php endif; ?>
 
           <div class="profile-section">
             <h2>Ongoing Purchases</h2>
