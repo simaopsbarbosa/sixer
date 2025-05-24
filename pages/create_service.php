@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div class="service-field">
                   <label for="service-delivery">Base Delivery Time (days)</label>
-                  <input type="number" class="input-field" id="service-delivery" name="delivery_time" min="1" max="60" />
+                  <input type="number" class="input-field" id="service-delivery" name="delivery_time" min="1"/>
                 </div>
               </div>
             </div>
