@@ -111,4 +111,17 @@ class Service {
         $stmt->execute([$user_id, $service_id]);
         return $stmt->fetchColumn() > 0;
     }
+
+    public static function get_service_messages($service_id, $client_id) {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT * FROM messages WHERE service_id = ? AND user_id = ? ORDER BY date_time ASC');
+        $stmt->execute([$service_id, $client_id]);
+        return $stmt->fetchAll();
+    }
+    public static function get_active_clients_for_service($service_id) {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT DISTINCT client_id FROM purchases WHERE service_id = ? AND completed = 0');
+        $stmt->execute([$service_id]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
 }

@@ -1,7 +1,4 @@
 <?php
-// templates/profile_service.php
-// Renders a service card for the profile page
-// Usage: require and call drawProfileService($service)
 
 function drawProfileService($service) {
     // $service: instance of Service

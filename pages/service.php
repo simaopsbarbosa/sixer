@@ -2,6 +2,7 @@
 require_once '../templates/common.php';
 require_once '../database/service_class.php';
 require_once '../database/user_class.php';
+require_once '../templates/message.php';
 
 // Get service id from query string
 $service_id = isset($_GET['id']) ? (int)$_GET['id'] : null;
@@ -69,6 +70,21 @@ if ($service) {
                 require_once '../utils/session.php';
                 $session = Session::getInstance();
                 $user = $session->getUser();
+
+                // Determine conversation context
+                $is_freelancer = $user && $service && $user['user_id'] == $service->freelancer_id;
+                $active_clients = $is_freelancer ? Service::get_active_clients_for_service($service->id) : [];
+                $selected_client_id = null;
+                if ($is_freelancer) {
+                    // Select client from GET or default to first
+                    if (isset($_GET['client_id']) && in_array((int)$_GET['client_id'], $active_clients)) {
+                        $selected_client_id = (int)$_GET['client_id'];
+                    } elseif (!empty($active_clients)) {
+                        $selected_client_id = (int)$active_clients[0];
+                    }
+                } else {
+                    $selected_client_id = $user ? $user['user_id'] : null;
+                }
               ?>
               <?php if ($user && $service && $user['user_id'] == $service->freelancer_id): ?>
                 <a href="edit_service.php?id=<?= $service->id ?>">
@@ -88,30 +104,52 @@ if ($service) {
 
         <div id="forumSection" class="service-section forum-section" style="display: none;">
           <h2>Private Forum with Freelancer</h2>
+          <?php if ($is_freelancer && count($active_clients) > 0): ?>
+            <div class="conversation-tabs-container">
+              <div class="conversation-tabs">
+                <?php foreach ($active_clients as $i => $cid):
+                  $cuser = $cid ? (Database::getInstance()->prepare('SELECT * FROM user_registry WHERE user_id = ?')->execute([$cid]) ? Database::getInstance()->prepare('SELECT * FROM user_registry WHERE user_id = ?')->execute([$cid]) : null) : null;
+                  $cuser = $cuser ? Database::getInstance()->query('SELECT * FROM user_registry WHERE user_id = ' . (int)$cid)->fetch() : null;
+                  $active = $selected_client_id == $cid;
+                ?>
+                  <a href="?id=<?= $service->id ?>&client_id=<?= $cid ?>#forumSection" style="text-decoration:none;">
+                    <button class="conversation-tab<?= $active ? ' active' : '' ?>" data-user="<?= $cuser ? htmlspecialchars($cuser['full_name']) : 'User ' . $cid ?>">
+                      <?= $cuser ? htmlspecialchars($cuser['full_name']) : 'User ' . $cid ?>
+                    </button>
+                  </a>
+                <?php endforeach; ?>
+              </div>
+            </div>
+            z<div class="forum-header-row">
+              <h2 style="margin: 0;">Private Forum with <span id="activeUser">
+                <?php
+                  $active_cuser = null;
+                  if ($selected_client_id) {
+                    $active_cuser = Database::getInstance()->query('SELECT * FROM user_registry WHERE user_id = ' . (int)$selected_client_id)->fetch();
+                  }
+                  echo $active_cuser ? htmlspecialchars($active_cuser['full_name']) : 'User ' . $selected_client_id;
+                ?>
+              </span></h2>
+              <!-- Optionally, add Mark as Completed button here if needed -->
+            </div>
+          <?php endif; ?>
           <div class="forum-messages">
-            <div class="forum-message">
-              <img src="../assets/images/default.jpg" alt="John Doe" class="forum-avatar" />
-              <div class="forum-message-content">
-                <div class="forum-message-header">
-                  <span class="forum-username">John Doe</span>
-                  <span class="forum-date">2025-05-20</span>
-                </div>
-                <div class="forum-text">Hello! How can I help you with your e-commerce project?</div>
-              </div>
-            </div>
-            <div class="forum-message">
-              <img src="../assets/images/default.jpg" alt="You" class="forum-avatar" />
-              <div class="forum-message-content">
-                <div class="forum-message-header">
-                  <span class="forum-username">You</span>
-                  <span class="forum-date">2025-05-21</span>
-                </div>
-                <div class="forum-text">Hi! I have some questions about payment integration.</div>
-              </div>
-            </div>
+            <?php 
+              if ($selected_client_id) {
+                $messages = Service::get_service_messages($service->id, $selected_client_id);
+                foreach ($messages as $msg) {
+                  drawMessage($msg, !$msg['is_reply'],
+                    $is_freelancer ? ($cuser ?? $user) : $user,
+                    $freelancer
+                  );
+                }
+              }
+            ?>
           </div>
-          <form class="forum-form" method="post">
-            <input type="text" name="message" placeholder="Write a message..." required class="forum-input" />
+          <?php if ($user && ($is_freelancer || Service::isUserCustomer($user['user_id'], $service->id))): ?>
+          <form class="forum-form" method="post" style="margin-bottom:0;">
+            <input type="text" name="message" placeholder="Write a message..." required class="forum-input" autocomplete="off" />
+            <input type="hidden" name="send_message" value="1" />
             <button type="submit" aria-label="Send">
               <span class="send-text">Send</span>
               <span class="send-icon">
@@ -119,6 +157,7 @@ if ($service) {
               </span>
             </button>
           </form>
+          <?php endif; ?>
           <label class="forum-notify-label">
             <input type="checkbox" name="notify_email" />
             Send email nofitication for new messages
@@ -262,6 +301,45 @@ if ($service) {
           this.textContent = 'Contact Freelancer';
         }
       });
+      // Open forum by default if hash is #forumSection or after sending
+      window.addEventListener('DOMContentLoaded', function() {
+        var forum = document.getElementById('forumSection');
+        if (window.location.hash === '#forumSection' || window.performance && performance.navigation.type === 1) {
+          forum.style.display = 'block';
+          var btn = document.getElementById('toggleForumBtn');
+          if (btn) btn.textContent = 'Hide Forum';
+        }
+      });
+      // Submit forum form with AJAX for instant update
+      var forumForm = document.querySelector('.forum-form');
+      if (forumForm) {
+        forumForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          var formData = new FormData(forumForm);
+          fetch(window.location.pathname + window.location.search, {
+            method: 'POST',
+            body: formData
+          })
+          .then(function() { window.location.hash = '#forumSection'; window.location.reload(); });
+        });
+      }
     </script>
   </body>
 </html>
+
+<?php
+// Handle message sending
+if (
+    isset($_POST['send_message'], $_POST['message']) &&
+    $user && $service && $selected_client_id && trim($_POST['message']) !== '' &&
+    ($is_freelancer || Service::isUserCustomer($user['user_id'], $service->id))
+) {
+    $msg_text = trim($_POST['message']);
+    $is_reply = $is_freelancer ? 1 : 0;
+    $msg_user_id = $is_freelancer ? $selected_client_id : $user['user_id'];
+    $db = Database::getInstance();
+    $stmt = $db->prepare('INSERT INTO messages (service_id, user_id, message_text, is_reply, date_time) VALUES (?, ?, ?, ?, datetime("now"))');
+    $stmt->execute([$service->id, $msg_user_id, $msg_text, $is_reply]);
+    echo '<script>window.location.hash = "#forumSection"; window.location.reload();</script>';
+    exit;
+}
