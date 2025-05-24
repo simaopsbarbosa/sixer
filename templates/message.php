@@ -12,10 +12,14 @@ function drawMessage($message, $is_client, $user, $freelancer) {
     $date = isset($message['date_time']) ? date('d/m/Y', strtotime($message['date_time'])) : '';
     ?>
     <div class="forum-message">
-      <img src="<?= $avatar ?>" alt="<?= $name ?>" class="forum-avatar" />
+      <a href="../pages/profile.php?id=<?= urlencode($sender['user_id']) ?>">
+        <img src="<?= $avatar ?>" alt="<?= $name ?>" class="forum-avatar" style="cursor:pointer;" />
+      </a>
       <div class="forum-message-content">
         <div class="forum-message-header">
-          <span class="forum-username"><?= $name ?></span>
+          <a style="text-decoration:none;" href="../pages/profile.php?id=<?= urlencode($sender['user_id']) ?>" style="color:inherit;text-decoration:underline;cursor:pointer;">
+            <span class="forum-username"><?= $name ?></span>
+          </a>
           <span class="forum-date"><?= $date ?></span>
         </div>
         <div class="forum-text"><?= nl2br(htmlspecialchars($message['message_text'])) ?></div>

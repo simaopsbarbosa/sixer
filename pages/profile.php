@@ -1,20 +1,29 @@
 <?php
 declare(strict_types=1);
-require_once '../utils/session.php';
+
+// Initialize session only if needed for own profile
+$session = null;
+$is_own_profile = false;
+if (!empty($_GET['id'])) {
+    $profile_user_id = intval($_GET['id']);
+} else {
+    require_once '../utils/session.php';
+    $session = Session::getInstance();
+    if ($session->isLoggedIn()) {
+        $profile_user_id = $session->getUser()['user_id'];
+        $is_own_profile = true;
+    } else {
+        // Not logged in and no id provided, show error or redirect
+        echo '<main><div class="profile-container"><h2>User not found.</h2></div></main>';
+        exit;
+    }
+}
+
 require_once '../templates/common.php';
 require_once '../database/user_class.php';
 require_once '../database/service_class.php';
 require_once '../templates/profile_service.php';
 require_once '../templates/profile_purchase_card.php';
-
-$session = Session::getInstance();
-if (!$session->isLoggedIn()) {
-    header('Location: ../pages/login.php');
-    exit;
-}
-
-// Determine which user's profile to show
-$profile_user_id = isset($_GET['id']) ? intval($_GET['id']) : $session->getUser()['user_id'];
 
 // Fetch user from database by id
 $user_data = null;
@@ -30,7 +39,6 @@ if (!$user_data) {
 
 // For display
 if (!empty($user_data['user_picture'])) {
-    // Serve image via a separate endpoint
     $user_picture = '../action/get_profile_picture.php?id=' . $profile_user_id;
 } else {
     $user_picture = '../assets/images/default.jpg';
@@ -38,7 +46,13 @@ if (!empty($user_data['user_picture'])) {
 $full_name = $user_data['full_name'] ?? '';
 $email = $user_data['email'] ?? '';
 $join_date = $user_data['join_date'] ?? '';
-$is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
+if ($session === null) {
+    require_once '../utils/session.php';
+    $session = Session::getInstance();
+}
+if ($session && $session->isLoggedIn()) {
+    $is_own_profile = ($session->getUser()['user_id'] == $profile_user_id);
+}
 
 $user_services = Service::get_by_freelancer($profile_user_id);
 
@@ -180,7 +194,7 @@ foreach ($user_purchases as $purchase) {
           
           <?php if (hasAnyServices($user_services)): ?>
             <div class="profile-section">
-              <h2>Your Current Services</h2>
+              <h2><?= $is_own_profile ? 'Your Current Services' : "User's Current Services" ?></h2>
               <div class="recent-work">
                 <?php 
                   foreach ($user_services as $service) {
@@ -191,31 +205,32 @@ foreach ($user_purchases as $purchase) {
             </div>
           <?php endif; ?>
 
-          <div class="profile-section">
-            <h2>Ongoing Purchases</h2>
-            <div class="recent-work">
-              <?php if (!empty($ongoing_purchases)) {
-                foreach ($ongoing_purchases as $item) {
-                  drawProfilePurchaseCard($item['purchase'], $item['service'], false);
-                }
-              } else {
-                echo '<p style="color:#888;">No ongoing purchases.</p>';
-              } ?>
+          <?php if ($is_own_profile): ?>
+            <div class="profile-section">
+              <h2>Ongoing Purchases</h2>
+              <div class="recent-work">
+                <?php if (!empty($ongoing_purchases)) {
+                  foreach ($ongoing_purchases as $item) {
+                    drawProfilePurchaseCard($item['purchase'], $item['service'], false);
+                  }
+                } else {
+                  echo '<p style="color:#888;">No ongoing purchases.</p>';
+                } ?>
+              </div>
             </div>
-          </div>
-
-          <div class="profile-section">
-            <h2>Past Purchases</h2>
-            <div class="recent-work">
-              <?php if (!empty($past_purchases)) {
-                foreach ($past_purchases as $item) {
-                  drawProfilePurchaseCard($item['purchase'], $item['service'], true);
-                }
-              } else {
-                echo '<p style="color:#888;">No past purchases.</p>';
-              } ?>
+            <div class="profile-section">
+              <h2>Past Purchases</h2>
+              <div class="recent-work">
+                <?php if (!empty($past_purchases)) {
+                  foreach ($past_purchases as $item) {
+                    drawProfilePurchaseCard($item['purchase'], $item['service'], true);
+                  }
+                } else {
+                  echo '<p style="color:#888;">No past purchases.</p>';
+                } ?>
+              </div>
             </div>
-          </div>
+          <?php endif; ?>
         </div>
       </div>
     </main>

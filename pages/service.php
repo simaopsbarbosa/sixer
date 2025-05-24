@@ -97,7 +97,7 @@ if ($service) {
                   <button class="hire-button">Hire Now</button>
                 </a>
               <?php endif; ?>
-              <button class="contact-button" id="toggleForumBtn">Contact Freelancer</button>
+              <button class="contact-button" id="toggleForumBtn" onclick="if (!<?= $user ? 'true' : 'false' ?>) { window.location.href = 'login.php'; return false; }">Contact Freelancer</button>
             </div>
           </div>
         </div> <!-- end of service-header -->
