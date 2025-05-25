@@ -30,11 +30,15 @@
 
 ## Running
 
-    sqlite3 database/sixer.db < database/setup_all.sql
+    sqlite3 database/sixer.db < database/database.sql
     php -S localhost:9000
+
+If desired, you can populate the database with mock data to explore the project's features more easily using this command:
+
+    sqlite3 database/sixer.db < database/insert_mock_data.sql
 
 ## Credentials
 
-[TODO - build nice looking profiles to share here]
-- admin/p4s5w0rd
-- johndoe/1234
+- simao.barbosa.05@gmail.com/simao123 (admin)
+- croc@gmail.com/simao123 (not admin)
+

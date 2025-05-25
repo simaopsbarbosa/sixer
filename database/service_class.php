@@ -81,10 +81,22 @@ class Service {
         }, $services);
     }
 
-    public static function update_service($service_id, $title, $category, $price, $eta, $info) {
+    public static function update_service($service_id, $title, $category, $price, $eta, $info, $picture = null) {
         $db = Database::getInstance();
-        $stmt = $db->prepare('UPDATE services_list SET service_title = ?, service_category = ?, service_price = ?, service_eta = ?, service_info = ? WHERE service_id = ?');
-        $stmt->execute([$title, $category, $price, $eta, $info, $service_id]);
+        if ($picture !== null) {
+            $stmt = $db->prepare('UPDATE services_list SET service_title = ?, service_category = ?, service_price = ?, service_eta = ?, service_info = ?, service_picture = ? WHERE service_id = ?');
+            $stmt->bindParam(1, $title);
+            $stmt->bindParam(2, $category);
+            $stmt->bindParam(3, $price);
+            $stmt->bindParam(4, $eta);
+            $stmt->bindParam(5, $info);
+            $stmt->bindParam(6, $picture, PDO::PARAM_LOB);
+            $stmt->bindParam(7, $service_id);
+            $stmt->execute();
+        } else {
+            $stmt = $db->prepare('UPDATE services_list SET service_title = ?, service_category = ?, service_price = ?, service_eta = ?, service_info = ? WHERE service_id = ?');
+            $stmt->execute([$title, $category, $price, $eta, $info, $service_id]);
+        }
     }
 
     public static function delete_by_id($service_id) {
