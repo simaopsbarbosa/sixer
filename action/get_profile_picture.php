@@ -4,6 +4,7 @@
 
 declare(strict_types=1);
 require_once '../utils/database.php';
+require_once '../utils/session.php';
 
 $user_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 if (!$user_id) {

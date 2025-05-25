@@ -4,13 +4,15 @@ require_once __DIR__ . '/../utils/session.php';
 require_once __DIR__ . '/../database/service_class.php';
 
 $session = Session::getInstance();
+require_once '../utils/csrf.php';
+$data = json_decode(file_get_contents('php://input'), true);
+
 if (!$session->isLoggedIn()) {
     http_response_code(403);
     echo json_encode(['success' => false, 'error' => 'Not logged in']);
     exit;
 }
 
-$data = json_decode(file_get_contents('php://input'), true);
 $purchase_id = $data['purchase_id'] ?? null;
 $rating = $data['rating'] ?? null;
 $review = $data['review'] ?? null;

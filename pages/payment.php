@@ -1,11 +1,13 @@
 <?php 
 require_once '../utils/session.php';
+require_once '../utils/csrf.php';
 $session = Session::getInstance();
 if (!$session->isLoggedIn()) {
     header('Location: ../pages/login.php');
     exit;
 }
-require_once '../templates/common.php';
+require_once '../templates/common.php'; 
+$csrf_token = CSRF::getToken();
 require_once '../database/service_class.php';
 
 $service_id = isset($_GET['service_id']) ? (int)$_GET['service_id'] : null;
@@ -102,6 +104,7 @@ $service_price = $service ? number_format($service->price, 2) : '0.00';
             </div>
 
             <form class="payment-form" method="post" action="../action/hire_service.php">
+              <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
               <input type="hidden" name="service_id" value="<?= $service_id ?>" />
               <div class="form-group">
                 <label for="phone">MB WAY - Phone Number</label>

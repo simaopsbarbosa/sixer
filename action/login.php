@@ -1,11 +1,19 @@
 <?php
 declare(strict_types=1);
 
-require_once(__DIR__ . '/../utils/database.php');
-require_once(__DIR__ . '/../utils/session.php');
-require_once(__DIR__ . '/../database/user_class.php');
+require_once '../utils/database.php';
+require_once '../utils/session.php';
+require_once '../database/user_class.php';
+require_once '../utils/csrf.php';
 
 $session = Session::getInstance();
+
+$csrf_token = $_POST['csrf_token'] ?? '';
+if (!CSRF::verifyCSRF($csrf_token)) {
+http_response_code(403);
+echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
+exit;
+}
 
 if ($session->isLoggedIn()) {
     header('Location: ../pages/profile.php');

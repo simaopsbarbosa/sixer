@@ -1,5 +1,7 @@
-<?php require_once '../templates/common.php'; 
+<?php require_once '../templates/common.php';
+require_once '../utils/csrf.php';
 session_start();
+$csrf_token = CSRF::getToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,6 +29,7 @@ session_start();
           <?php endif; ?>
 
           <form class="auth-form" action="../action/signup.php" method="post">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
             <div class="form-group">
               <label for="name">Full Name</label>
               <input

@@ -3,6 +3,7 @@ require_once '../templates/common.php';
 require_once '../database/service_class.php';
 require_once '../database/user_class.php';
 require_once '../templates/message.php';
+require_once '../utils/csrf.php';
 
 // Get service id from query string
 $service_id = isset($_GET['id']) ? (int)$_GET['id'] : null;
@@ -15,6 +16,7 @@ if ($service) {
   $stmt->execute([$service->freelancer_id]);
   $freelancer = $stmt->fetch();
 }
+$csrf_token = CSRF::getToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -176,6 +178,7 @@ if ($service) {
                   $btnText = $has_uncompleted ? 'Mark as Completed' : 'Marked as Complete';
                 ?>
                   <form id="markCompletedForm" method="post" action="../action/mark_completed.php" style="display:inline; margin-left: 1em;">
+                    <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
                     <input type="hidden" name="service_id" value="<?= $service->id ?>" />
                     <input type="hidden" name="client_id" value="<?= $selected_client_id ?>" />
                     <button type="button" id="markCompletedBtn" class="simple-button<?= !$has_uncompleted ? ' mark-completed-disabled' : '' ?>" style="margin-left: auto;<?= !$has_uncompleted ? ' background:#333; color:#bbb; cursor:not-allowed; border:1px solid #444;' : '' ?>" <?= $disabled ?>><?= $btnText ?></button>
@@ -213,6 +216,7 @@ if ($service) {
             </div>
             <?php if ($user && (!$is_freelancer || ($is_freelancer && count($active_clients) > 0))): ?>
             <form class="forum-form" method="post" action="../action/send_message.php" style="margin-bottom:0;">
+              <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
               <input type="hidden" name="service_id" value="<?= htmlspecialchars($service->id) ?>" />
               <?php if ($is_freelancer): ?>
                 <input type="hidden" name="client_id" value="<?= $selected_client_id ?>" />

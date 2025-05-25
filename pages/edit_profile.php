@@ -1,6 +1,7 @@
 <?php
 require_once '../utils/session.php';
 require_once '../templates/common.php';
+require_once '../utils/csrf.php';
 
 $session = Session::getInstance();
 if (!$session->isLoggedIn()) {
@@ -18,7 +19,7 @@ if (!$user) {
 $user_picture = $user['user_picture'] ?? '../assets/images/default.jpg';
 $full_name = $user['full_name'] ?? '';
 $email = $user['email'] ?? '';
-
+$csrf_token = CSRF::getToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -38,6 +39,7 @@ $email = $user['email'] ?? '';
     <div class="auth-box">
       <h2>Edit Profile</h2>
       <form class="auth-form" action="../action/edit_profile.php" method="post">
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
         <div class="form-group">
           <label for="full_name">Full Name</label>
           <input type="text" id="full_name" name="full_name" value="<?= htmlspecialchars($full_name) ?>" required />

@@ -1,6 +1,7 @@
 <?php
 require_once '../templates/common.php';
 require_once '../database/service_class.php';
+require_once '../utils/csrf.php';
 
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 $category = isset($_GET['category']) ? trim($_GET['category']) : '';

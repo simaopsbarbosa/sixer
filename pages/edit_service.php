@@ -2,6 +2,7 @@
 require_once '../templates/common.php';
 require_once '../database/service_class.php';
 require_once '../utils/session.php';
+require_once '../utils/csrf.php';
 
 $service_id = isset($_GET['id']) ? (int)$_GET['id'] : null;
 $service = $service_id ? Service::get_by_id($service_id) : null;
@@ -18,6 +19,7 @@ if ($service->freelancer_id !== ($user['user_id'] ?? null)) {
   header('Location: profile.php');
   exit();
 }
+$csrf_token = CSRF::getToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,6 +42,7 @@ if ($service->freelancer_id !== ($user['user_id'] ?? null)) {
     <main>
       <div class="service-container">
         <form class="service-form" action="../action/edit_service.php?id=<?= $service->id ?>" method="post" enctype="multipart/form-data">
+          <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
           <h1>Edit Service</h1>
           <h2 class="service-subtitle">
             <span>You are editing your service.<br>Changes will be visible on your profile and service page.</span>

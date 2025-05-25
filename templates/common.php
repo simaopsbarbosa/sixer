@@ -1,9 +1,11 @@
 <?php 
 require_once __DIR__ . '/../utils/session.php';
+require_once '../utils/csrf.php';
 function drawHeader() { 
   $session = Session::getInstance();
   $loggedIn = $session->isLoggedIn();
   $user = $session->getUser();
+  $csrf_token = CSRF::getToken();
 ?>
 <header>
   <div>
@@ -21,6 +23,7 @@ function drawHeader() {
       <img class="icon" src="../assets/icons/dropdown.svg" alt="" />
     </a>
     <form action="search.php" method="get">
+      <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
       <?php $search_value = isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>
       <input
         type="text"
@@ -63,6 +66,7 @@ function drawHeader() {
     <button id="close-filters" type="button">&times;</button>
     <h3>Filters</h3>
     <form id="filters-form">
+      <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
       <label for="filter-category">Category:</label>
       <select id="filter-category" name="category">
         <option value="">Any</option>

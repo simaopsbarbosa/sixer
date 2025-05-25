@@ -6,8 +6,8 @@ declare(strict_types=1);
 require_once '../utils/session.php';
 require_once '../utils/database.php';
 
-
 $session = Session::getInstance();
+
 if (!$session->isLoggedIn()) {
     header('Location: ../pages/login.php');
     exit;
