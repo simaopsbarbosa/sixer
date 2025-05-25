@@ -52,7 +52,27 @@ foreach ($service_ids as $row) {
     <main>
       <div class="search-results-container">
         <h2 class="search-results-title">
-          <?= count($services) ?> results for<br /><span style="font-weight:bold; font-size: 1.3em">"Empty search"</span>
+          <?= count($services) ?> results for<br />
+          <span style="font-weight:bold; font-size: 1.3em">
+            <?php
+              $search_title = $q ? '"' . htmlspecialchars($q) . '"' : 'All Services';
+              if ($category) {
+                $search_title .= ' in ' . htmlspecialchars($category);
+              }
+              if ($min_price !== null || $max_price !== null) {
+                $price_range = '';
+                if ($min_price !== null && $max_price !== null) {
+                  $price_range = '$' . $min_price . ' - $' . $max_price;
+                } elseif ($min_price !== null) {
+                  $price_range = '$' . $min_price . ' and up';
+                } else {
+                  $price_range = 'up to $' . $max_price;
+                }
+                $search_title .= ' (' . $price_range . ')';
+              }
+              echo $search_title;
+            ?>
+          </span>
         </h2>
         <div class="search-cards">
           <?php

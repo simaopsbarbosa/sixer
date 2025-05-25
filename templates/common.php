@@ -21,11 +21,13 @@ function drawHeader() {
       <img class="icon" src="../assets/icons/dropdown.svg" alt="" />
     </a>
     <form action="search.php" method="get">
+      <?php $search_value = isset($_GET['q']) ? htmlspecialchars($_GET['q']) : ''; ?>
       <input
         type="text"
         name="q"
         id="main-search"
         placeholder="what do you need to get done?"
+        value="<?= $search_value ?>"
       />
       <button type="submit">
         <img class="icon" src="../assets/icons/search.svg" alt="search" />
@@ -102,10 +104,29 @@ function drawHeader() {
     var filtersModal = document.getElementById('filters-modal');
     var closeFilters = document.getElementById('close-filters');
     if (filtersBtn && filtersModal && closeFilters) {
+
       filtersBtn.addEventListener('click', function(e) {
         e.preventDefault();
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        const category = urlParams.get('category');
+        if (category) {
+          document.getElementById('filter-category').value = category;
+        }
+        
+        const minPrice = urlParams.get('min_price');
+        const maxPrice = urlParams.get('max_price');
+        if (minPrice) {
+          document.querySelector('input[name="min_price"]').value = minPrice;
+        }
+        if (maxPrice) {
+          document.querySelector('input[name="max_price"]').value = maxPrice;
+        }
+        
         filtersModal.style.display = 'flex';
       });
+      
       closeFilters.addEventListener('click', function() {
         filtersModal.style.display = 'none';
       });
@@ -119,8 +140,11 @@ function drawHeader() {
 
   document.getElementById('filters-form').addEventListener('submit', function(e) {
     e.preventDefault();
-
-    const q = document.getElementById('main-search') ? document.getElementById('main-search').value : '';
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const currentQuery = urlParams.get('q');
+    
+    const q = currentQuery || (document.getElementById('main-search') ? document.getElementById('main-search').value : '');
     const category = document.getElementById('filter-category').value;
     const min_price = this.elements['min_price'].value;
     const max_price = this.elements['max_price'].value;
