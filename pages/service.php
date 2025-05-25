@@ -214,7 +214,7 @@ if ($service) {
             <form class="forum-form" method="post" action="../action/send_message.php" style="margin-bottom:0;">
               <input type="hidden" name="service_id" value="<?= htmlspecialchars($service->id) ?>" />
               <?php if ($is_freelancer): ?>
-                <input type="hidden" name="client_id" value="<?= htmlspecialchars($selected_client_id) ?>" />
+                <input type="hidden" name="client_id" value="<?= $selected_client_id ?>" />
               <?php endif; ?>
               <input type="text" name="message" placeholder="Write a message..." required class="forum-input" autocomplete="off" />
               <button type="submit" aria-label="Send">
@@ -335,7 +335,7 @@ if ($service) {
             </script>
           </div>
 
-          <a href="profile.php?id=<?= $freelancer ? htmlspecialchars($freelancer['user_id']) : '' ?>" class="service-section">
+          <a href="profile.php?id=<?= $freelancer ? $freelancer['user_id'] : '' ?>" class="service-section">
             <h2>About The Freelancer</h2>
             <div class="freelancer-info">
               <div class="freelancer-header">

@@ -2,3 +2,4 @@
 .read database/create_db.sql
 .read database/insert_langs.sql
 .read database/insert_skills.sql
+.read database/insert_categories.sql

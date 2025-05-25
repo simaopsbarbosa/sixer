@@ -137,7 +137,7 @@ foreach ($user_purchases as $purchase) {
                   $completed_services = User::getTotalCompletedServices($profile_user_id);
                 ?>
                 <span class="stat-value"><?= $completed_services ?></span>
-                <span class="stat-label">Completed Services</span>
+                <span class="stat-label">Customers</span> 
               </div>
             </div>
           </div>

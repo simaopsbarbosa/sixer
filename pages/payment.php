@@ -101,7 +101,7 @@ $service_price = $service ? number_format($service->price, 2) : '0.00';
             </div>
 
             <form class="payment-form" method="post" action="../action/hire_service.php">
-              <input type="hidden" name="service_id" value="<?= htmlspecialchars($service_id) ?>" />
+              <input type="hidden" name="service_id" value="<?= $service_id ?>" />
               <div class="form-group">
                 <label for="phone">MB WAY - Phone Number</label>
                 <input
