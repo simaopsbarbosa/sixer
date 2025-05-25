@@ -4,6 +4,7 @@ function drawHeader() {
   $session = Session::getInstance();
   $loggedIn = $session->isLoggedIn();
   $user = $session->getUser();
+  $csrf_token = CSRF::getToken();
 ?>
 <header>
   <div>
