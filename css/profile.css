@@ -309,13 +309,6 @@
   gap: 0.5em;
 }
 
-.work-rating::before {
-  content: "★★★★★";
-  font-size: 0.9em;
-  letter-spacing: 0.1em;
-  opacity: 0.7;
-}
-
 .work-description {
   margin-bottom: 1.5em;
   line-height: 1.6;
@@ -370,6 +363,11 @@
   cursor: not-allowed;
   background: #bdbdbd;
 }
+.review-btn.active {
+  background: #222 !important;
+  color: #fff !important;
+  border: none;
+}
 
 .review-form-styled {
   display: flex;
@@ -400,6 +398,7 @@
   box-sizing: border-box;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
   font-family: 'Inter', sans-serif;
+  font-weight: 100;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23aaa'%3E%3Cpath d='M7 10l5 5 5-5H7z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
