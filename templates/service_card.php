@@ -37,12 +37,17 @@ function drawServiceCard($service_id) {
             <div class="search-card-stats">
                 <div class="search-card-info">
                     <span class="search-card-delivery">
-                        <?php
-                            $eta_display = ($service->eta > 999) ? '999+' : htmlspecialchars($service->eta);
-                        ?>
-                            <?= $eta_display ?> day<?= $service->eta == 1 ? '' : 's' ?>
+                    <?php
+                        $eta_display = ($service->eta > 999) ? '999+' : htmlspecialchars($service->eta);
+                    ?>
+                    <?= $eta_display ?> day<?= $service->eta == 1 ? '' : 's' ?>
                     </span>
-                    <span class="search-card-rating">4.0 ★★★★☆</span> <!-- placeholder rating -->
+                    <span class="search-card-rating">
+                      <?php
+                        $rating_info = Service::getServiceRatingInfo($service->id);
+                        echo Service::getStars((float)$rating_info['avg']) . ' ' . htmlspecialchars($rating_info['avg']);
+                      ?>
+                    </span>
                 </div>
                 <span class="search-card-price">from <span class="search-card-price-bold"><?= htmlspecialchars($service->price) ?>$</span></span>
             </div>

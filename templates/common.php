@@ -36,7 +36,15 @@ function drawHeader() {
     <?php if (
       $loggedIn && isset($user['user_id'])
     ): ?>
-      <a href="profile.php?id=<?= urlencode($user['user_id']) ?>">profile</a>
+      <a href="profile.php?id=<?= urlencode($user['user_id']) ?>" class="profile-link-with-pic">
+        <p style="margin:0;">profile</p>
+        <img src="../action/get_profile_picture.php?id=<?= urlencode($user['user_id']) ?>" alt="profile picture" class="header-profile-pic" />
+      </a>
+      <?php if (isset($user['access_level']) && $user['access_level'] === 'admin'): ?>
+      <a href="admin.php" class="simple-button admin-link">
+        [admin]
+      </a>
+      <?php endif; ?>
       <a href="create_service.php" class="simple-button">
         <span class="new-service-plus">+</span>
         <span class="new-service-text"> new service</span>

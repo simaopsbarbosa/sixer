@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: ../pages/service.php?id=' . $service_id . '&error=already_hired');
         exit;
     }
-    $stmt = $db->prepare('INSERT INTO purchases (client_id, service_id, completed, review_text, review_rating) VALUES (?, ?, 0, NULL, NULL)');
+    $stmt = $db->prepare('INSERT INTO purchases (client_id, service_id, completed, purchase_date, review_text, review_rating) VALUES (?, ?, 0, CURRENT_TIMESTAMP, NULL, NULL)');
     $stmt->execute([$user['user_id'], $service_id]);
     header('Location: ../pages/service.php?id=' . $service_id . '&success=hire');
     exit;

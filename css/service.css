@@ -146,6 +146,7 @@
 .rating-count {
   color: #888888;
   font-size: 0.9em;
+  font-weight: 200;
 }
 
 .service-stats {
@@ -199,34 +200,10 @@
 
 .service-section p {
   line-height: 1.6;
-  color: #cccccc;
   font-size: 0.95em;
   margin: 0;
   padding: 0;
   text-align: left;
-}
-
-.service-features {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1em;
-}
-
-.service-features li {
-  color: #cccccc;
-  font-size: 0.95em;
-  padding-left: 1.5em;
-  position: relative;
-}
-
-.service-features li::before {
-  content: "•";
-  position: absolute;
-  left: 0;
-  color: #666666;
 }
 
 .freelancer-info {
@@ -268,7 +245,7 @@
 }
 
 .freelancer-description {
-  color: #cccccc;
+  color: white;
   font-size: 0.95em;
   line-height: 1.6;
 }
@@ -391,7 +368,7 @@
 }
 
 .review-text {
-  color: #cccccc;
+  color: white;
   font-size: 0.95em;
   line-height: 1.6;
   margin: 0;
@@ -438,6 +415,22 @@
   animation: reviewCardGlassEffect 8s linear infinite;
 }
 
+.submit-button {
+  color: #ffffff;
+  background-color: #131313;
+  border-radius: 0px;
+  border: 1px solid #333333;
+  font-family: "Inter", Courier, monospace;
+  font-weight: 200;
+  padding: 0.8em 2em;
+  font-size: 1em;
+}
+.submit-button:hover {
+  background-color: #1a1a1a;
+  border-color: #444444;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
+}
+
 /* Ensure review content stays above the gradient */
 .review-header,
 .review-text {
@@ -458,14 +451,14 @@
 
 .reviews-stats {
   display: flex;
-  gap: 3em;
+  gap: 2em;
   margin-top: 0.2em;
 }
 
 .reviews-stats .stat {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: flex-end;
 }
 
 .reviews-stats .stat-value {
@@ -476,6 +469,7 @@
 .reviews-stats .stat-label {
   color: #888888;
   font-size: 0.8em;
+  font-weight: 200;
 }
 
 .reviews-title {
@@ -485,8 +479,8 @@
 }
 
 .reviews-subtitle {
-  color: #888888;
-  font-size: 0.9em;
+  color: white;
+  font-size: 0.95em;
   font-weight: 100;
 }
 
@@ -645,6 +639,11 @@
     gap: 0.5em;
     margin-bottom: 0.7em;
   }
+
+  .service-image img {
+    margin: 0 0.5em;
+  }
+
   .reviews-title h2 {
     font-size: 1.1em;
   }
@@ -668,6 +667,12 @@
 }
 
 /* forum things */
+
+.active-clients-info {
+  margin-top: 0.5em !important;
+  margin-bottom: 1.5em !important;
+}
+
 .forum-section {
   padding: 1.5em 1em 1em 1em;
   border: 1px solid #333333;
@@ -682,7 +687,7 @@
 .forum-section h2 {
   font-size: 1.3em;
   font-weight: bold;
-  margin: 0 0 1em 0;
+  margin: 0 !important;
   text-align: left;
   color: #ffffff;
 }
@@ -691,7 +696,7 @@
   display: flex;
   flex-direction: column;
   gap: 1em;
-  margin-bottom: 1em;
+  margin: 2em 0;
 }
 
 .forum-message {
@@ -731,6 +736,7 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 0.2em;
+  text-align: left;
 }
 
 .forum-username {
@@ -745,7 +751,7 @@
 }
 
 .forum-text {
-  color: #cccccc;
+  color: white;
   font-size: 0.95em;
   line-height: 1.6;
   margin: 0;
@@ -865,7 +871,7 @@
   gap: 1em;
   flex-wrap: wrap;
   margin-top: 1.5em;
-  margin-bottom: 0.5em;
+  margin-bottom: 1.5em;
 }
 
 .forum-section {
@@ -952,4 +958,13 @@
     height: 20px;
     vertical-align: middle;
   }
+}
+
+.mark-completed-disabled {
+  background: #1a1a1a !important;
+  color: #bbb !important;
+  cursor: not-allowed !important;
+  border: 1px solid #444 !important;
+  pointer-events: none;
+  opacity: 1;
 }

@@ -31,6 +31,7 @@ body {
     margin-bottom: 0.2em;
     color: #aaa;
     font-size: 0.9em;
+    font-weight: 200;
 }
 
 .service-form input[type="text"],
@@ -250,7 +251,7 @@ body {
 .service-section-description {
     color: #888888;
     font-size: 0.95em;
-    font-weight: 100;
+    font-weight: 200;
     margin-bottom: 1em;
     text-align: left;
 }

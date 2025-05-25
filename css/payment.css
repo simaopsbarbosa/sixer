@@ -114,6 +114,7 @@
 }
 
 .service-card-info h2 {
+  text-align: left !important;
   font-size: 1.2em;
   font-weight: bold;
   margin: 0 0 1em 0;

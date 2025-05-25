@@ -240,6 +240,13 @@ header a {
   color: #000000;
 }
 
+.simple-button.admin-link {
+  background-color: #8b00d1;
+  color: #ffffff;
+  border: 1px solid #8b00d1;
+  font-weight:600;
+}
+
 .icon {
   width: 1.5em;
   height: 1.5em;
@@ -622,4 +629,24 @@ main p {
     margin-right: auto;
     display: block;
   }
+}
+
+/* profile picture in header bar */
+.header-profile-pic {
+  width: 1.5em;
+  height: 1.5em;
+  object-fit: cover;
+  border-radius: 10%;
+  margin-left: 0.2em;
+}
+.profile-link-with-pic {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4em;
+  text-decoration: none;
+  color: inherit;
+}
+.profile-link-with-pic p {
+  margin-bottom: 0.1em !important;
 }

@@ -100,7 +100,7 @@ class Service {
         $stmt = $db->prepare('SELECT COUNT(*) FROM purchases WHERE client_id = ? AND service_id = ? AND completed = 0');
         $stmt->execute([$client_id, $service_id]);
         if ($stmt->fetchColumn() > 0) return false;
-        $stmt = $db->prepare('INSERT INTO purchases (client_id, service_id, completed, review_text, review_rating) VALUES (?, ?, 0, NULL, NULL)');
+        $stmt = $db->prepare('INSERT INTO purchases (client_id, service_id, completed, purchase_date, review_text, review_rating) VALUES (?, ?, 0, CURRENT_TIMESTAMP, NULL, NULL)');
         return $stmt->execute([$client_id, $service_id]);
     }
 
@@ -110,5 +110,84 @@ class Service {
         $stmt = $db->prepare('SELECT COUNT(*) FROM purchases WHERE client_id = ? AND service_id = ? AND completed = 0');
         $stmt->execute([$user_id, $service_id]);
         return $stmt->fetchColumn() > 0;
+    }
+
+    public static function get_service_messages($service_id, $client_id) {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT * FROM messages WHERE service_id = ? AND user_id = ? ORDER BY date_time ASC');
+        $stmt->execute([$service_id, $client_id]);
+        return $stmt->fetchAll();
+    }
+    // Returns active clients for a service (with uncompleted purchases)
+    public static function get_active_clients_for_service($service_id) {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT DISTINCT client_id FROM purchases WHERE service_id = ? AND completed = 0');
+        $stmt->execute([$service_id]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    // Returns all clients who have ever made a purchase for this service
+    public static function get_all_clients_for_service($service_id) {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT DISTINCT client_id FROM purchases WHERE service_id = ?');
+        $stmt->execute([$service_id]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    public static function get_all_message_users_for_service($service_id) {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT DISTINCT user_id FROM messages WHERE service_id = ?');
+        $stmt->execute([$service_id]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    // Mark a purchase as completed for a given client and service (if uncompleted)
+    public static function markPurchaseCompleted(int $client_id, int $service_id): bool {
+        $db = Database::getInstance();
+        // Only update if there is an uncompleted purchase
+        $stmt = $db->prepare('UPDATE purchases SET completed = 1 WHERE client_id = ? AND service_id = ? AND completed = 0');
+        $stmt->execute([$client_id, $service_id]);
+        // Return true if any row was updated
+        return $stmt->rowCount() > 0;
+    }
+
+    // Add a review to a purchase
+    public static function addReviewToPurchase(int $purchase_id, int $rating, string $review): bool {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('UPDATE purchases SET review_rating = ?, review_text = ? WHERE purchase_id = ?');
+        $stmt->execute([$rating, $review, $purchase_id]);
+        return $stmt->rowCount() > 0;
+    }
+
+    // Get the average rating and number of reviews for a service
+    public static function getServiceRatingInfo(int $service_id): array {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT AVG(review_rating) as avg_rating, COUNT(review_rating) as num_reviews FROM purchases WHERE service_id = ? AND review_rating IS NOT NULL');
+        $stmt->execute([$service_id]);
+        $row = $stmt->fetch();
+        $count = $row ? (int)$row['num_reviews'] : 0;
+        $avg = ($row && $row['avg_rating'] !== null && $count > 0) ? round((float)$row['avg_rating'], 1) : 0.0;
+        return ['avg' => $avg, 'count' => $count];
+    }
+
+    // Get the total number of customers (purchases) for a service
+    public static function getTotalCustomers(int $service_id): int {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT COUNT(*) FROM purchases WHERE service_id = ?');
+        $stmt->execute([$service_id]);
+        return (int)$stmt->fetchColumn();
+    }
+
+    // Helper to render stars (full, empty) for a given float rating
+    public static function getStars(float $rating): string {
+        $stars = '';
+        for ($i = 1; $i <= 5; $i++) {
+            if ($rating >= $i) {
+                $stars .= '★';
+            } else {
+                $stars .= '☆';
+            }
+        }
+        return $stars;
     }
 }

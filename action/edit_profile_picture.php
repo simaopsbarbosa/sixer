@@ -60,8 +60,8 @@ switch ($img_info[2]) {
 $w = imagesx($src_img);
 $h = imagesy($src_img);
 $size = min($w, $h);
-$x = ($w - $size) / 2;
-$y = ($h - $size) / 2;
+$x = (int)(($w - $size) / 2);
+$y = (int)(($h - $size) / 2);
 $dst_img = imagecreatetruecolor($size, $size);
 imagecopyresampled($dst_img, $src_img, 0, 0, $x, $y, $size, $size, $size, $size);
 

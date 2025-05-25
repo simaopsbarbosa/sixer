@@ -1,19 +1,31 @@
 <?php
 declare(strict_types=1);
-require_once '../utils/session.php';
-require_once '../templates/common.php';
 
-$session = Session::getInstance();
-if (!$session->isLoggedIn()) {
-    header('Location: ../pages/login.php');
-    exit;
+// Initialize session only if needed for own profile
+$session = null;
+$is_own_profile = false;
+if (!empty($_GET['id'])) {
+    $profile_user_id = intval($_GET['id']);
+} else {
+    require_once '../utils/session.php';
+    $session = Session::getInstance();
+    if ($session->isLoggedIn()) {
+        $profile_user_id = $session->getUser()['user_id'];
+        $is_own_profile = true;
+    } else {
+        // Not logged in and no id provided, show error or redirect
+        echo '<main><div class="profile-container"><h2>User not found.</h2></div></main>';
+        exit;
+    }
 }
 
-// Determine which user's profile to show
-$profile_user_id = isset($_GET['id']) ? intval($_GET['id']) : $session->getUser()['user_id'];
+require_once '../templates/common.php';
+require_once '../database/user_class.php';
+require_once '../database/service_class.php';
+require_once '../templates/profile_service_card.php';
+require_once '../templates/profile_purchase_card.php';
 
 // Fetch user from database by id
-require_once '../database/user_class.php';
 $user_data = null;
 $db = Database::getInstance();
 $stmt = $db->prepare('SELECT * FROM user_registry WHERE user_id = ?');
@@ -27,7 +39,6 @@ if (!$user_data) {
 
 // For display
 if (!empty($user_data['user_picture'])) {
-    // Serve image via a separate endpoint
     $user_picture = '../action/get_profile_picture.php?id=' . $profile_user_id;
 } else {
     $user_picture = '../assets/images/default.jpg';
@@ -35,7 +46,15 @@ if (!empty($user_data['user_picture'])) {
 $full_name = $user_data['full_name'] ?? '';
 $email = $user_data['email'] ?? '';
 $join_date = $user_data['join_date'] ?? '';
-$is_own_profile = ($session->getUser()['user_id'] === $profile_user_id);
+if ($session === null) {
+    require_once '../utils/session.php';
+    $session = Session::getInstance();
+}
+if ($session && $session->isLoggedIn()) {
+    $is_own_profile = ($session->getUser()['user_id'] == $profile_user_id);
+}
+
+$user_services = Service::get_by_freelancer($profile_user_id);
 
 $user_skills = [];
 $stmt = $db->prepare('SELECT skill_name FROM user_skills WHERE user_id = ?');
@@ -46,6 +65,29 @@ $all_skills = [];
 $stmt = $db->prepare('SELECT skill_name FROM skills ORDER BY skill_name ASC');
 $stmt->execute();
 $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+function hasAnyServices($user_services) {
+    return !empty($user_services) && count($user_services) > 0;
+}
+
+// Fetch user purchases
+$user_purchases = User::get_user_purchases($profile_user_id);
+
+// Split purchases into ongoing and past
+$ongoing_purchases = [];
+$past_purchases = [];
+foreach ($user_purchases as $purchase) {
+    if (!empty($purchase['service_id'])) {
+        $service = Service::get_by_id($purchase['service_id']);
+        if ($service) {
+            if ($purchase['completed']) {
+                $past_purchases[] = ['purchase' => $purchase, 'service' => $service];
+            } else {
+                $ongoing_purchases[] = ['purchase' => $purchase, 'service' => $service];
+            }
+        }
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -84,12 +126,18 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
             </div>
             <div class="profile-stats">
               <div class="stat">
-                <span class="stat-value">4.8</span>
+                <?php
+                  $user_rating = User::getAverageRating($profile_user_id);
+                ?>
+                <span class="stat-value"><?= $user_rating ? number_format($user_rating, 1) : '0.0' ?></span>
                 <span class="stat-label">Rating</span>
               </div>
               <div class="stat">
-                <span class="stat-value">127</span>
-                <span class="stat-label">Completed Services</span>
+                <?php
+                  $completed_services = User::getTotalCompletedServices($profile_user_id);
+                ?>
+                <span class="stat-value"><?= $completed_services ?></span>
+                <span class="stat-label">Customers</span> 
               </div>
             </div>
           </div>
@@ -150,125 +198,45 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
           </div>
         </div>
           
-          <div class="profile-section">
-            <h2>Your Current Services</h2>
-            <div class="recent-work">
-              <div class="work-item">
-                <div class="work-header">
-                  <div class="work-title-group">
-                    <h3>Full E-commerce Website Development</h3>
-                    <span class="work-date">Starting from $499</span>
-                  </div>
-                  <div class="work-rating">5.0 <span style="font-weight: 100; color: #999">(75)</span></div>
-                </div>
-                <p class="work-description">
-                  I will build you a complete e-commerce website with modern
-                  UI/UX design, secure payment processing, and inventory
-                  management system.
-                </p>
-              </div>
-              <div class="work-item">
-                <div class="work-header">
-                  <div class="work-title-group">
-                    <h3>Custom API & Backend Development</h3>
-                    <span class="work-date">Starting from $299</span>
-                  </div>
-                  <div class="work-rating">4.8 <span style="font-weight: 100; color: #999">(52)</span></div>
-                </div>
-                <p class="work-description">
-                  I will create a robust backend system with RESTful APIs,
-                  database architecture, and complete documentation for your web
-                  or mobile application.
-                </p>
+          <?php if (hasAnyServices($user_services)): ?>
+            <div class="profile-section">
+              <h2><?= $is_own_profile ? 'Your Current Services' : "User's Current Services" ?></h2>
+              <div class="recent-work">
+                <?php 
+                  foreach ($user_services as $service) {
+                    drawProfileService($service);
+                  }
+                ?>
               </div>
             </div>
-          </div>
+          <?php endif; ?>
 
-          <div class="profile-section">
-            <h2>Ongoing Purchases</h2>
-            <div class="recent-work">
-              <div class="work-item">
-                <div class="work-header">
-                  <div class="work-title-group">
-                    <h3>Logo Design Package</h3>
-                    <span class="work-date">Paid $99 on 09/05/2025</span>
-                  </div>
-                  <div class="work-rating">4.1 <span style="font-weight: 100; color: #999">(105)</span></div>
-                </div>
-                <p class="work-description">
-                  Professional logo design tailored to your brand identity. Includes 3 initial concepts and unlimited revisions.
-                </p>
-                <button class="review-btn" disabled>Review after delivery</button>
-              </div>
-              <div class="work-item">
-                <div class="work-header">
-                  <div class="work-title-group">
-                    <h3>SEO Optimization</h3>
-                    <span class="work-date">Paid $150 on 05/05/2025</span>
-                  </div>
-                  <div class="work-rating">4.8 <span style="font-weight: 100; color: #999">(55)</span></div>
-                </div>
-                <p class="work-description">
-                  Full website SEO audit and optimization for better search engine ranking and visibility.
-                </p>
-                <button class="review-btn" disabled>Review after delivery</button>
+          <?php if ($is_own_profile): ?>
+            <div class="profile-section">
+              <h2>Ongoing Purchases</h2>
+              <div class="recent-work">
+                <?php if (!empty($ongoing_purchases)) {
+                  foreach ($ongoing_purchases as $item) {
+                    drawProfilePurchaseCard($item['purchase'], $item['service'], false);
+                  }
+                } else {
+                  echo '<p>No ongoing purchases.</p>';
+                } ?>
               </div>
             </div>
-          </div>
-
-          <div class="profile-section">
-            <h2>Past Purchases</h2>
-            <div class="recent-work">
-              <div class="work-item">
-                <div class="work-header">
-                  <div class="work-title-group">
-                    <h3>Business Card Design</h3>
-                    <span class="work-date">Paid $49 on 10/04/2025</span>
-                  </div>
-                  <div class="work-rating">4.7 <span style="font-weight: 100; color: #999">(12)</span></div>
-                </div>
-                <p class="work-description">
-                  Custom business card design with print-ready files and unique branding.
-                </p>
-
-                <label class="review-label">You reviewed:</label>
-                <div class="review-block">
-                  <div style="display: flex; align-items: center; gap: 8px;">
-                    <span class="review-stars">★★★★★</span>
-                    <span class="review-score">5.0</span>
-                  </div>
-                  <p class="review-text">Great work! Fast delivery and exactly what I needed.</p>
-                </div>
-              </div>
-              <div class="work-item">
-                <div class="work-header">
-                  <div class="work-title-group">
-                    <h3>Landing Page Copywriting</h3>
-                    <span class="work-date">Paid $80 on 28/03/2025</span>
-                  </div>
-                  <div class="work-rating">4.6 <span style="font-weight: 100; color: #999">(6)</span></div>
-                </div>
-                <p class="work-description">
-                  Engaging and high-converting copy for your product or service landing page.
-                </p>
-                <button class="review-btn" type="button">Review</button>
-                <form class="review-form review-form-styled" style="display:none; margin-top: 16px;" method="post">
-                  <label for="review-rating" style="color:#aaa; font-size:0.9em; margin-bottom:0.5em;">Rating:</label>
-                  <select id="review-rating" name="rating" required class="styled-select">
-                    <option value="" disabled selected>Select rating</option>
-                    <option value="5">5 (excellent)</option>
-                    <option value="4">4 (good)</option>
-                    <option value="3">3 (average)</option>
-                    <option value="2">2 (poor)</option>
-                    <option value="1">1 (terrible)</option>
-                  </select>
-                  <label for="review-text" style="color:#aaa; font-size:0.9em; margin-bottom:0.5em; margin-top:1em;">Review:</label>
-                  <textarea id="review-text" name="review" rows="3" required class="styled-textarea"></textarea>
-                  <button type="submit" class="submit-button" style="margin-top:1em;">Submit</button>
-                </form>
+            <div class="profile-section">
+              <h2>Past Purchases</h2>
+              <div class="recent-work">
+                <?php if (!empty($past_purchases)) {
+                  foreach ($past_purchases as $item) {
+                    drawProfilePurchaseCard($item['purchase'], $item['service'], true);
+                  }
+                } else {
+                  echo '<p>No past purchases.</p>';
+                } ?>
               </div>
             </div>
-          </div>
+          <?php endif; ?>
         </div>
       </div>
     </main>
@@ -437,7 +405,7 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ skills: checked })
         })
-        .then(r => r.json())
+        .then (r => r.json())
         .then(data => {
           if (data.success) {
             skillsText.innerHTML = data.skills.length
@@ -465,3 +433,26 @@ $all_skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
 </script>
   </body>
 </html>
+
+<!-- for future reference - this is how to draw a purchase card with review:
+  <div class="work-item">
+    <div class="work-header">
+      <div class="work-title-group">
+        <h3>Business Card Design</h3>
+        <span class="work-date">Paid $49 on 10/04/2025</span>
+      </div>
+      <div class="work-rating">4.7 <span style="font-weight: 100; color: #999">(12)</span></div>
+    </div>
+    <p class="work-description">
+      Custom business card design with print-ready files and unique branding.
+    </p>
+    <label class="review-label">You reviewed:</label>
+    <div class="review-block">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="review-stars">★★★★★</span>
+        <span class="review-score">5.0</span>
+      </div>
+      <p class="review-text">Great work! Fast delivery and exactly what I needed.</p>
+    </div>
+  </div> -->
+
