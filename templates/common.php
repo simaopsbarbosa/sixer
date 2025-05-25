@@ -80,17 +80,15 @@ function drawHeader() {
       <br /><br />
       <label>Price:</label>
       <div class="price-fields">
-        <input type="number" name="min_price" placeholder="Min" min="0" />
-        <input type="number" name="max_price" placeholder="Max" min="0" />
+        <input type="number" id="min-price" name="min_price" placeholder="Min" min="0" />
+        <input type="number" id="max-price" name="max_price" placeholder="Max" min="0" />
       </div>
       <br /><br />
-      <label for="filter-rating">Rating:</label>
-      <select id="filter-rating" name="rating">
-        <option value="">Any</option>
-        <option value="5">5 stars</option>
-        <option value="4">4 stars & up</option>
-        <option value="3">3 stars & up</option>
-      </select>
+      <label>Rating:</label>
+      <div class="price-fields">
+        <input type="number" id="min-rating" name="min_rating" placeholder="Min" min="0" max="5" step="0.1" />
+        <input type="number" id="max-rating" name="max_rating" placeholder="Max" min="0" max="5" step="0.1" />
+      </div>
       <br /><br />
       <button type="submit" class="simple-button">Apply Filters</button>
     </form>
@@ -98,6 +96,66 @@ function drawHeader() {
 </div>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
+    // Rating validation - min can't be bigger than max
+    const minRatingInput = document.getElementById('min-rating');
+    const maxRatingInput = document.getElementById('max-rating');
+    
+    if (minRatingInput && maxRatingInput) {
+      // Function to validate and adjust rating values
+      const validateRatings = function() {
+        const minVal = parseFloat(minRatingInput.value) || 0;
+        const maxVal = parseFloat(maxRatingInput.value) || 5;
+        
+        if (minVal > maxVal && maxVal !== '') {
+          // If min is greater than max, set min equal to max
+          minRatingInput.value = maxVal;
+          
+          // Visual feedback - briefly highlight the field
+          minRatingInput.style.transition = 'background-color 0.3s';
+          minRatingInput.style.backgroundColor = '#ff8c8c';
+          setTimeout(() => {
+            minRatingInput.style.backgroundColor = '';
+          }, 500);
+        }
+      };
+      
+      // Add event listeners to both inputs
+      minRatingInput.addEventListener('input', validateRatings);
+      minRatingInput.addEventListener('change', validateRatings);
+      maxRatingInput.addEventListener('input', validateRatings);
+      maxRatingInput.addEventListener('change', validateRatings);
+    }
+    
+    // Price validation - min can't be bigger than max
+    const minPriceInput = document.getElementById('min-price');
+    const maxPriceInput = document.getElementById('max-price');
+    
+    if (minPriceInput && maxPriceInput) {
+      // Function to validate and adjust price values
+      const validatePrices = function() {
+        const minVal = parseFloat(minPriceInput.value) || 0;
+        const maxVal = parseFloat(maxPriceInput.value) || 0;
+        
+        if (minVal > maxVal && maxVal !== '') {
+          // If min is greater than max, set min equal to max
+          minPriceInput.value = maxVal;
+          
+          // Visual feedback - briefly highlight the field
+          minPriceInput.style.transition = 'background-color 0.3s';
+          minPriceInput.style.backgroundColor = '#ff8c8c';
+          setTimeout(() => {
+            minPriceInput.style.backgroundColor = '';
+          }, 500);
+        }
+      };
+      
+      // Add event listeners to both inputs
+      minPriceInput.addEventListener('input', validatePrices);
+      minPriceInput.addEventListener('change', validatePrices);
+      maxPriceInput.addEventListener('input', validatePrices);
+      maxPriceInput.addEventListener('change', validatePrices);
+    }
+    
     var filtersBtn = document.getElementById('filters-btn');
     var filtersModal = document.getElementById('filters-modal');
     var closeFilters = document.getElementById('close-filters');
@@ -122,9 +180,13 @@ function drawHeader() {
           document.querySelector('input[name="max_price"]').value = maxPrice;
         }
         
-        const rating = urlParams.get('rating');
-        if (rating) {
-          document.getElementById('filter-rating').value = rating;
+        const minRating = urlParams.get('min_rating');
+        const maxRating = urlParams.get('max_rating');
+        if (minRating) {
+          document.querySelector('input[name="min_rating"]').value = minRating;
+        }
+        if (maxRating) {
+          document.querySelector('input[name="max_rating"]').value = maxRating;
         }
         
         filtersModal.style.display = 'flex';
@@ -151,14 +213,16 @@ function drawHeader() {
     const category = document.getElementById('filter-category').value;
     const min_price = this.elements['min_price'].value.trim();
     const max_price = this.elements['max_price'].value.trim();
-    const rating = document.getElementById('filter-rating').value;
+    const min_rating = this.elements['min_rating'].value.trim();
+    const max_rating = this.elements['max_rating'].value.trim();
 
     let url = 'search.php?';
     if (q) url += 'q=' + encodeURIComponent(q) + '&';
     if (category) url += 'category=' + encodeURIComponent(category) + '&';
     if (min_price) url += 'min_price=' + encodeURIComponent(min_price) + '&';
     if (max_price) url += 'max_price=' + encodeURIComponent(max_price) + '&';
-    if (rating) url += 'rating=' + encodeURIComponent(rating) + '&';
+    if (min_rating) url += 'min_rating=' + encodeURIComponent(min_rating) + '&';
+    if (max_rating) url += 'max_rating=' + encodeURIComponent(max_rating) + '&';
     
     if (url.endsWith('&')) {
       url = url.slice(0, -1);

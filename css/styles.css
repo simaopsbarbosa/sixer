@@ -413,6 +413,9 @@ main p {
   width: 100%;
   align-items: center;
 }
+.filters-modal-content .price-fields input[type="number"] {
+  font-family: "Inter", sans-serif;
+}
 .filters-modal-content .price-separator {
   width: 4%;
   text-align: center;

@@ -6,7 +6,18 @@ $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 $category = isset($_GET['category']) ? trim($_GET['category']) : '';
 $min_price = isset($_GET['min_price']) && $_GET['min_price'] !== '' ? floatval($_GET['min_price']) : null;
 $max_price = isset($_GET['max_price']) && $_GET['max_price'] !== '' ? floatval($_GET['max_price']) : null;
-$min_rating = isset($_GET['rating']) && $_GET['rating'] !== '' ? floatval($_GET['rating']) : null;
+$min_rating = isset($_GET['min_rating']) && $_GET['min_rating'] !== '' ? floatval($_GET['min_rating']) : null;
+$max_rating = isset($_GET['max_rating']) && $_GET['max_rating'] !== '' ? floatval($_GET['max_rating']) : null;
+
+// Server-side validation: ensure min_rating is not greater than max_rating
+if ($min_rating !== null && $max_rating !== null && $min_rating > $max_rating) {
+    $min_rating = $max_rating;
+}
+
+// Server-side validation: ensure min_price is not greater than max_price
+if ($min_price !== null && $max_price !== null && $min_price > $max_price) {
+    $min_price = $max_price;
+}
 
 $params = [];
 $sql = 'SELECT service_id FROM services_list WHERE service_delisted = 0';
@@ -28,44 +39,85 @@ if ($max_price !== null) {
     $params[] = $max_price;
 }
 
-// Handle rating filter
-if ($min_rating !== null) {
-    // This requires joining with the reviews table to get the average rating
-    $sql = 'SELECT s.service_id 
-            FROM services_list s 
-            LEFT JOIN (
-                SELECT service_id, AVG(rating) as avg_rating 
-                FROM reviews 
-                GROUP BY service_id
-            ) r ON s.service_id = r.service_id 
-            WHERE service_delisted = 0';
+// Get services list with possible rating filters
+$db = Database::getInstance();
+
+// If we have rating filters, we need a more complex query that joins with purchases table
+if ($min_rating !== null || $max_rating !== null) {
+    // Start with base SQL query for non-delisted services
+    $join_sql = 'SELECT s.service_id, 
+                COALESCE(AVG(CASE WHEN p.review_rating IS NOT NULL THEN p.review_rating ELSE NULL END), 0) as avg_rating,
+                COUNT(CASE WHEN p.review_rating IS NOT NULL THEN 1 ELSE NULL END) as review_count
+                FROM services_list s
+                LEFT JOIN purchases p ON s.service_id = p.service_id
+                WHERE s.service_delisted = 0 ';
     
+    // Add other filters
     if ($q !== '') {
-        $sql .= ' AND s.service_title LIKE ?';
+        $join_sql .= ' AND s.service_title LIKE ?';
     }
     if ($category !== '') {
-        $sql .= ' AND s.service_category = ?';
+        $join_sql .= ' AND s.service_category = ?';
     }
     if ($min_price !== null) {
-        $sql .= ' AND s.service_price >= ?';
+        $join_sql .= ' AND s.service_price >= ?';
     }
     if ($max_price !== null) {
-        $sql .= ' AND s.service_price <= ?';
+        $join_sql .= ' AND s.service_price <= ?';
     }
     
-    $sql .= ' AND (r.avg_rating >= ? OR r.avg_rating IS NULL)';
-    $params[] = $min_rating;
+    // Group by service_id to get averages
+    $join_sql .= ' GROUP BY s.service_id';
+    
+    // Apply rating filters in HAVING clause since they operate on aggregate functions
+    $having_conditions = [];
+    if ($min_rating !== null) {
+        // Here we use COALESCE to treat NULL ratings as 0
+        $having_conditions[] = 'COALESCE(avg_rating, 0) >= ?';
+        $params[] = $min_rating;
+    }
+    if ($max_rating !== null) {
+        $having_conditions[] = 'COALESCE(avg_rating, 0) <= ?';
+        $params[] = $max_rating;
+    }
+    
+    // Include all services, treating those without reviews as having a rating of 0
+    if (!empty($having_conditions)) {
+        // Modify HAVING clause to treat NULL avg_rating as 0 for filtering purposes
+        $having_clauses = [];
+        
+        if ($min_rating !== null) {
+            // If min rating is 0 or negative, include services with no reviews
+            if (floatval($min_rating) <= 0) {
+                $having_clauses[] = '(COALESCE(avg_rating, 0) >= ? OR avg_rating IS NULL)';
+            } else {
+                // Only include services with ratings above min_rating
+                $having_clauses[] = 'COALESCE(avg_rating, 0) >= ?';
+            }
+        }
+        
+        if ($max_rating !== null) {
+            // Include services with no reviews if max_rating is specified
+            $having_clauses[] = 'COALESCE(avg_rating, 0) <= ?';
+        }
+        
+        $join_sql .= ' HAVING ' . implode(' AND ', $having_clauses);
+    }
+    
+    $stmt = $db->prepare($join_sql);
+    $stmt->execute($params);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    $service_ids = array_column($results, 'service_id');
+} else {
+    // Simple query without rating filters
+    $stmt = $db->prepare($sql);
+    $stmt->execute($params);
+    $service_ids = $stmt->fetchAll(PDO::FETCH_COLUMN, 0);
 }
 
-$db = Database::getInstance();
-$stmt = $db->prepare($sql);
-$stmt->execute($params);
-$service_ids = $stmt->fetchAll();
-
-$services = [];
-foreach ($service_ids as $row) {
-    $services[] = $row['service_id'];
-}
+// Convert service IDs to the format expected by the rest of the code
+$services = $service_ids;
 
 ?>
 <!DOCTYPE html>
@@ -100,8 +152,20 @@ foreach ($service_ids as $row) {
                 }
                 $search_title .= ' (' . $price_range . ')';
               }
-              if ($min_rating !== null) {
-                $search_title .= ' with ' . $min_rating . '+ stars';
+              if ($min_rating !== null || $max_rating !== null) {
+                $rating_range = '';
+                if ($min_rating !== null && $max_rating !== null) {
+                  $rating_range = $min_rating . ' - ' . $max_rating . ' stars';
+                } elseif ($min_rating !== null) {
+                  if (floatval($min_rating) <= 0) {
+                    $rating_range = $min_rating . '+ stars (includes unrated)';
+                  } else {
+                    $rating_range = $min_rating . '+ stars';
+                  }
+                } else {
+                  $rating_range = 'up to ' . $max_rating . ' stars';
+                }
+                $search_title .= ' with ' . $rating_range;
               }
               echo $search_title;
             ?>
