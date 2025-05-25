@@ -118,12 +118,22 @@ class Service {
         $stmt->execute([$service_id, $client_id]);
         return $stmt->fetchAll();
     }
+    // Returns active clients for a service (with uncompleted purchases)
     public static function get_active_clients_for_service($service_id) {
         $db = Database::getInstance();
         $stmt = $db->prepare('SELECT DISTINCT client_id FROM purchases WHERE service_id = ? AND completed = 0');
         $stmt->execute([$service_id]);
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
+
+    // Returns all clients who have ever made a purchase for this service
+    public static function get_all_clients_for_service($service_id) {
+        $db = Database::getInstance();
+        $stmt = $db->prepare('SELECT DISTINCT client_id FROM purchases WHERE service_id = ?');
+        $stmt->execute([$service_id]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
     public static function get_all_message_users_for_service($service_id) {
         $db = Database::getInstance();
         $stmt = $db->prepare('SELECT DISTINCT user_id FROM messages WHERE service_id = ?');

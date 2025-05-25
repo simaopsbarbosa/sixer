@@ -76,9 +76,9 @@ if ($service) {
 
                 // Determine conversation context
                 $is_freelancer = $user && $service && $user['user_id'] == $service->freelancer_id;
-                // Show all clients with ongoing purchases AND all clients that have sent a message (no repeats)
+                // Show all clients with any purchases (completed or not) AND all clients that have sent a message (no repeats)
                 if ($is_freelancer) {
-                  $clients_from_purchases = Service::get_active_clients_for_service($service->id); // completed == false
+                  $clients_from_purchases = Service::get_all_clients_for_service($service->id); // all purchases
                   $clients_from_messages = Service::get_all_message_users_for_service($service->id); // all who sent a message
                   $active_clients = array_unique(array_merge($clients_from_purchases, $clients_from_messages));
                 } else {
@@ -174,8 +174,9 @@ if ($service) {
                   $disabled = $has_uncompleted ? '' : 'disabled';
                   $btnText = $has_uncompleted ? 'Mark as Completed' : 'Marked as Complete';
                 ?>
-                  <form id="markCompletedForm" method="post" style="display:inline; margin-left: 1em;">
-                    <input type="hidden" name="mark_completed" value="1" />
+                  <form id="markCompletedForm" method="post" action="../action/mark_completed.php" style="display:inline; margin-left: 1em;">
+                    <input type="hidden" name="service_id" value="<?= $service->id ?>" />
+                    <input type="hidden" name="client_id" value="<?= $selected_client_id ?>" />
                     <button type="button" id="markCompletedBtn" class="simple-button<?= !$has_uncompleted ? ' mark-completed-disabled' : '' ?>" style="margin-left: auto;<?= !$has_uncompleted ? ' background:#333; color:#bbb; cursor:not-allowed; border:1px solid #444;' : '' ?>" <?= $disabled ?>><?= $btnText ?></button>
                   </form>
                   <script>
