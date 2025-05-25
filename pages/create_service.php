@@ -113,17 +113,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="service-section-description">Choose the category that best fits your service.</div>
             <select id="service-category" name="category" required>
               <option value="">Select a category</option>
-              <option value="e-commerce">E-commerce</option>
-              <option value="design">Design</option>
-              <option value="writing">Writing</option>
-              <option value="translation">Translation</option>
-              <option value="programming">Programming</option>
-              <option value="marketing">Marketing</option>
-              <option value="video">Video & Animation</option>
-              <option value="music">Music & Audio</option>
-              <option value="business">Business</option>
-              <option value="lifestyle">Lifestyle</option>
-              <option value="other">Other</option>
+              <?php
+                $db = Database::getInstance();
+                $stmt = $db->query('SELECT category_name FROM categories ORDER BY category_name');
+                $categories = $stmt->fetchAll(PDO::FETCH_COLUMN);
+                foreach ($categories as $cat) {
+                  echo '<option value="' . htmlspecialchars($cat) . '">' . htmlspecialchars($cat) . '</option>';
+                }
+              ?>
             </select>
           </div>
         <button type="submit" class="hire-button">Create Service</button>

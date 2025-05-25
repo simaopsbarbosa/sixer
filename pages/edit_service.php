@@ -86,17 +86,15 @@ $csrf_token = CSRF::getToken();
             <div class="service-section-description">Choose the category that best fits your service.</div>
             <select id="service-category" name="category" required>
               <option value="">Select a category</option>
-              <option value="e-commerce" <?= $service->category == 'e-commerce' ? 'selected' : '' ?>>E-commerce</option>
-              <option value="design" <?= $service->category == 'design' ? 'selected' : '' ?>>Design</option>
-              <option value="writing" <?= $service->category == 'writing' ? 'selected' : '' ?>>Writing</option>
-              <option value="translation" <?= $service->category == 'translation' ? 'selected' : '' ?>>Translation</option>
-              <option value="programming" <?= $service->category == 'programming' ? 'selected' : '' ?>>Programming</option>
-              <option value="marketing" <?= $service->category == 'marketing' ? 'selected' : '' ?>>Marketing</option>
-              <option value="video" <?= $service->category == 'video' ? 'selected' : '' ?>>Video & Animation</option>
-              <option value="music" <?= $service->category == 'music' ? 'selected' : '' ?>>Music & Audio</option>
-              <option value="business" <?= $service->category == 'business' ? 'selected' : '' ?>>Business</option>
-              <option value="lifestyle" <?= $service->category == 'lifestyle' ? 'selected' : '' ?>>Lifestyle</option>
-              <option value="other" <?= $service->category == 'other' ? 'selected' : '' ?>>Other</option>
+              <?php
+                $db = Database::getInstance();
+                $stmt = $db->query('SELECT category_name FROM categories ORDER BY category_name');
+                $categories = $stmt->fetchAll(PDO::FETCH_COLUMN);
+                foreach ($categories as $cat) {
+                  $selected = ($service->category === $cat) ? 'selected' : '';
+                  echo '<option value="' . htmlspecialchars($cat) . '" ' . $selected . '>' . htmlspecialchars($cat) . '</option>';
+                }
+              ?>
             </select>
           </div>
           <div class="form-actions" style="margin-top: 2em; display: flex; gap: 1em;">

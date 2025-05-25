@@ -56,7 +56,7 @@ $csrf_token = CSRF::getToken();
                   <?= $service ? htmlspecialchars($service->category) : '-' ?>
                 </span>
                 <span class="service-price"
-                  >Starting from
+                  >from
                   <span style="font-weight: bold">
                     <?= htmlspecialchars($service ? $service->price : '-') ?>$
                   </span></span
@@ -216,7 +216,7 @@ $csrf_token = CSRF::getToken();
             <form class="forum-form" method="post" action="../action/send_message.php" style="margin-bottom:0;">
               <input type="hidden" name="service_id" value="<?= htmlspecialchars($service->id) ?>" />
               <?php if ($is_freelancer): ?>
-                <input type="hidden" name="client_id" value="<?= htmlspecialchars($selected_client_id) ?>" />
+                <input type="hidden" name="client_id" value="<?= $selected_client_id ?>" />
               <?php endif; ?>
               <input type="text" name="message" placeholder="Write a message..." required class="forum-input" autocomplete="off" />
               <button type="submit" aria-label="Send">
@@ -297,9 +297,9 @@ $csrf_token = CSRF::getToken();
                 $initial_reviews = array_slice($all_reviews, 0, $max_initial);
                 $remaining_reviews = array_slice($all_reviews, $max_initial);
                 if ($review_count === 0 && $customer_count === 0) {
-                  echo '<p style="color:#aaa; margin:0;">This service has no customers or reviews yet.</p>';
+                  echo '<p style="color:#999; margin:0; font-weight:200;">This service has no customers or reviews yet.</p>';
                 } elseif ($review_count === 0 && $customer_count > 0) {
-                  echo '<p style="color:#aaa; margin:0;">This service has customers, but no reviews have been left yet.</p>';
+                  echo '<p style="color:#999; margin:0; font-weight:200;">This service has customers, but no reviews have been left yet.</p>';
                 }
                 foreach ($initial_reviews as $review) {
                   drawReviewCard($review);
@@ -337,7 +337,7 @@ $csrf_token = CSRF::getToken();
             </script>
           </div>
 
-          <a href="profile.php?id=<?= $freelancer ? htmlspecialchars($freelancer['user_id']) : '' ?>" class="service-section">
+          <a href="profile.php?id=<?= $freelancer ? $freelancer['user_id'] : '' ?>" class="service-section">
             <h2>About The Freelancer</h2>
             <div class="freelancer-info">
               <div class="freelancer-header">

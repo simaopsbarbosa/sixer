@@ -4,6 +4,8 @@ PRAGMA foreign_keys = ON;
 
 DROP TABLE IF EXISTS user_registry;
 
+DROP TABLE IF EXISTS categories;
+
 DROP TABLE IF EXISTS skills;
 DROP TABLE IF EXISTS user_skills;
 
@@ -68,6 +70,11 @@ CREATE TABLE user_languages
         ON UPDATE CASCADE
 );
 
+CREATE TABLE categories
+(
+    category_name TEXT PRIMARY KEY NOT NULL
+);
+
 CREATE TABLE services_list
 (
     service_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -83,7 +90,8 @@ CREATE TABLE services_list
 
     service_picture BLOB DEFAULT NULL,
 
-    FOREIGN KEY(freelancer_id) REFERENCES user_registry(user_id)
+    FOREIGN KEY(freelancer_id) REFERENCES user_registry(user_id),
+    FOREIGN KEY(service_category) REFERENCES categories(category_name)
 );
 
 CREATE TABLE purchases
@@ -92,7 +100,7 @@ CREATE TABLE purchases
     client_id INTEGER NOT NULL,
     service_id INTEGER NOT NULL,
     completed BOOLEAN DEFAULT FALSE,
-
+    purchase_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     review_text TEXT DEFAULT NULL,
     review_rating INTEGER DEFAULT NULL,
 
@@ -111,7 +119,7 @@ CREATE TABLE messages
     is_reply BOOLEAN NOT NULL,
 
     FOREIGN KEY(user_id) REFERENCES user_registry(user_id),
-    FOREIGN KEY(service_id) REFERENCES services(service_id)
+    FOREIGN KEY(service_id) REFERENCES services_list(service_id)
 ); 
  
 

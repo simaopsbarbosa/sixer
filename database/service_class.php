@@ -100,7 +100,7 @@ class Service {
         $stmt = $db->prepare('SELECT COUNT(*) FROM purchases WHERE client_id = ? AND service_id = ? AND completed = 0');
         $stmt->execute([$client_id, $service_id]);
         if ($stmt->fetchColumn() > 0) return false;
-        $stmt = $db->prepare('INSERT INTO purchases (client_id, service_id, completed, review_text, review_rating) VALUES (?, ?, 0, NULL, NULL)');
+        $stmt = $db->prepare('INSERT INTO purchases (client_id, service_id, completed, purchase_date, review_text, review_rating) VALUES (?, ?, 0, CURRENT_TIMESTAMP, NULL, NULL)');
         return $stmt->execute([$client_id, $service_id]);
     }
 

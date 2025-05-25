@@ -145,7 +145,7 @@ foreach ($user_purchases as $purchase) {
                   $completed_services = User::getTotalCompletedServices($profile_user_id);
                 ?>
                 <span class="stat-value"><?= $completed_services ?></span>
-                <span class="stat-label">Completed Services</span>
+                <span class="stat-label">Customers</span> 
               </div>
             </div>
           </div>
@@ -228,7 +228,7 @@ foreach ($user_purchases as $purchase) {
                     drawProfilePurchaseCard($item['purchase'], $item['service'], false);
                   }
                 } else {
-                  echo '<p style="color:#888;">No ongoing purchases.</p>';
+                  echo '<p>No ongoing purchases.</p>';
                 } ?>
               </div>
             </div>
@@ -240,7 +240,7 @@ foreach ($user_purchases as $purchase) {
                     drawProfilePurchaseCard($item['purchase'], $item['service'], true);
                   }
                 } else {
-                  echo '<p style="color:#888;">No past purchases.</p>';
+                  echo '<p>No past purchases.</p>';
                 } ?>
               </div>
             </div>
