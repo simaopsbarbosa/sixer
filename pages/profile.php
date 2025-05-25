@@ -10,6 +10,7 @@ if (!empty($_GET['id'])) {
 } else {
     require_once '../utils/session.php';
     $session = Session::getInstance();
+    $csrf_token = CSRF::getToken();
     if ($session->isLoggedIn()) {
         $profile_user_id = $session->getUser()['user_id'];
         $is_own_profile = true;
@@ -25,9 +26,6 @@ require_once '../database/user_class.php';
 require_once '../database/service_class.php';
 require_once '../templates/profile_service_card.php';
 require_once '../templates/profile_purchase_card.php';
-require_once '../utils/csrf.php';
-
-$csrf_token = CSRF::getToken();
 
 // Fetch user from database by id
 $user_data = null;
@@ -103,9 +101,6 @@ foreach ($user_purchases as $purchase) {
     <title>sixer - profile</title>
   </head>
   <body>
-    <script>
-    const CSRF_TOKEN = <?= json_encode($csrf_token) ?>;
-    </script>
     <?php drawHeader(); ?>
     <main>
       <div class="profile-container">
