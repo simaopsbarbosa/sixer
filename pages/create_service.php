@@ -51,6 +51,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 }
+else {
+  $csrf_token = CSRF::getToken();
+}
 
 ?>
 <!DOCTYPE html>
