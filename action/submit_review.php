@@ -5,7 +5,9 @@ require_once __DIR__ . '/../database/service_class.php';
 
 $session = Session::getInstance();
 require_once '../utils/csrf.php';
-$csrf_token = $_POST['csrf_token'] ?? '';
+$data = json_decode(file_get_contents('php://input'), true);
+$csrf_token = $data['csrf_token'] ?? '';
+
 if (!CSRF::verifyCSRF($csrf_token)) {
     http_response_code(403);
     echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
@@ -17,7 +19,6 @@ if (!$session->isLoggedIn()) {
     exit;
 }
 
-$data = json_decode(file_get_contents('php://input'), true);
 $purchase_id = $data['purchase_id'] ?? null;
 $rating = $data['rating'] ?? null;
 $review = $data['review'] ?? null;
