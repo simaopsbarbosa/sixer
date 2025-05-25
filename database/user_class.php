@@ -2,8 +2,6 @@
 declare(strict_types=1);
 require_once(__DIR__ . '/../utils/database.php');
 
-require_once(__DIR__ . '/../database/user_class.php');
-
 class User {
     public int $id;
     public string $email;
@@ -52,5 +50,60 @@ class User {
         $stmt = $db->prepare('SELECT * FROM purchases WHERE client_id = ?');
         $stmt->execute([$user_id]);
         return $stmt->fetchAll();
+    }
+    
+    // Get the total number of completed services for this freelancer
+    public static function getTotalCompletedServices(int $user_id): int {
+        $db = Database::getInstance();
+        // Get all service ids for this freelancer
+        $stmt = $db->prepare('SELECT service_id FROM services_list WHERE freelancer_id = ?');
+        $stmt->execute([$user_id]);
+        $services = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        
+        // If no services, return 0
+        if (empty($services)) {
+            return 0;
+        }
+        
+        // Sum up the total customers for all services
+        $total = 0;
+        foreach ($services as $service_id) {
+            require_once(__DIR__ . '/service_class.php');
+            $total += Service::getTotalCustomers($service_id);
+        }
+        
+        return $total;
+    }
+    
+    // Get the average rating for all services by this freelancer
+    public static function getAverageRating(int $user_id): float {
+        $db = Database::getInstance();
+        // Get all service ids for this freelancer
+        $stmt = $db->prepare('SELECT service_id FROM services_list WHERE freelancer_id = ?');
+        $stmt->execute([$user_id]);
+        $services = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        
+        // If no services, return 0
+        if (empty($services)) {
+            return 0.0;
+        }
+        
+        // Get the ratings for all services
+        $total_rating = 0.0;
+        $total_reviews = 0;
+        
+        foreach ($services as $service_id) {
+            require_once(__DIR__ . '/service_class.php');
+            $rating_info = Service::getServiceRatingInfo($service_id);
+            $total_rating += $rating_info['avg'] * $rating_info['count']; // Weighted by number of reviews
+            $total_reviews += $rating_info['count'];
+        }
+        
+        // Calculate the weighted average
+        if ($total_reviews > 0) {
+            return round($total_rating / $total_reviews, 1);
+        } else {
+            return 0.0;
+        }
     }
 }

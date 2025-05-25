@@ -414,6 +414,22 @@
   animation: reviewCardGlassEffect 8s linear infinite;
 }
 
+.submit-button {
+  color: #ffffff;
+  background-color: #131313;
+  border-radius: 0px;
+  border: 1px solid #333333;
+  font-family: "Inter", Courier, monospace;
+  font-weight: 200;
+  padding: 0.8em 2em;
+  font-size: 1em;
+}
+.submit-button:hover {
+  background-color: #1a1a1a;
+  border-color: #444444;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
+}
+
 /* Ensure review content stays above the gradient */
 .review-header,
 .review-text {

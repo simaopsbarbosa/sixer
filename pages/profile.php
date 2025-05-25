@@ -126,11 +126,17 @@ foreach ($user_purchases as $purchase) {
             </div>
             <div class="profile-stats">
               <div class="stat">
-                <span class="stat-value">4.8</span>
+                <?php
+                  $user_rating = User::getAverageRating($profile_user_id);
+                ?>
+                <span class="stat-value"><?= $user_rating ? number_format($user_rating, 1) : '0.0' ?></span>
                 <span class="stat-label">Rating</span>
               </div>
               <div class="stat">
-                <span class="stat-value">127</span>
+                <?php
+                  $completed_services = User::getTotalCompletedServices($profile_user_id);
+                ?>
+                <span class="stat-value"><?= $completed_services ?></span>
                 <span class="stat-label">Completed Services</span>
               </div>
             </div>
