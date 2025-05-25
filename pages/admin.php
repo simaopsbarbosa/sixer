@@ -124,8 +124,20 @@ $total_purchases = $stmt->fetchColumn();
     <link rel="stylesheet" href="../css/styles.css" />
     <link rel="stylesheet" href="../css/admin.css" />
     <title>sixer - admin panel</title>
+    <style>
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.15; /* Reduced opacity to ensure content remains readable */
+        }
+    </style>
 </head>
 <body>
+    <canvas id="matrix-canvas"></canvas>
     <?php drawHeader(); ?>
     <main>
         <div class="admin-container">
@@ -411,6 +423,79 @@ $total_purchases = $stmt->fetchColumn();
         
         // Initialize with all sections visible
         adminSections.forEach(section => section.classList.add('active'));
+        
+        // Matrix Rain Animation Code
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Set canvas to full window size
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        // Characters to use in the rain (use a mix of characters for a tech/hacker look)
+        const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲンABCDEFGHIJKLMNOPQRSTUVWXYZ#$%&*+<=>?@';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize; // Number of columns based on canvas width
+        
+        // Array to track the y position of each drop
+        const drops = [];
+        for(let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * -100; // Start above the canvas for a staggered effect
+        }
+        
+        // Colors for the matrix rain in green shades
+        const colors = ['#0F0', '#00FF00', '#22FF22', '#44FF44', '#88FF88'];
+        
+        function draw() {
+            // Add semi-transparent black rectangle to create trailing effect
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Set font style
+            ctx.font = fontSize + 'px monospace';
+            
+            // Loop over drops
+            for(let i = 0; i < drops.length; i++) {
+                // Pick a random character
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                
+                // Pick a random green color
+                ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                
+                // Draw the character
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                
+                // Move drop down
+                drops[i]++;
+                
+                // Send the drop back to the top after it reaches the bottom
+                // Also randomize the reset to make it look more natural
+                if(drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    drops[i] = 0;
+                }
+            }
+        }
+        
+        // Handle window resizing
+        window.addEventListener('resize', function() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            const newColumns = canvas.width / fontSize;
+            
+            // Adjust drops array length based on new columns count
+            if (newColumns > drops.length) {
+                // Add more drops
+                for (let i = drops.length; i < newColumns; i++) {
+                    drops[i] = Math.random() * -100;
+                }
+            } else if (newColumns < drops.length) {
+                // Remove excess drops
+                drops.length = Math.floor(newColumns);
+            }
+        });
+        
+        // Run the animation
+        setInterval(draw, 35); // Speed of animation
     });
     </script>
 </body>
