@@ -65,19 +65,17 @@ function drawHeader() {
     <form id="filters-form">
       <label for="filter-category">Category:</label>
       <select id="filter-category" name="category">
-        <!-- we should find a better way to do this -->
         <option value="">Any</option>
-        <option value="e-commerce">E-commerce</option>
-        <option value="design">Design</option>
-        <option value="writing">Writing</option>
-        <option value="translation">Translation</option>
-        <option value="programming">Programming</option>
-        <option value="marketing">Marketing</option>
-        <option value="video">Video & Animation</option>
-        <option value="music">Music & Audio</option>
-        <option value="business">Business</option>
-        <option value="lifestyle">Lifestyle</option>
-        <option value="other">Other</option>
+        <?php
+          require_once __DIR__ . '/../utils/database.php';
+          $db = Database::getInstance();
+          $stmt = $db->query('SELECT category_name FROM categories ORDER BY category_name');
+          $categories = $stmt->fetchAll(PDO::FETCH_COLUMN);
+          foreach ($categories as $cat) {
+            $selected = (isset($_GET['category']) && $_GET['category'] === $cat) ? 'selected' : '';
+            echo '<option value="' . htmlspecialchars($cat) . '" ' . $selected . '>' . htmlspecialchars($cat) . '</option>';
+          }
+        ?>
       </select>
       <br /><br />
       <label>Price:</label>
@@ -124,6 +122,11 @@ function drawHeader() {
           document.querySelector('input[name="max_price"]').value = maxPrice;
         }
         
+        const rating = urlParams.get('rating');
+        if (rating) {
+          document.getElementById('filter-rating').value = rating;
+        }
+        
         filtersModal.style.display = 'flex';
       });
       
@@ -146,14 +149,21 @@ function drawHeader() {
     
     const q = currentQuery || (document.getElementById('main-search') ? document.getElementById('main-search').value : '');
     const category = document.getElementById('filter-category').value;
-    const min_price = this.elements['min_price'].value;
-    const max_price = this.elements['max_price'].value;
+    const min_price = this.elements['min_price'].value.trim();
+    const max_price = this.elements['max_price'].value.trim();
+    const rating = document.getElementById('filter-rating').value;
 
     let url = 'search.php?';
     if (q) url += 'q=' + encodeURIComponent(q) + '&';
     if (category) url += 'category=' + encodeURIComponent(category) + '&';
     if (min_price) url += 'min_price=' + encodeURIComponent(min_price) + '&';
     if (max_price) url += 'max_price=' + encodeURIComponent(max_price) + '&';
+    if (rating) url += 'rating=' + encodeURIComponent(rating) + '&';
+    
+    if (url.endsWith('&')) {
+      url = url.slice(0, -1);
+    }
+    
     window.location.href = url;
 });
 </script>

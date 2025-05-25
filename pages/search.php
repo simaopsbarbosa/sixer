@@ -6,6 +6,7 @@ $q = isset($_GET['q']) ? trim($_GET['q']) : '';
 $category = isset($_GET['category']) ? trim($_GET['category']) : '';
 $min_price = isset($_GET['min_price']) && $_GET['min_price'] !== '' ? floatval($_GET['min_price']) : null;
 $max_price = isset($_GET['max_price']) && $_GET['max_price'] !== '' ? floatval($_GET['max_price']) : null;
+$min_rating = isset($_GET['rating']) && $_GET['rating'] !== '' ? floatval($_GET['rating']) : null;
 
 $params = [];
 $sql = 'SELECT service_id FROM services_list WHERE service_delisted = 0';
@@ -25,6 +26,35 @@ if ($min_price !== null) {
 if ($max_price !== null) {
     $sql .= ' AND service_price <= ?';
     $params[] = $max_price;
+}
+
+// Handle rating filter
+if ($min_rating !== null) {
+    // This requires joining with the reviews table to get the average rating
+    $sql = 'SELECT s.service_id 
+            FROM services_list s 
+            LEFT JOIN (
+                SELECT service_id, AVG(rating) as avg_rating 
+                FROM reviews 
+                GROUP BY service_id
+            ) r ON s.service_id = r.service_id 
+            WHERE service_delisted = 0';
+    
+    if ($q !== '') {
+        $sql .= ' AND s.service_title LIKE ?';
+    }
+    if ($category !== '') {
+        $sql .= ' AND s.service_category = ?';
+    }
+    if ($min_price !== null) {
+        $sql .= ' AND s.service_price >= ?';
+    }
+    if ($max_price !== null) {
+        $sql .= ' AND s.service_price <= ?';
+    }
+    
+    $sql .= ' AND (r.avg_rating >= ? OR r.avg_rating IS NULL)';
+    $params[] = $min_rating;
 }
 
 $db = Database::getInstance();
@@ -69,6 +99,9 @@ foreach ($service_ids as $row) {
                   $price_range = 'up to $' . $max_price;
                 }
                 $search_title .= ' (' . $price_range . ')';
+              }
+              if ($min_rating !== null) {
+                $search_title .= ' with ' . $min_rating . '+ stars';
               }
               echo $search_title;
             ?>

@@ -367,7 +367,8 @@ main p {
   margin-right: 0;
 }
 .filters-modal-content input[type="number"],
-.filters-modal-content select {
+.filters-modal-content select,
+.filters-modal-content option {
   background: #09090b;
   color: #fff;
   border: 1px solid #333333;
@@ -375,7 +376,7 @@ main p {
   padding: 0.6em 0.9em;
   margin-right: 4px;
   margin-bottom: 0.7em;
-  font-family: "Inter", Courier, monospace;
+  font-family: "Inter", sans-serif;
   font-size: 1em;
   font-weight: 100;
   transition: border-color 0.3s;
