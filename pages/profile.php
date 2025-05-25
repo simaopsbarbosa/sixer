@@ -405,10 +405,11 @@ foreach ($user_purchases as $purchase) {
       saveBtn.addEventListener('click', function(e) {
         e.preventDefault();
         const checked = getCheckedSkills();
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
         fetch('../action/edit_profile_skills.php', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ skills: checked })
+          body: JSON.stringify({ skills: checked, csrf_token: csrfToken })
         })
         .then (r => r.json())
         .then(data => {
