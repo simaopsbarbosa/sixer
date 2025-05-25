@@ -119,7 +119,6 @@ foreach ($user_purchases as $purchase) {
           <div class="profile-avatar" style="z-index: 1; position: relative; cursor: pointer;">
             <form id="profile-pic-form" action="../action/edit_profile_picture.php" method="post" enctype="multipart/form-data" style="display:none;">
               <input type="file" id="profile-pic-input" name="profile_picture" accept="image/*" style="display:none;" />
-              <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
             </form>
             <img id="profile-pic-img" src="<?= htmlspecialchars($user_picture) ?>" alt="<?= htmlspecialchars($full_name) ?>'s Profile Picture" style="object-fit: cover; aspect-ratio: 1/1; width: 100%; height: 100%; border-radius: 0; cursor: pointer;" />
             <?php if ($is_own_profile): ?>
