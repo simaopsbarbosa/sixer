@@ -146,6 +146,7 @@
 .rating-count {
   color: #888888;
   font-size: 0.9em;
+  font-weight: 200;
 }
 
 .service-stats {
@@ -468,6 +469,7 @@
 .reviews-stats .stat-label {
   color: #888888;
   font-size: 0.8em;
+  font-weight: 200;
 }
 
 .reviews-title {

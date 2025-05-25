@@ -8,7 +8,7 @@ function drawProfileService($service) {
         <div class="work-header">
             <div class="work-title-group">
                 <h3><?= htmlspecialchars($service->title) ?></h3>
-                <span class="work-date">Starting from $<?= number_format($service->price, 0) ?></span>
+                <span class="work-date">from <span style="color:white; font-weight:bold;">$<?= number_format($service->price, 0) ?></span></span>
             </div>
             <div class="work-rating">
                 <?php 

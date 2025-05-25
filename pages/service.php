@@ -54,7 +54,7 @@ if ($service) {
                   <?= $service ? htmlspecialchars($service->category) : '-' ?>
                 </span>
                 <span class="service-price"
-                  >Starting from
+                  >from
                   <span style="font-weight: bold">
                     <?= htmlspecialchars($service ? $service->price : '-') ?>$
                   </span></span
@@ -295,9 +295,9 @@ if ($service) {
                 $initial_reviews = array_slice($all_reviews, 0, $max_initial);
                 $remaining_reviews = array_slice($all_reviews, $max_initial);
                 if ($review_count === 0 && $customer_count === 0) {
-                  echo '<p style="color:#aaa; margin:0;">This service has no customers or reviews yet.</p>';
+                  echo '<p style="color:#999; margin:0; font-weight:200;">This service has no customers or reviews yet.</p>';
                 } elseif ($review_count === 0 && $customer_count > 0) {
-                  echo '<p style="color:#aaa; margin:0;">This service has customers, but no reviews have been left yet.</p>';
+                  echo '<p style="color:#999; margin:0; font-weight:200;">This service has customers, but no reviews have been left yet.</p>';
                 }
                 foreach ($initial_reviews as $review) {
                   drawReviewCard($review);

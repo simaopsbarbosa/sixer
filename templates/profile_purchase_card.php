@@ -13,7 +13,9 @@ function drawProfilePurchaseCard($purchase, $service, $is_completed) {
               <h3><a href="<?= $service_url ?>" class="service-title-link" style="text-decoration:none;color:inherit;">
                 <?= htmlspecialchars($service->title) ?>
               </a></h3>
-              <span class="work-date">Paid $<?= $paid ?> on <?= $date ?></span>
+              <span class="work-date">
+                Paid <span style="color:white; font-weight:bold;">$<?= $paid ?></span> on <?= $date ?>
+              </span>
           </div>
           <div class="work-rating">
               <?= $rating_info['avg'] !== null ? Service::getStars((float)$rating_info['avg']) . '   ' . htmlspecialchars($rating_info['avg']) : '–' ?>
