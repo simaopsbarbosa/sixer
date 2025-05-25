@@ -37,11 +37,11 @@ function drawServiceCard($service_id) {
             <div class="search-card-stats">
                 <div class="search-card-info">
                     <span class="search-card-delivery">
-  <?php
-    $eta_display = ($service->eta > 999) ? '999+' : htmlspecialchars($service->eta);
-  ?>
-  <?= $eta_display ?> day<?= $service->eta == 1 ? '' : 's' ?>
-</span>
+                    <?php
+                        $eta_display = ($service->eta > 999) ? '999+' : htmlspecialchars($service->eta);
+                    ?>
+                    <?= $eta_display ?> day<?= $service->eta == 1 ? '' : 's' ?>
+                    </span>
                     <span class="search-card-rating">
                       <?php
                         $rating_info = Service::getServiceRatingInfo($service->id);
