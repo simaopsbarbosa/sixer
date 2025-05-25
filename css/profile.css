@@ -473,6 +473,7 @@
   color: #fff;
   opacity: 1;
   border-color: #444;
+  cursor: pointer;
 }
 
 .skills-text {
