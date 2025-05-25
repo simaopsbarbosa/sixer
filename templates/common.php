@@ -96,21 +96,17 @@ function drawHeader() {
 </div>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Rating validation - min can't be bigger than max
     const minRatingInput = document.getElementById('min-rating');
     const maxRatingInput = document.getElementById('max-rating');
     
     if (minRatingInput && maxRatingInput) {
-      // Function to validate and adjust rating values
       const validateRatings = function() {
         const minVal = parseFloat(minRatingInput.value) || 0;
         const maxVal = parseFloat(maxRatingInput.value) || 5;
         
         if (minVal > maxVal && maxVal !== '') {
-          // If min is greater than max, set min equal to max
           minRatingInput.value = maxVal;
           
-          // Visual feedback - briefly highlight the field
           minRatingInput.style.transition = 'background-color 0.3s';
           minRatingInput.style.backgroundColor = '#ff8c8c';
           setTimeout(() => {
@@ -119,28 +115,23 @@ function drawHeader() {
         }
       };
       
-      // Add event listeners to both inputs
       minRatingInput.addEventListener('input', validateRatings);
       minRatingInput.addEventListener('change', validateRatings);
       maxRatingInput.addEventListener('input', validateRatings);
       maxRatingInput.addEventListener('change', validateRatings);
     }
     
-    // Price validation - min can't be bigger than max
     const minPriceInput = document.getElementById('min-price');
     const maxPriceInput = document.getElementById('max-price');
     
     if (minPriceInput && maxPriceInput) {
-      // Function to validate and adjust price values
       const validatePrices = function() {
         const minVal = parseFloat(minPriceInput.value) || 0;
-        const maxVal = parseFloat(maxPriceInput.value) || 0;
+        const maxVal = parseFloat(maxPriceInput.value);
         
-        if (minVal > maxVal && maxVal !== '') {
-          // If min is greater than max, set min equal to max
+        if (maxPriceInput.value.trim() !== '' && minVal > maxVal) {
           minPriceInput.value = maxVal;
           
-          // Visual feedback - briefly highlight the field
           minPriceInput.style.transition = 'background-color 0.3s';
           minPriceInput.style.backgroundColor = '#ff8c8c';
           setTimeout(() => {
@@ -149,7 +140,6 @@ function drawHeader() {
         }
       };
       
-      // Add event listeners to both inputs
       minPriceInput.addEventListener('input', validatePrices);
       minPriceInput.addEventListener('change', validatePrices);
       maxPriceInput.addEventListener('input', validatePrices);
