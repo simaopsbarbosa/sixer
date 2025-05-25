@@ -28,6 +28,7 @@ $email = $user['email'] ?? '';
     <link rel="stylesheet" href="../css/styles.css" />
     <link rel="stylesheet" href="../css/auth.css" />
     <link rel="stylesheet" href="../css/edit_profile.css" />
+    <link rel="icon" href="../assets/icons/favicon.ico" type="image/x-icon" />
     <title>Edit Profile</title>
 </head>
 <body>

@@ -123,6 +123,7 @@ $total_purchases = $stmt->fetchColumn();
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/styles.css" />
     <link rel="stylesheet" href="../css/admin.css" />
+    <link rel="icon" href="../assets/icons/favicon.ico" type="image/x-icon" />
     <title>sixer - admin panel</title>
 </head>
 <body>

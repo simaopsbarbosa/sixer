@@ -50,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../css/styles.css" />
     <link rel="stylesheet" href="../css/service.css" />
     <link rel="stylesheet" href="../css/create_service.css" />
+    <link rel="icon" href="../assets/icons/favicon.ico" type="image/x-icon" />
     <style>
       html, body, input, select, textarea, button {
         font-family: 'Inter', sans-serif !important;
