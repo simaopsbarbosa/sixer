@@ -9,9 +9,6 @@ DROP TABLE IF EXISTS categories;
 DROP TABLE IF EXISTS skills;
 DROP TABLE IF EXISTS user_skills;
 
-DROP TABLE IF EXISTS languages;
-DROP TABLE IF EXISTS user_languages;
-
 DROP TABLE IF EXISTS services_list;
 DROP TABLE IF EXISTS purchases;
 DROP TABLE IF EXISTS messages;
@@ -46,26 +43,6 @@ CREATE TABLE user_skills
     PRIMARY KEY(user_id, skill_name),
     FOREIGN KEY(user_id) REFERENCES user_registry(user_id)
     FOREIGN KEY(skill_name) REFERENCES skills(skill_name)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
-);
-
-CREATE TABLE languages
-(
-    lang_code TEXT NOT NULL, /* pt-br */
-    lang_name TEXT NOT NULL, /* Portuguese */
-
-    PRIMARY KEY(lang_code)
-);
-
-CREATE TABLE user_languages
-(
-    user_id INTEGER NOT NULL,
-    lang_code TEXT NOT NULL,
-
-    PRIMARY KEY(user_id, lang_code),
-    FOREIGN KEY(user_id) REFERENCES user_registry(user_id),
-    FOREIGN KEY(lang_code) REFERENCES languages(lang_code)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 );

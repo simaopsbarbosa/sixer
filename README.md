@@ -14,15 +14,15 @@
 - [x] Mark services as completed once delivered.
 
 **Clients:**
-- [ ] Browse services using filters like category, price, and rating.
+- [x] Browse services using filters like category, price, and rating.
 - [x] Engage with freelancers to ask questions or request custom orders.
 - [x] Hire freelancers and proceed to checkout (simulate payment process).
 - [x] Leave ratings and reviews for completed services.
 
 **Admins:**
-- [ ] Elevate a user to admin status.
-- [ ] Introduce new service categories and other pertinent entities.
-- [ ] Oversee and ensure the smooth operation of the entire system.
+- [x] Elevate a user to admin status.
+- [x] Introduce new service categories and other pertinent entities.
+- [x] Oversee and ensure the smooth operation of the entire system.
 
 **Extra:**
 - [x] Users can add and edit a profile description.

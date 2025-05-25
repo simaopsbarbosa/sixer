@@ -102,29 +102,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo json_encode(['success' => true, 'message' => 'Skill added successfully']);
                 break;
                 
-            case 'add_language':
-                $lang_code = trim($_POST['lang_code'] ?? '');
-                $lang_name = trim($_POST['lang_name'] ?? '');
-                
-                if (empty($lang_code) || empty($lang_name)) {
-                    http_response_code(400);
-                    echo json_encode(['success' => false, 'error' => 'Language code and name are required']);
-                    exit;
-                }
-                
-                // Check if language already exists
-                $stmt = $db->prepare('SELECT COUNT(*) FROM languages WHERE lang_code = ?');
-                $stmt->execute([$lang_code]);
-                if ($stmt->fetchColumn() > 0) {
-                    echo json_encode(['success' => false, 'error' => 'Language already exists']);
-                    exit;
-                }
-                
-                $stmt = $db->prepare('INSERT INTO languages (lang_code, lang_name) VALUES (?, ?)');
-                $stmt->execute([$lang_code, $lang_name]);
-                echo json_encode(['success' => true, 'message' => 'Language added successfully']);
-                break;
-                
             default:
                 http_response_code(400);
                 echo json_encode(['success' => false, 'error' => 'Unknown action']);
