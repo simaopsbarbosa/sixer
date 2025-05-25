@@ -143,7 +143,7 @@ if ($service) {
                     $cuser = $cuser ? Database::getInstance()->query('SELECT * FROM user_registry WHERE user_id = ' . (int)$cid)->fetch() : null;
                     $active = $selected_client_id == $cid;
                   ?>
-                    <a href="?id=<?= $service->id ?>&client_id=<?= $cid ?>#forumSection" style="text-decoration:none;">
+                    <a href="?id=<?= $service->id ?>&client_id=<?= $cid ?>&forum=open" style="text-decoration:none;">
                       <button class="conversation-tab<?= $active ? ' active' : '' ?>" data-user="<?= $cuser ? htmlspecialchars($cuser['full_name']) : 'User ' . $cid ?>">
                         <?= $cuser ? htmlspecialchars($cuser['full_name']) : 'User ' . $cid ?>
                       </button>
@@ -366,6 +366,25 @@ if ($service) {
           forum.style.display = 'none';
             this.textContent = <?= ($user && $service && $user['user_id'] == $service->freelancer_id) ? "'Contact Clients'" : "'Contact Freelancer'"; ?>;
         }
+      });
+      window.addEventListener('DOMContentLoaded', function() {
+        var forum = document.getElementById('forumSection');
+        var urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('forum') === 'open') {
+          forum.style.display = 'block';
+          var btn = document.getElementById('toggleForumBtn');
+          if (btn) btn.textContent = 'Hide Forum';
+
+          // Remove #forumSection from the URL
+          if (window.location.hash === '#forumSection') {
+            history.replaceState(null, '', window.location.pathname + window.location.search);
+          }
+        }
+      });
+      document.querySelectorAll('.conversation-tab').forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          window.location.href = this.href + '&forum=open'; // Reload with forum=open
+        });
       });
     </script>
   </body>
