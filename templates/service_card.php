@@ -2,7 +2,7 @@
 require_once '../templates/common.php';
 require_once '../database/service_class.php';
 
-function get_user_full_name($user_id) {
+function getUserFullName($user_id) {
     $db = Database::getInstance();
     $stmt = $db->prepare('SELECT full_name FROM user_registry WHERE user_id = ?');
     $stmt->execute([$user_id]);
@@ -11,9 +11,9 @@ function get_user_full_name($user_id) {
 }
 
 function drawServiceCard($service_id) {
-    $service = Service::get_by_id($service_id);
+    $service = Service::getById($service_id);
     if (!$service) return;
-    $freelancer_name = htmlspecialchars(get_user_full_name($service->freelancer_id));
+    $freelancer_name = htmlspecialchars(getUserFullName($service->freelancer_id));
     $desc = $service->info;
     $desc_lines = explode("\n", $desc);
     $description = $desc_lines[0];

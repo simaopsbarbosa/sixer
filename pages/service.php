@@ -7,7 +7,7 @@ require_once '../utils/csrf.php';
 
 // Get service id from query string
 $service_id = isset($_GET['id']) ? (int)$_GET['id'] : null;
-$service = $service_id ? Service::get_by_id($service_id) : null;
+$service = $service_id ? Service::getById($service_id) : null;
 
 $freelancer = null;
 if ($service) {
@@ -81,8 +81,8 @@ $csrf_token = CSRF::getToken();
                 $is_freelancer = $user && $service && $user['user_id'] == $service->freelancer_id;
                 // Show all clients with any purchases (completed or not) AND all clients that have sent a message (no repeats)
                 if ($is_freelancer) {
-                  $clients_from_purchases = Service::get_all_clients_for_service($service->id); // all purchases
-                  $clients_from_messages = Service::get_all_message_users_for_service($service->id); // all who sent a message
+                  $clients_from_purchases = Service::getAllClientsForService($service->id); // all purchases
+                  $clients_from_messages = Service::getAllMessageUsersForService($service->id); // all who sent a message
                   $active_clients = array_unique(array_merge($clients_from_purchases, $clients_from_messages));
                 } else {
                   $active_clients = [];
@@ -199,7 +199,7 @@ $csrf_token = CSRF::getToken();
             <div class="forum-messages">
               <?php 
                 if ($selected_client_id) {
-                  $messages = Service::get_service_messages($service->id, $selected_client_id);
+                  $messages = Service::getServiceMessages($service->id, $selected_client_id);
                   // Ensure correct client user for freelancer
                   $active_user = null;
                   if ($is_freelancer && $selected_client_id) {

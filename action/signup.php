@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     User::create($full_name, $email, $password);
     unset($_SESSION['error']);
 
-    $user = User::get_user_by_email_password($email, $password);
+    $user = User::getUserByEmailPassword($email, $password);
     if ($user) {
         $session->login($user);
         header('Location: ../pages/profile.php');

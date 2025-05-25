@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $user = User::get_user_by_email_password($email, $password);
+    $user = User::getUserByEmailPassword($email, $password);
     if ($user) {
         $session->login($user);
         unset($_SESSION['error']);

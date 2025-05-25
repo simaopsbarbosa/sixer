@@ -11,7 +11,7 @@ $csrf_token = CSRF::getToken();
 require_once '../database/service_class.php';
 
 $service_id = isset($_GET['service_id']) ? (int)$_GET['service_id'] : null;
-$service = $service_id ? Service::get_by_id($service_id) : null;
+$service = $service_id ? Service::getById($service_id) : null;
 $freelancer = null;
 if ($service) {
     $db = Database::getInstance();

@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Check if the current user is the freelancer for this service
-    $service = Service::get_by_id($service_id);
+    $service = Service::getById($service_id);
     if (!$service || $user['user_id'] != $service->freelancer_id) {
         header('Location: ../pages/service.php?id=' . $service_id . '&error=not_authorized');
         exit;

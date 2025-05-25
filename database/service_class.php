@@ -42,7 +42,7 @@ class Service {
         return $db->lastInsertId();
     }
 
-    public static function get_by_id($service_id) {
+    public static function getById($service_id) {
         $db = Database::getInstance();
         $stmt = $db->prepare('SELECT * FROM services_list WHERE service_id = ?');
         $stmt->execute([$service_id]);
@@ -61,7 +61,7 @@ class Service {
         );
     }
 
-    public static function get_by_freelancer($freelancer_id) {
+    public static function getByFreelancer($freelancer_id) {
         $db = Database::getInstance();
         $stmt = $db->prepare('SELECT * FROM services_list WHERE freelancer_id = ?');
         $stmt->execute([$freelancer_id]);
@@ -81,7 +81,7 @@ class Service {
         }, $services);
     }
 
-    public static function update_service($service_id, $title, $category, $price, $eta, $info, $picture = null) {
+    public static function updateService($service_id, $title, $category, $price, $eta, $info, $picture = null) {
         $db = Database::getInstance();
         if ($picture !== null) {
             $stmt = $db->prepare('UPDATE services_list SET service_title = ?, service_category = ?, service_price = ?, service_eta = ?, service_info = ?, service_picture = ? WHERE service_id = ?');
@@ -99,7 +99,7 @@ class Service {
         }
     }
 
-    public static function delete_by_id($service_id) {
+    public static function deleteById($service_id) {
         $db = Database::getInstance();
         $stmt = $db->prepare('DELETE FROM services_list WHERE service_id = ?');
         $stmt->execute([$service_id]);
@@ -124,14 +124,14 @@ class Service {
         return $stmt->fetchColumn() > 0;
     }
 
-    public static function get_service_messages($service_id, $client_id) {
+    public static function getServiceMessages($service_id, $client_id) {
         $db = Database::getInstance();
         $stmt = $db->prepare('SELECT * FROM messages WHERE service_id = ? AND user_id = ? ORDER BY date_time ASC');
         $stmt->execute([$service_id, $client_id]);
         return $stmt->fetchAll();
     }
     // Returns active clients for a service (with uncompleted purchases)
-    public static function get_active_clients_for_service($service_id) {
+    public static function getActiveClientsForService($service_id) {
         $db = Database::getInstance();
         $stmt = $db->prepare('SELECT DISTINCT client_id FROM purchases WHERE service_id = ? AND completed = 0');
         $stmt->execute([$service_id]);
@@ -139,14 +139,14 @@ class Service {
     }
 
     // Returns all clients who have ever made a purchase for this service
-    public static function get_all_clients_for_service($service_id) {
+    public static function getAllClientsForService($service_id) {
         $db = Database::getInstance();
         $stmt = $db->prepare('SELECT DISTINCT client_id FROM purchases WHERE service_id = ?');
         $stmt->execute([$service_id]);
         return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
-    public static function get_all_message_users_for_service($service_id) {
+    public static function getAllMessageUsersForService($service_id) {
         $db = Database::getInstance();
         $stmt = $db->prepare('SELECT DISTINCT user_id FROM messages WHERE service_id = ?');
         $stmt->execute([$service_id]);

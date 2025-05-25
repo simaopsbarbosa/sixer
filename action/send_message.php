@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $service = Service::get_by_id($service_id);
+    $service = Service::getById($service_id);
     if (!$service) {
         $redirect_error = '../pages/service.php?id=' . urlencode($service_id) . '&error=service_not_found';
         if ($client_id) {

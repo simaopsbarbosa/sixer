@@ -58,7 +58,7 @@ if ($session && $session->isLoggedIn()) {
     $is_own_profile = ($session->getUser()['user_id'] == $profile_user_id);
 }
 
-$user_services = Service::get_by_freelancer($profile_user_id);
+$user_services = Service::getByFreelancer($profile_user_id);
 
 $user_skills = [];
 $stmt = $db->prepare('SELECT skill_name FROM user_skills WHERE user_id = ?');
@@ -75,14 +75,14 @@ function hasAnyServices($user_services) {
 }
 
 // Fetch user purchases
-$user_purchases = User::get_user_purchases($profile_user_id);
+$user_purchases = User::getUserPurchases($profile_user_id);
 
 // Split purchases into ongoing and past
 $ongoing_purchases = [];
 $past_purchases = [];
 foreach ($user_purchases as $purchase) {
     if (!empty($purchase['service_id'])) {
-        $service = Service::get_by_id($purchase['service_id']);
+        $service = Service::getById($purchase['service_id']);
         if ($service) {
             if ($purchase['completed']) {
                 $past_purchases[] = ['purchase' => $purchase, 'service' => $service];

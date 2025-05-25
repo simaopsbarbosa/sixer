@@ -5,7 +5,7 @@ require_once '../utils/session.php';
 require_once '../utils/csrf.php';
 
 $service_id = isset($_GET['id']) ? (int)$_GET['id'] : null;
-$service = $service_id ? Service::get_by_id($service_id) : null;
+$service = $service_id ? Service::getById($service_id) : null;
 
 $session = Session::getInstance();
 $user = $session->getUser();

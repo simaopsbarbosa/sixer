@@ -19,7 +19,7 @@ class User {
         $stmt->execute([$full_name, $email, password_hash($password, PASSWORD_DEFAULT)]);
     }
 
-    public static function get_user_by_email_password($email, $password) {
+    public static function getUserByEmailPassword($email, $password) {
         $db = Database::getInstance();
         $stmt = $db->prepare('SELECT * FROM user_registry WHERE email = ?');
         $stmt->execute([$email]);
@@ -30,7 +30,7 @@ class User {
         return false;
     }
 
-    public static function get_user_by_email($email) {
+    public static function getUserByEmail($email) {
         $db = Database::getInstance();
         $stmt = $db->prepare('SELECT * FROM user_registry WHERE email = ?');
         $stmt->execute([$email]);
@@ -45,7 +45,7 @@ class User {
         $stmt->execute([$this->full_name, $this->id]);
     }
 
-    public static function get_user_purchases($user_id) {
+    public static function getUserPurchases($user_id) {
         $db = Database::getInstance();
         $stmt = $db->prepare('SELECT * FROM purchases WHERE client_id = ?');
         $stmt->execute([$user_id]);

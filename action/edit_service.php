@@ -15,7 +15,7 @@ exit;
 $user_id = $session->getUser()['user_id'] ?? null;
 
 $service_id = isset($_GET['id']) ? (int)$_GET['id'] : null;
-$service = $service_id ? Service::get_by_id($service_id) : null;
+$service = $service_id ? Service::getById($service_id) : null;
 
 if (!$service || $service->freelancer_id !== $user_id) {
   header('Location: ../pages/profile.php');
@@ -25,7 +25,7 @@ if (!$service || $service->freelancer_id !== $user_id) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   if (isset($_POST['delete'])) {
     // Delete service
-    Service::delete_by_id($service_id);
+    Service::deleteById($service_id);
     header('Location: ../pages/profile.php');
     exit();
   } else {
@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       }
     }
     
-    Service::update_service($service_id, $title, $category, $price, $eta, $info, $image_blob);
+    Service::updateService($service_id, $title, $category, $price, $eta, $info, $image_blob);
     header('Location: ../pages/service.php?id=' . $service_id);
     exit();
   }
