@@ -421,7 +421,7 @@ foreach ($user_purchases as $purchase) {
         body: JSON.stringify({ skills: checked, csrf_token: CSRF_TOKEN })
         )
 
-        .then r => r.json())
+        .then(r => r.json())
         .then(data => {
           if (data.success) {
             skillsText.innerHTML = data.skills.length
@@ -470,5 +470,4 @@ foreach ($user_purchases as $purchase) {
       </div>
       <p class="review-text">Great work! Fast delivery and exactly what I needed.</p>
     </div>
-  </div> -->
-
+  </div>
