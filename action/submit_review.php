@@ -4,6 +4,13 @@ require_once __DIR__ . '/../utils/session.php';
 require_once __DIR__ . '/../database/service_class.php';
 
 $session = Session::getInstance();
+require_once '../utils/csrf.php';
+$csrf_token = $_POST['csrf_token'] ?? '';
+if (!CSRF::verifyCSRF($csrf_token)) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
+    exit;
+}
 if (!$session->isLoggedIn()) {
     http_response_code(403);
     echo json_encode(['success' => false, 'error' => 'Not logged in']);

@@ -43,6 +43,7 @@ function drawProfilePurchaseCard($purchase, $service, $is_completed) {
       <?php else: ?>
            <button class="review-btn" type="button">Review</button>
             <form class="review-form review-form-styled" style="display:none; margin-top: 16px;" method="post" data-purchase-id="<?= $purchase['purchase_id'] ?>">
+              <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>" />
               <label style="color:#aaa; font-size:0.9em; margin-bottom:0.5em;">Rating:</label>
               <select name="rating" required class="styled-select">
                 <option value="" disabled selected>Select rating</option>
