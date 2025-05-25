@@ -1,5 +1,4 @@
 <?php
-// filepath: /home/simao/ltw/templates/review_card.php
 function drawReviewCard($review) {
     require_once __DIR__ . '/../database/service_class.php';
     $reviewer_name = htmlspecialchars($review['full_name'] ?? 'User');

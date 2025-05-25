@@ -1,5 +1,4 @@
 <?php
-// action/mark_completed.php: Handles marking a purchase as completed
 
 require_once __DIR__ . '/../utils/session.php';
 require_once __DIR__ . '/../database/service_class.php';

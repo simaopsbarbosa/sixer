@@ -1,7 +1,6 @@
 <?php
 
 function drawProfileService($service) {
-    // $service: instance of Service
     ?>
     <a href="../pages/service.php?id=<?= urlencode($service->id) ?>" style="text-decoration:none; color:inherit;">
     <div class="work-item">

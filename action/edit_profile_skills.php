@@ -1,6 +1,4 @@
 <?php
-// action/edit_profile_skills.php
-// Handles AJAX requests to update the user's skills
 
 declare(strict_types=1);
 require_once '../utils/session.php';

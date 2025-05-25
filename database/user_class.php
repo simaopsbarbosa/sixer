@@ -7,12 +7,6 @@ class User {
     public string $email;
     public string $full_name;
 
-    public function __construct(int $id, string $full_name, string $email) {
-        $this->id = $id;
-        $this->full_name = $full_name;
-        $this->email = $email;
-    }
-
     public static function create($full_name, $email, $password) {
         $db = Database::getInstance();
         $stmt = $db->prepare('INSERT INTO user_registry (full_name, email, password_hash, join_date) VALUES (?, ?, ?, DATETIME(\'now\'))');
@@ -30,21 +24,6 @@ class User {
         return false;
     }
 
-    public static function getUserByEmail($email) {
-        $db = Database::getInstance();
-        $stmt = $db->prepare('SELECT * FROM user_registry WHERE email = ?');
-        $stmt->execute([$email]);
-        $user = $stmt->fetch();
-        if (!$user) return null;
-        return new User($user['user_id'], $user['full_name'], $user['email']);
-    }
-
-    public function update() {
-        $db = Database::getInstance();
-        $stmt = $db->prepare('UPDATE user_registry SET full_name = ? WHERE user_id = ?');
-        $stmt->execute([$this->full_name, $this->id]);
-    }
-
     public static function getUserPurchases($user_id) {
         $db = Database::getInstance();
         $stmt = $db->prepare('SELECT * FROM purchases WHERE client_id = ?');
@@ -52,7 +31,6 @@ class User {
         return $stmt->fetchAll();
     }
     
-    // Get the total number of completed services for this freelancer
     public static function getTotalCompletedServices(int $user_id): int {
         $db = Database::getInstance();
         // Get all service ids for this freelancer
@@ -75,7 +53,6 @@ class User {
         return $total;
     }
     
-    // Get the average rating for all services by this freelancer
     public static function getAverageRating(int $user_id): float {
         $db = Database::getInstance();
         // Get all service ids for this freelancer

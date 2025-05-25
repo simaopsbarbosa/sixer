@@ -105,7 +105,6 @@ class Service {
         $stmt->execute([$service_id]);
     }
 
-    // Add a purchase for a user and service
     public static function addPurchase(int $client_id, int $service_id): bool {
         $db = Database::getInstance();
         // Prevent duplicate active purchase
@@ -130,6 +129,7 @@ class Service {
         $stmt->execute([$service_id, $client_id]);
         return $stmt->fetchAll();
     }
+
     // Returns active clients for a service (with uncompleted purchases)
     public static function getActiveClientsForService($service_id) {
         $db = Database::getInstance();
@@ -163,7 +163,6 @@ class Service {
         return $stmt->rowCount() > 0;
     }
 
-    // Add a review to a purchase
     public static function addReviewToPurchase(int $purchase_id, int $rating, string $review): bool {
         $db = Database::getInstance();
         $stmt = $db->prepare('UPDATE purchases SET review_rating = ?, review_text = ? WHERE purchase_id = ?');
@@ -171,7 +170,6 @@ class Service {
         return $stmt->rowCount() > 0;
     }
 
-    // Get the average rating and number of reviews for a service
     public static function getServiceRatingInfo(int $service_id): array {
         $db = Database::getInstance();
         $stmt = $db->prepare('SELECT AVG(review_rating) as avg_rating, COUNT(review_rating) as num_reviews FROM purchases WHERE service_id = ? AND review_rating IS NOT NULL');
@@ -190,7 +188,6 @@ class Service {
         return (int)$stmt->fetchColumn();
     }
 
-    // Helper to render stars (full, empty) for a given float rating
     public static function getStars(float $rating): string {
         $stars = '';
         for ($i = 1; $i <= 5; $i++) {

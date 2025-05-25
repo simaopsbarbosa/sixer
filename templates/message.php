@@ -1,10 +1,6 @@
 <?php
 
 function drawMessage($message, $is_client, $user, $freelancer) {
-    // $message: array with keys: message_text, is_reply, created_at
-    // $is_client: bool, true if the current user is the client
-    // $user: array, the client user
-    // $freelancer: array, the freelancer user
     $is_reply = (bool)$message['is_reply'];
     $sender = $is_reply ? $freelancer : $user;
     $avatar = !empty($sender['user_picture']) ? '../action/get_profile_picture.php?id=' . $sender['user_id'] : '../assets/images/default.jpg';

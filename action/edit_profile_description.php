@@ -1,6 +1,5 @@
 <?php
-// action/edit_profile_description.php
-// Handles AJAX requests to update the user's about me description
+// handles AJAX requests to update the user's about me description
 
 declare(strict_types=1);
 require_once '../utils/session.php';

@@ -1,6 +1,4 @@
 <?php
-// action/hire_service.php: Handles hiring a freelancer for a service (creates a purchase entry)
-
 declare(strict_types=1);
 require_once '../utils/session.php';
 require_once '../utils/database.php';

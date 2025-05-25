@@ -1,6 +1,4 @@
 <?php
-// action/edit_profile_picture.php
-// Handles profile picture upload and cropping
 
 declare(strict_types=1);
 require_once '../utils/session.php';

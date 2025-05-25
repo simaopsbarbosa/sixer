@@ -1,5 +1,4 @@
 <?php
-// /action/edit_profile.php: Handles profile update form submission
 
 declare(strict_types=1);
 require_once '../utils/database.php';

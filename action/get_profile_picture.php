@@ -1,6 +1,4 @@
 <?php
-// action/get_profile_picture.php
-// Serves the user's profile picture from the database as an image
 
 declare(strict_types=1);
 require_once '../utils/database.php';

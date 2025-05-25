@@ -1,6 +1,4 @@
 <?php
-// action/admin_operations.php
-// Handles admin operations like adding categories and elevating users
 
 declare(strict_types=1);
 require_once '../utils/session.php';

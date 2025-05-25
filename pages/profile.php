@@ -440,26 +440,3 @@ foreach ($user_purchases as $purchase) {
 </script>
   </body>
 </html>
-
-<!-- for future reference - this is how to draw a purchase card with review:
-  <div class="work-item">
-    <div class="work-header">
-      <div class="work-title-group">
-        <h3>Business Card Design</h3>
-        <span class="work-date">Paid $49 on 10/04/2025</span>
-      </div>
-      <div class="work-rating">4.7 <span style="font-weight: 100; color: #999">(12)</span></div>
-    </div>
-    <p class="work-description">
-      Custom business card design with print-ready files and unique branding.
-    </p>
-    <label class="review-label">You reviewed:</label>
-    <div class="review-block">
-      <div style="display: flex; align-items: center; gap: 8px;">
-        <span class="review-stars">★★★★★</span>
-        <span class="review-score">5.0</span>
-      </div>
-      <p class="review-text">Great work! Fast delivery and exactly what I needed.</p>
-    </div>
-  </div> -->
-
