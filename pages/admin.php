@@ -83,27 +83,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             $error_message = 'Database error: ' . $e->getMessage();
         }
     }
-    
-    // Add new language
-    elseif ($_POST['action'] === 'add_language' && !empty($_POST['lang_code']) && !empty($_POST['lang_name'])) {
-        $lang_code = trim($_POST['lang_code']);
-        $lang_name = trim($_POST['lang_name']);
-        
-        try {
-            // Check if language already exists
-            $stmt = $db->prepare('SELECT COUNT(*) FROM languages WHERE lang_code = ?');
-            $stmt->execute([$lang_code]);
-            if ($stmt->fetchColumn() > 0) {
-                $error_message = 'Language already exists.';
-            } else {
-                $stmt = $db->prepare('INSERT INTO languages (lang_code, lang_name) VALUES (?, ?)');
-                $stmt->execute([$lang_code, $lang_name]);
-                $success_message = "Language \"$lang_name\" has been added successfully.";
-            }
-        } catch (PDOException $e) {
-            $error_message = 'Database error: ' . $e->getMessage();
-        }
-    }
 }
 
 // Fetch all users except the current admin
@@ -119,10 +98,6 @@ $categories = $stmt->fetchAll(PDO::FETCH_COLUMN);
 // Fetch all skills
 $stmt = $db->query('SELECT skill_name FROM skills ORDER BY skill_name');
 $skills = $stmt->fetchAll(PDO::FETCH_COLUMN);
-
-// Fetch all languages
-$stmt = $db->query('SELECT lang_code, lang_name FROM languages ORDER BY lang_name');
-$languages = $stmt->fetchAll();
 
 // Fetch system statistics
 $stmt = $db->query('SELECT COUNT(*) FROM user_registry');
@@ -310,39 +285,6 @@ $total_purchases = $stmt->fetchColumn();
                                     <input type="text" id="skill_name" name="skill_name" required>
                                 </div>
                                 <button type="submit" class="admin-button">Add Skill</button>
-                            </form>
-                        </div>
-                    </div>
-                </section>
-                
-                <section class="admin-section">
-                    <h2>Language Management</h2>
-                    <div class="category-container">
-                        <div class="current-items">
-                            <h3>Current Languages</h3>
-                            <ul class="item-list">
-                                <?php foreach ($languages as $language): ?>
-                                    <li><?= htmlspecialchars($language['lang_name']) ?> (<?= htmlspecialchars($language['lang_code']) ?>)</li>
-                                <?php endforeach; ?>
-                                <?php if (empty($languages)): ?>
-                                    <li class="empty-message">No languages defined yet.</li>
-                                <?php endif; ?>
-                            </ul>
-                        </div>
-                        
-                        <div class="add-new-form">
-                            <h3>Add New Language</h3>
-                            <form id="add-language-form" class="ajax-form">
-                                <input type="hidden" name="admin_action" value="add_language">
-                                <div class="form-group">
-                                    <label for="lang_code">Language Code</label>
-                                    <input type="text" id="lang_code" name="lang_code" placeholder="e.g., en-us" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="lang_name">Language Name</label>
-                                    <input type="text" id="lang_name" name="lang_name" placeholder="e.g., English (US)" required>
-                                </div>
-                                <button type="submit" class="admin-button">Add Language</button>
                             </form>
                         </div>
                     </div>
