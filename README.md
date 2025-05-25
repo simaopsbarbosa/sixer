@@ -1,4 +1,4 @@
-# ltw01g01
+# ltw17g06
 
 ## Features
 
@@ -27,6 +27,9 @@
 **Extra:**
 - [x] Users can add and edit a profile description.
 - [x] Users can select their skills to show on the user's profile.
+- [x] Admins can add new skill options.
+- [x] Admins can monitor system statistics.
+- [x] Clients can see detailed service purchase history with review submission system.
 
 ## Running
 
