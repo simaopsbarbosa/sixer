@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
-require_once '../utils/csrf.php';
+
+require_once('../utils/csrf.php');
 
 // Initialize session only if needed for own profile
 $session = null;
@@ -11,6 +12,7 @@ if (!empty($_GET['id'])) {
     require_once '../utils/session.php';
     $session = Session::getInstance();
     $csrf_token = CSRF::getToken();
+    $_SESSION['csrf'] = $csrf_token;
     if ($session->isLoggedIn()) {
         $profile_user_id = $session->getUser()['user_id'];
         $is_own_profile = true;
@@ -103,6 +105,7 @@ foreach ($user_purchases as $purchase) {
   <body>
     <?php drawHeader(); ?>
     <main>
+      <meta name="csrf-token" content="<?= $_SESSION['csrf'] ?>">
       <div class="profile-container">
         <div class="profile-header" style="position: relative;">
           <?php if (
@@ -323,15 +326,12 @@ foreach ($user_purchases as $purchase) {
            
           const newAbout = aboutText.textContent.trim();
           editBtn.disabled = true;
+          const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
           fetch('../action/edit_profile_description.php', {
             method: 'POST',
-            headers: { 
-              'Content-Type': 'application/json',
-              'X-CSRF-Token': CSRF_TOKEN
-            },
-            body: JSON.stringify({ aboutme: newAbout, csrf_token: CSRF_TOKEN })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ aboutme: newAbout, csrf_token: csrfToken })
           })
-
           .then(r => r.json())
           .then(data => {
             if (data.success) {
@@ -371,7 +371,6 @@ foreach ($user_purchases as $purchase) {
     }
 
     function enterEditSkillsMode() {
-
       originalChecked = getCheckedSkills();
       skillsDropdown.style.display = 'block';
       if (addSkillBtn) addSkillBtn.style.display = 'none';
@@ -407,15 +406,11 @@ foreach ($user_purchases as $purchase) {
         e.preventDefault();
         const checked = getCheckedSkills();
         fetch('../action/edit_profile_skills.php', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'X-CSRF-Token': CSRF_TOKEN
-        },
-        body: JSON.stringify({ skills: checked, csrf_token: CSRF_TOKEN })
-        )
-
-        .then(r => r.json())
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ skills: checked })
+        })
+        .then (r => r.json())
         .then(data => {
           if (data.success) {
             skillsText.innerHTML = data.skills.length
@@ -464,4 +459,5 @@ foreach ($user_purchases as $purchase) {
       </div>
       <p class="review-text">Great work! Fast delivery and exactly what I needed.</p>
     </div>
-  </div>
+  </div> -->
+

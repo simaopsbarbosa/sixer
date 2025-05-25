@@ -11,11 +11,13 @@ header('Content-Type: application/json');
 
 $session = Session::getInstance();
 
-$csrf_token = $_POST['csrf_token'] ?? '';
-if (!CSRF::verifyCSRF($csrf_token)) {
-http_response_code(403);
-echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
-exit;
+
+
+$data = json_decode(file_get_contents('php://input'), true);
+if (!isset($data['csrf_token']) || !CSRF::verifyCSRF($data['csrf_token'])) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
+    exit;
 }
 
 if (!$session->isLoggedIn()) {
