@@ -42,6 +42,8 @@ If desired, you can populate the database with mock data to explore the project'
 
 ## Credentials
 
-- simao.barbosa.05@gmail.com/simao123 (admin)
-- croc@gmail.com/simao123 (not admin)
+These credentials are for the mock data provided above:
+
+- simao.barbosa.05@gmail.com/simao123   (admin)
+- croc@gmail.com/simao123   (not admin)
 
