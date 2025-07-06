@@ -1,4 +1,6 @@
-# ltw17g06
+# sixer
+
+sixer is a freelancing platform, similar to [Fiverr](https://www.fiverr.com/), where freelancers can offer their services and customers can browse and purchase them.
 
 ## Features
 
@@ -44,4 +46,8 @@ If desired, you can populate the database with mock data to explore the project'
 
 - simao.barbosa.05@gmail.com/simao123 (admin)
 - croc@gmail.com/simao123 (not admin)
+
+## Team
+
+This project was developed for the LTW 24/25 course at FEUP, with the help of Maurício Sardinha and Pedro Araújo.
 
